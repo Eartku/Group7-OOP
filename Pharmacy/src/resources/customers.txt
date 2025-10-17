@@ -1,0 +1,12 @@
+C00001|Aurora Le|01/01/2000|Hanoi|aurora01@example.com|0900000001|aurora01
+C00002|Lan Anh|10/10/1992|Ho Chi Minh City|lan_anh92@example.com|0900000002|lan_anh92
+C00003|Shadow X|05/05/1995|Da Nang|shadowx@example.com|0900000003|shadowx
+C00004|Minh Trang|12/12/1998|Hanoi|minhtrang@example.com|0900000004|minhtrang
+C00005|Beta Tester|03/03/1990|Hue|beta_tester@example.com|0900000005|beta_tester
+C00006|Nguyen Rey|07/07/1993|Can Tho|vietnam_rey@example.com|0900000006|vietnam_rey
+C00007|Guest One|15/08/2001|Hanoi|guest101@example.com|0900000007|guest101
+C00008|Huy lore|18/08/2006|VinhLong|huy@gmail.com|0962713941|khachang1
+C00009|Huy|18/09/2006|aaaaaaaaaaaaaaa|aaaaaaaaaaaa|aaaaaaaaaaaaa|khachang1
+C00010|admin|11/11/2011|admin|admin|admin|admin
+C00011|Nguyen Hoang Phuc|13/07/2006|BacLieu|phuct@gmail.com|ko biet|phuctoken
+C00012|hahahahah|12/12/1212|hahahaha|haha|haha|ha ha

@@ -1,0 +1,20 @@
+P00001|Paracetamol|Hop|50000.0|6|4 vien/ngay|Paracetamol 500mg|false|D
+P00002|Amoxicillin|Hop|75000.0|12|3 vien/ngay|Amoxicillin 500mg|true|D
+P00003|Vitamin C|Lo|30000.0|24|1 vien/ngay|Acid Ascorbic 1000mg|false|D
+P00004|Ibuprofen|Hop|60000.0|18|2 vien/ngay|Ibuprofen 200mg|true|D
+P00005|Cetirizine|Hop|45000.0|12|1 vien/ngay|Cetirizine Hydrochloride 10mg|false|D
+P00006|Azithromycin|Hop|85000.0|18|1 vien/ngay|Azithromycin 250mg|true|D
+P00007|Metformin|Hop|65000.0|24|2 vien/ngay|Metformin 500mg|true|D
+P00008|Omeprazole|Hop|70000.0|24|1 vien/ngay|Omeprazole 20mg|true|D
+P00009|Loratadine|Hop|50000.0|18|1 vien/ngay|Loratadine 10mg|false|D
+P00010|Prednisolone|Hop|90000.0|12|1 vien/ngay|Prednisolone 5mg|true|D
+P00011|Kem duong da|Hop|120000.0|24|Duong am, mem da|Innisfree|My pham|N
+P00012|Dung dich muoi sinh ly|Chai|20000.0|12|Rua mui, ve sinh vet thuong|Bidiphar|Ve sinh|N
+P00013|Gel rua tay|Chai|45000.0|18|Diet khuan tay|Lifebuoy|Ve sinh|N
+P00014|Khau trang y te|Hop|40000.0|6|Loc bui, bao ve ho hap|Nam Anh|Dung cu y te|N
+P00015|Bong y te|Go|25000.0|48|Dung de sat trung vet thuong|Viet Duc|Dung cu y te|N
+P00016|Nuoc sat trung|Chai|60000.0|24|Diet khuan nhanh tren tay|Green Cross|Ve sinh|N
+P00017|Kem chong nang|Tuyp|150000.0|18|Bao ve da khoi tia UV|Anessa|My pham|N
+P00018|Dung dich rua mat|Chai|90000.0|24|Lam sach da mat|Simple|My pham|N
+P00019|Dau goi dau thao duoc|Chai|80000.0|18|Giam rung toc, lam mem toc|Thorakao|My pham|N
+P00020|Gel lam diu da|Tuyp|80000.0|18|Lam diu, cap am da|Nature Republic|My pham|N
