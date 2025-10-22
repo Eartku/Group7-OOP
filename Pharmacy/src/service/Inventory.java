@@ -157,11 +157,6 @@ public class Inventory implements Management<Batch>{
     @Override
     public String report(){
         return "Tong so luong lo hang ton kho trong he thong: " + inv.size() + "\n";
-    } 
-    public static void main(String[] args) {
-        ProductManager pm = new ProductManager();
-        Inventory inv = new Inventory(pm);
-        inv.showList();
     }
 }
 

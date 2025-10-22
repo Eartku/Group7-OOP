@@ -186,7 +186,7 @@ public class ManageOrderMenu {
         // Tính tổng tiền
         double total = 0;
         for (OrderItem item : ordered) {
-            total += inv.getExportPricebyProduct(item.getProduct()) * item.getQuantity(); // thực tế là giá bán ra của inventory với sản phẩm đó
+            total += item.getProduct().getPrice()* item.getQuantity(); // thực tế là giá bán ra của inventory với sản phẩm đó
         }
 
         System.out.printf("Tong so tien can thanh toan: %.2f VND%n", total);
@@ -273,22 +273,14 @@ public class ManageOrderMenu {
                 double subtotal = price * quantity;
                 total += subtotal;
 
-                // Hiển thị chi tiết theo loại sản phẩm
                 switch (product) {
                     case Drug d -> {
                         System.out.println("[THUOC] " + d.getName() + " (" + quantity + " " + d.getUnit() + ")");
                         System.out.println(" - Gia: " + price + " VND");
-                        System.out.println(" - Han dung: " + d.getShelfLifeInfo());
-                        System.out.println(" - Thanh phan: " + d.getIngredient());
-                        System.out.println(" - Lieu luong: " + d.getDosage());
-                        System.out.println(" - Ke don: " + (d.getpR() ? "Co" : "Khong"));
                     }
                     case NonDrug nd -> {
-                        System.out.println("[SAN PHAM KHAC] " + nd.getName() + " (" + quantity + " " + nd.getUnit() + ")");
+                        System.out.println("[PHI THUOC] " + nd.getName() + " (" + quantity + " " + nd.getUnit() + ")");
                         System.out.println(" - Gia: " + price + " VND");
-                        System.out.println(" - Nha san xuat: " + nd.getManufacturer());
-                        System.out.println(" - Loai: " + nd.getType());
-                        System.out.println(" - Cong dung: " + nd.getUsage());
                     }
                     default -> System.out.println("[?] San pham khong xac dinh");
                 }
@@ -349,7 +341,7 @@ public class ManageOrderMenu {
                         System.out.println("[SAN PHAM KHAC] " + nd.getName() + " (" + quantity + " " + nd.getUnit() + ")");
                         System.out.println(" - Gia: " + nd.getPrice() + " VND");
                     }
-                    default -> System.out.println("[?] San pham khong xac dinh");
+                    default -> System.out.println("[] San pham khong xac dinh");
                 }
 
                 System.out.println(" → Thanh tien: " + subtotal + " VND");
