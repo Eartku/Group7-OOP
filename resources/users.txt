@@ -1,5 +1,4 @@
-ops_admin|0psAdmin|2
-admindev|admindev|2
+admin|admindev|2
 aurora01|P@ssw0rd!23|1
 lan_anh92|lanA!992021|1
 shadowx|sh4d0wX777|1
@@ -8,10 +7,3 @@ minhtrang|MtR@ng2025|1
 beta_tester|B3taTest#1|1
 vietnam_rey|VnR3y_88|1
 guest101|guest_pass101|1
-khachang1|123456|1
-phuctokuda|phuc12345|1
-admin|admindev|1
-abc|abcxyz|0
-ph�c cu to|cuto19cm|1
-huy cu to v?i|123123|1
-ha ha|hahaha|1

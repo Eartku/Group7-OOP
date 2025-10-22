@@ -104,16 +104,6 @@ public class Inventory implements Management<Batch>{
         save();
     }
 
-    public double getExportPricebyProduct(Product p) {
-        for (Batch b : inv) {
-            if (b.getProduct().equals(p) && b.getActive() && !b.isExpired() && b.getQuantity() > 0) {
-                return b.getExportPrice()/b.getQuantity();
-            }
-        }
-        return 0; // không có lô hợp lệ
-    }
-
-
     //lưu file cả list user
     @Override
     public void save() {

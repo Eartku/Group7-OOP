@@ -1,5 +1,6 @@
 package view;
 
+import data.Data;
 import interfaces.Authenticable;
 import java.io.IOException;
 import java.util.Scanner;
@@ -25,6 +26,7 @@ public class MainMenu{
         }
     }
     public static void showMenu(){
+        Data.initData();
         UserManager um = new UserManager();
         CustomerManager cm = new CustomerManager();
         ProductManager pm = new ProductManager();
@@ -33,7 +35,7 @@ public class MainMenu{
 
         Scanner sc = new Scanner(System.in);
         Authenticable currentUser = null;
-        clearScreen();
+        // clearScreen();
 
         while (true) {
             System.out.println("\n==== WELCOME ====");

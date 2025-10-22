@@ -32,8 +32,8 @@ public class Batch implements Comparable<Batch>{
         this.product = product;
         this.quantity = quantity;
         this.importDate = importDate;
-        this.importPrice = quantity * product.getPrice() * 1.1; // giá nhập tăng 10% so với giá thị trường
-        this.exportPrice = importPrice * 1.1; // lợi nhuận lời 10%
+        this.importPrice = quantity * product.getPrice(); // giá nhập tăng 10% so với giá thị trường
+        this.exportPrice = importPrice;
         if(product.getSLM() != null){
             this.expiryDate = importDate.plusMonths(product.getSLM());
         } else {

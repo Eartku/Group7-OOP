@@ -33,8 +33,8 @@ public class ManageOrderMenu {
         while (true) {
             MainMenu.clearScreen();
             System.out.println("==== ORDER MANAGER ====");
-            System.out.println(pm.report());
-            pm.showList();
+            System.out.println(om.report());
+            om.showList();
             System.out.println("1. Them don hang moi (neu giao dich tai quay)");
             System.out.println("2. Xoa don hang");
             System.out.println("3. Cap nhat thong tin don hang (Khong co)");
@@ -269,7 +269,7 @@ public class ManageOrderMenu {
             for (OrderItem item : order.getItems()) {
                 Product product = item.getProduct();
                 long quantity = item.getQuantity();
-                double price = inv.getExportPricebyProduct(product);
+                double price = product.getPrice();
                 double subtotal = price * quantity;
                 total += subtotal;
 
@@ -335,7 +335,7 @@ public class ManageOrderMenu {
             for (OrderItem item : order.getItems()) {
                 Product product = item.getProduct();
                 long quantity = item.getQuantity();
-                double price = inv.getExportPricebyProduct(product);
+                double price = product.getPrice();
                 double subtotal = price * quantity;
                 total += subtotal;
 
@@ -343,11 +343,11 @@ public class ManageOrderMenu {
                 switch (product) {
                     case Drug d -> {
                         System.out.println("[THUOC] " + d.getName() + " (" + quantity + " " + d.getUnit() + ")");
-                        System.out.println(" - Gia: " + inv.getExportPricebyProduct(product) + " VND");
+                        System.out.println(" - Gia: " + d.getPrice() + " VND");
                     }
                     case NonDrug nd -> {
                         System.out.println("[SAN PHAM KHAC] " + nd.getName() + " (" + quantity + " " + nd.getUnit() + ")");
-                        System.out.println(" - Gia: " + inv.getExportPricebyProduct(product) + " VND");
+                        System.out.println(" - Gia: " + nd.getPrice() + " VND");
                     }
                     default -> System.out.println("[?] San pham khong xac dinh");
                 }

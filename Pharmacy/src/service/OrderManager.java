@@ -132,7 +132,7 @@ public class OrderManager implements Management<Order> {
     @Override
     public void showList(){
         for (Order elem : orders) {
-            System.out.println(elem.getOID() + "," + elem.getTotal() + ","+ elem.getpurchaseDate());
+            System.out.println(elem.getOID() + "|" + elem.getCustomer().getCID() + "|"+ elem.getpurchaseDate());
         }
     }
 
