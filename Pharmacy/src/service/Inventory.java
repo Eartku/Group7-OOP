@@ -67,9 +67,9 @@ public class Inventory implements Management<Batch>{
     }
 
     @Override
-    public Batch get(String username){
+    public Batch get(String ID){
         for (Batch u : inv) {
-            if (u.getBatchId().equals(username))
+            if (u.getBatchId().equals(ID))
                 return u;
         }
         return null;

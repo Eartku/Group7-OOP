@@ -42,7 +42,7 @@ public class CustomerMenu {
                     }
                     case 4 -> {
                         System.out.println("Xem lich su mua hang...");
-                        om.History(customer);
+                        om.history(customer);
                     }
                     default -> System.out.println("Khong hop le!");
                 }

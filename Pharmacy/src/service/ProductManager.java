@@ -151,35 +151,27 @@ public class ProductManager implements Management<Product>{
     }  
 
     @Override
-    public void delete(String pname){
-        products.removeIf(u -> u.getPID().equals(pname));
-    } 
+    public void delete(String ID){
+        products.removeIf(u -> u.getPID().equals(ID));
+    }
 
-    public int countDrug(){
+    @Override
+    public String report(){
         int count = 0;
         for (Product p : products) {
             if (p instanceof Drug) {
                 count++;
             }
         }
-        return count;
-    }
-
-       public int countNonDrug(){
-        int count = 0;
+        int count2 = 0;
         for (Product p : products) {
             if (p instanceof NonDrug) {
-                count++;
+                count2++;
             }
         }
-        return count;
-    }
-
-    @Override
-    public String report(){
         return "Tong so luong san pham trong he thong: " + products.size() + "\n"
-        +  "So luong thuoc: " +  countDrug() + "\n"
-        +  "So luong phi thuoc " +  countNonDrug() + "\n";
+        +  "So luong thuoc: " +  count + "\n"
+        +  "So luong phi thuoc " +  count2 + "\n";
     } 
 
     @Override

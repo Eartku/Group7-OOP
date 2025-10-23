@@ -136,7 +136,7 @@ public class OrderManager implements Management<Order> {
         }
     }
 
-    public ArrayList<OrderItem> selectProducts(Scanner sc, ProductManager pm) {
+    public ArrayList<OrderItem> buyProducts(Scanner sc, ProductManager pm) {
         ArrayList<OrderItem> list = new ArrayList<>();
         while(true){
             pm.showList();
@@ -178,8 +178,8 @@ public class OrderManager implements Management<Order> {
 
 
     @Override
-    public void add(Order user){
-        orders.add(user);
+    public void add(Order order){
+        orders.add(order);
     }  
 
     @Override
@@ -192,7 +192,7 @@ public class OrderManager implements Management<Order> {
         return "Tong so don hang trong he thong: " + orders.size() + "\n";
     } 
 
-    public void History(Customer cs){
+    public void history(Customer cs){
         for (Order o: orders){
             if(o.getCustomer().equals(cs)){
                 System.out.println(o.getOID() + "|" + o.getTotal() + "VND");

@@ -104,36 +104,6 @@ public class UserManager implements Management<Authenticable>{
         }
     }
 
-    public int countGuest(){
-        int count = 0;
-        for (Authenticable user : users) {
-            if (user instanceof Guest) {
-                count++;
-            }
-        }
-        return count;
-    }
-
-       public int countCustomer(){
-        int count = 0;
-        for (Authenticable user : users) {
-            if (user instanceof Customer) {
-                count++;
-            }
-        }
-        return count;
-    }
-
-       public int countAdmin(){
-        int count = 0;
-        for (Authenticable user : users) {
-            if (user instanceof Admin) {
-                count++;
-            }
-        }
-        return count;
-    }
-
     @Override
     public void save() {
         try (BufferedWriter bw = new BufferedWriter(new FileWriter(FILE_PATH, false))) {
@@ -147,10 +117,16 @@ public class UserManager implements Management<Authenticable>{
 
     @Override
     public String report(){
+        int count1 = 0, count2 = 0, count3 = 0;
+        for (Authenticable user : users) {
+            if (user instanceof Guest) count1++;
+            else if (user instanceof Customer) count2++;
+            else if (user instanceof Admin) count3++;
+        }
         return "Tong so luong tai khoan trong he thong: " + users.size() + "\n"
-        +  "So tai khoan Guest: " +  countGuest() + "\n"
-        +  "So tai khoan khach hang (profile updated): " +  countCustomer() + "\n"
-        +  "So tai khoan Admin: " + countAdmin();
+        +  "So tai khoan Guest: " +  count1 + "\n"
+        +  "So tai khoan khach hang (profile updated): " +  count2 + "\n"
+        +  "So tai khoan Admin: " + count3;
     } 
 }
 

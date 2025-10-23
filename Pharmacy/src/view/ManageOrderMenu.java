@@ -88,7 +88,7 @@ public class ManageOrderMenu {
 
                 if (c instanceof Customer customer) {
                     System.out.println("Dang nhap thanh cong, xin chao " + customer.getFullname() + "!");
-                    ArrayList<OrderItem> ordered = om.selectProducts(sc, pm);
+                    ArrayList<OrderItem> ordered = om.buyProducts(sc, pm);
                     if(!ordered.isEmpty()){
                         om.add(new Order(OID,ordered,customer));
                         om.save();
@@ -129,7 +129,7 @@ public class ManageOrderMenu {
                     um.add(customer); um.save();
                     cm.add(customer); cm.save();
                     System.out.println("Dang ky thanh cong, chao mung " + customer.getFullname() + "!");
-                    ArrayList<OrderItem> ordered = om.selectProducts(sc, pm);
+                    ArrayList<OrderItem> ordered = om.buyProducts(sc, pm);
                     for (OrderItem o: ordered) {
                         inv.deductStock(o);
                     }
@@ -159,7 +159,7 @@ public class ManageOrderMenu {
         String OID = Data.generateNewID(OrderManager.FILE_PATH, 'O');
 
         // Chọn sản phẩm
-        List<OrderItem> ordered = om.selectProducts(sc, pm);
+        List<OrderItem> ordered = om.buyProducts(sc, pm);
 
         // Kiểm tra nếu danh sách trống
         if (ordered.isEmpty()) {

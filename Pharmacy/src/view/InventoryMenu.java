@@ -284,7 +284,7 @@ public class InventoryMenu {
         System.out.println("----- CHI TIET LO HANG [" + batch.getBatchId() + "] -----");
         System.out.println("Ma lo hang: " + batch.getBatchId());
         System.out.println("San pham: " + p.getName() + " (" + p.getPID() + ")");
-        System.out.println("Gia - Nhap vao: " + String.format("%.2f", batch.getImportPrice()) + ".VND | Ban ra: " + String.format("%.2f", batch.getExportPrice()) +".VND");
+        System.out.println("Gia - Nhap vao: " + String.format("%.2f", batch.getProduct().getPrice()) + ".VND | Ban ra: " + String.format("%.2f", batch.getProduct().getPrice()) +".VND");
         System.out.println("Don vi: " + p.getUnit());
         System.out.println("So luong: " + batch.getQuantity());
         System.out.println("Ngay nhap hang: " + batch.getImportDate());

@@ -58,9 +58,7 @@ public abstract class Product implements Comparable<Product> {
     public Integer getSLM(){return this.shelfLifeMonths;}
 
     @Override
-    public String toString(){
-        return PID + "|" + Name + "|" + unit + "|" + price + "|" + getShelfLifeInfo();
-    }
+    public abstract String toString();
 
     @Override
     public int compareTo(Product p){
