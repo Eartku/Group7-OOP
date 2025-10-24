@@ -131,8 +131,8 @@ public class Inventory implements Management<Batch>{
     }    
 
     @Override
-    public void delete(String name){
-        inv.removeIf(u -> u.getBatchId().equals(name));
+    public void delete(String ID){
+        inv.removeIf(u -> u.getBatchId().equals(ID));
     } 
 
     public void reportExpiringBatch(ProductManager pm){
