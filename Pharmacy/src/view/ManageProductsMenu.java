@@ -1,19 +1,28 @@
 package view;
 
 import data.Data;
+import interfaces.ManageMenu;
 import java.util.Scanner;
 import models.Drug;
 import models.NonDrug;
 import models.Product;
 import service.ProductManager;
 
-public class ManageProductsMenu {
-    public static void showMenu(ProductManager pm){
-        Scanner sc = new Scanner(System.in);
+public class ManageProductsMenu implements ManageMenu{
+    private final ProductManager pm;
+    private final Scanner sc;
+
+    public ManageProductsMenu(ProductManager pm, Scanner sc) {
+        this.pm = pm;
+        this.sc = sc;
+    }
+
+    @Override
+    public void mainMenu(){
         MainMenu.clearScreen();
 
         if (pm == null) {
-            System.out.println("Khong the quan ly khach hang!");
+            System.out.println("Khong the quan ly san pham!");
             return;
         }
 
@@ -30,7 +39,7 @@ public class ManageProductsMenu {
             System.out.print("Chon: ");
             int choice;
             try {
-                choice = Integer.parseInt(sc.nextLine());
+                choice = Integer.parseInt(sc.nextLine().trim());
             } catch (NumberFormatException _) {
                 System.out.println("Nhap so tu 0-4!");
                 continue;
@@ -38,16 +47,16 @@ public class ManageProductsMenu {
 
             switch (choice) {
                 case 1 -> {
-                    AddMenu(sc, pm);
+                    addMenu();
                 }
                 case 2 -> {
-                    RemoveProduct(sc, pm);
+                    removeMenu();
                 }
                 case 3 -> {
-                    EditProduct(sc, pm);
+                    updateMenu();
                 }
                 case 4 -> {
-                    ViewProduct(sc, pm);
+                    viewMenu();
                 }
                 case 0 -> {
                     System.out.println("Thoat chuong trinh. Tam biet!");
@@ -58,19 +67,38 @@ public class ManageProductsMenu {
         }
     }
 
-    public static void AddMenu(Scanner sc, ProductManager pm){
+    @Override
+    public void addMenu(){
         MainMenu.clearScreen();
         System.out.println("==== ADD NEW PRODUCT ====");
         
         String PID = Data.generateNewID(ProductManager.FILE_PATH, 'P');
-        System.out.print("Ten san pham: ");
-        String name = sc.nextLine();
+        System.out.print("Ten san pham (Nhap 0 de quay lai): ");
+        String name = sc.nextLine().trim();
+
+        if (name.equals("0")) {
+                System.out.println("Huy thao tac xoa, quay lai menu chinh.");
+                return;
+            }
 
         System.out.print("Don vi san pham (Vien/Vi/Hop/Cai/vv): ");
-        String unit = sc.nextLine();
+        String unit = sc.nextLine().trim();
 
-        System.out.print("Gia thi truong: ");
-        double price = Double.parseDouble(sc.nextLine().trim());
+        double price;
+        while (true) {
+            System.out.print("Gia thi truong: ");
+            String inputPrice = sc.nextLine().trim();
+            try {
+                price = Double.parseDouble(inputPrice);
+                if (price <= 0) {
+                    System.out.println("Gia phai lon hon 0!");
+                    continue;
+                }
+                break;
+            } catch (NumberFormatException e) {
+                System.out.println("Gia khong hop le! Vui long nhap so.");
+            }
+        }
 
         System.out.print("Thoi han su dung (thang), bo trong neu khong co: ");
         String input = sc.nextLine().trim();
@@ -79,20 +107,32 @@ public class ManageProductsMenu {
         if (!input.isEmpty()) {
             try {
                 SLM = Integer.valueOf(input);
+                if (SLM < 0) {
+                    System.out.println("Thoi han khong the am! Mac dinh de trong neu khong co.");
+                    SLM = null;
+                }
             } catch (NumberFormatException e) {
-                System.out.println("Gia tri ko hop le!");
+                System.out.println("Gia tri khong hop le! Bo qua truong nay.");
+                SLM = null;
             }
         }
 
-        System.out.println("San pham co phai la thuoc (y/n): ");
-        String confirm = sc.nextLine().trim();
+
+        String confirm;
+        while (true) {
+            System.out.print("San pham co phai la thuoc? (y/n): ");
+            confirm = sc.nextLine().trim().toLowerCase();
+            if (confirm.equals("y") || confirm.equals("n")) break;
+            System.out.println("Chi nhap y hoac n!");
+        }
+
         Product product;
 
         if (confirm.equalsIgnoreCase("y")) {
             System.out.println("Nhap thanh phan chinh cua thuoc: ");
-            String ingredient = sc.nextLine();
+            String ingredient = sc.nextLine().trim();
             System.out.println("Nhap lieu luong dung:");
-            String dosage = sc.nextLine();
+            String dosage = sc.nextLine().trim();
             System.out.println("Thuoc co ke don cua bac si khong? (y/n):");
             String pr = sc.nextLine().trim(); boolean pR = false;
             if (pr.equalsIgnoreCase("y")) pR = true;
@@ -100,11 +140,11 @@ public class ManageProductsMenu {
             product = new Drug(PID, name, unit, price, SLM, dosage, ingredient, pR);
         } else {
             System.out.println("Nhap Don vi san xuat: ");
-            String manufacturer= sc.nextLine();
+            String manufacturer= sc.nextLine().trim();
             System.out.println("Nhap cong dung:");
-            String usage = sc.nextLine();
+            String usage = sc.nextLine().trim();
             System.out.println("Loai san pham (VD: Ho tro suc khoe, Lam dep, Y te,...)");
-            String type = sc.nextLine();
+            String type = sc.nextLine().trim();
 
             product = new NonDrug(PID, name, unit, price, SLM, manufacturer, type, usage);
         }
@@ -113,8 +153,9 @@ public class ManageProductsMenu {
         System.out.println("Da them san pham thanh cong!");
         pm.save();
     }
-    //Menu 
-    public static void RemoveProduct(Scanner sc, ProductManager pm) {
+
+    @Override
+    public void removeMenu() {
         MainMenu.clearScreen();
         while (true) {
             System.out.println("==== REMOVE PRODUCT ====");
@@ -150,7 +191,8 @@ public class ManageProductsMenu {
         }
     }
 
-    public static void EditProduct(Scanner sc, ProductManager pm) {
+    @Override
+    public void updateMenu() {
         MainMenu.clearScreen();
         System.out.println("==== EDIT PRODUCT ====");
         pm.showList();
@@ -221,7 +263,8 @@ public class ManageProductsMenu {
         System.out.println("Cap nhat thong tin san pham thanh cong!");
     }
 
-    public static void ViewProduct(Scanner sc, ProductManager pm) {
+    @Override
+    public void viewMenu() {
             MainMenu.clearScreen();
             while(true){
             System.out.println("==== VIEW PRODUCTS ====");
@@ -241,7 +284,7 @@ public class ManageProductsMenu {
                     System.out.println("Ma san pham: " + d.getPID());
                     System.out.println("Ten san pham: " + d.getName());
                     System.out.println("Don vi san pham: " + d.getUnit());
-                    System.err.println("Gia thi truong: " + d.getPrice());
+                    System.out.println("Gia thi truong: " + d.getPrice());
                     System.out.println("Han dung: " + d.getShelfLifeInfo());
                     System.out.println("Thanh phan chinh: " + d.getIngredient());
                     System.out.println("Lieu luong dung: " + d.getDosage());
@@ -252,7 +295,7 @@ public class ManageProductsMenu {
                     System.out.println("Ma san pham: " + d.getPID());
                     System.out.println("Ten san pham: " + d.getName());
                     System.out.println("Don vi san pham: " + d.getUnit());
-                    System.err.println("Gia thi truong: " + d.getPrice());
+                    System.out.println("Gia thi truong: " + d.getPrice());
                     System.out.println("Nha san xuat: " + d.getManufacturer());
                     System.out.println("Loai san pham: " + d.getType());
                     System.out.println("Mo ta cong dung: " + d.getUsage());

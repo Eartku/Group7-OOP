@@ -2,6 +2,7 @@ package view;
 
 import data.Data;
 import interfaces.Authenticable;
+import interfaces.ManageMenu;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Scanner;
@@ -11,9 +12,21 @@ import models.Guest;
 import service.CustomerManager;
 import service.UserManager;
 
-public class ManageUserMenu {
-    public static void showMenu(UserManager um, CustomerManager cm){
-        Scanner sc = new Scanner(System.in);
+public class ManageUserMenu implements ManageMenu {
+    
+    private final CustomerManager cm;
+    private final UserManager um;
+    private final Scanner sc;
+
+    public ManageUserMenu(CustomerManager cm, UserManager um, Scanner sc) {
+        this.cm = cm;
+        this.um = um;
+        this.sc = sc;
+    }
+
+
+    @Override
+    public void mainMenu(){
         MainMenu.clearScreen();
 
         if (um == null) {
@@ -42,17 +55,17 @@ public class ManageUserMenu {
 
             switch (choice) {
                 case 1 -> {
-                    AddMenu(sc, um);
+                    addMenu();
                 }
 
                 case 2 -> {
-                    RemoveUser(sc, um);
+                    removeMenu();
                 }
                 case 3 -> {
-                    UpdateUser(sc, um);
+                    updateMenu();
                 }
                 case 4 -> {
-                    ViewUser(sc, um, cm);
+                    viewMenu();
                 }
                 case 0 -> {
                     System.out.println("Thoat chuong trinh. Tam biet!");
@@ -63,7 +76,8 @@ public class ManageUserMenu {
         }
     }
 
-    public static void AddMenu(Scanner sc, UserManager um){
+    @Override
+    public void addMenu(){
         MainMenu.clearScreen();
         System.out.println("==== ADD USER ====");
         String username;
@@ -80,7 +94,6 @@ public class ManageUserMenu {
             else break;
             
         }
-        System.out.print("Nhap password: ");
         String password;
         while (true) {
             System.out.print("Nhap password: ");
@@ -103,23 +116,22 @@ public class ManageUserMenu {
             }
         }
 
-        Authenticable newUser = null;
-        switch (role) {
-            case 0 -> newUser = new Guest(username, password);
+        Authenticable newUser = switch (role) {
+            case 0 -> new Guest(username, password);
+            case 2 -> new Admin(username, password);
             case 1 -> {
                 String CID = Data.generateNewID(username, 'C');
                 System.out.print("Ho va ten: ");
                 String fullname = sc.nextLine();
 
-                LocalDate dobDate = null;
+                LocalDate dobDate;
                 while (true) {
                     System.out.print("Ngay sinh (dd/MM/yyyy): ");
-                    String dob = sc.nextLine();
                     try {
-                        dobDate = LocalDate.parse(dob, DateTimeFormatter.ofPattern("dd/MM/yyyy"));
+                        dobDate = LocalDate.parse(sc.nextLine(), DateTimeFormatter.ofPattern("dd/MM/yyyy"));
                         break;
                     } catch (Exception e) {
-                        System.out.println("Ngay sinh khong hop le! Nhap lai theo dd/MM/yyyy");
+                        System.out.println("Ngay sinh khong hop le! Nhap lai.");
                     }
                 }
 
@@ -130,18 +142,22 @@ public class ManageUserMenu {
                 System.out.print("So dien thoai: ");
                 String phone = sc.nextLine();
 
-                newUser = new Customer(username, password, CID, fullname, dobDate, address, email, phone);
-                um.appendCustomer("resources/customers.txt", (Customer)newUser);
+                Customer c = new Customer(username, password, CID, fullname, dobDate, address, email, phone);
+                um.appendCustomer("resources/customers.txt", c);
+                yield c;
             }
-            case 2 -> newUser = new Admin(username, password);
-        }
+            default -> null;
+        };
+
         if (newUser != null) {
             um.add(newUser);
             System.out.println("Da them user thanh cong!");
             um.save();
         }
     }
-        public static void RemoveUser(Scanner sc, UserManager um) {
+
+    @Override
+        public void removeMenu() {
         MainMenu.clearScreen();
         while (true) {
             System.out.println("==== REMOVE USER ====");
@@ -177,7 +193,8 @@ public class ManageUserMenu {
         }
     }
 
-    public static void UpdateUser(Scanner sc, UserManager um) {
+    @Override
+    public void updateMenu() {
         MainMenu.clearScreen();
         System.out.println("==== EDIT USER ====");
         um.showList();
@@ -196,13 +213,22 @@ public class ManageUserMenu {
         Authenticable oldUser = um.get(oldUsername);
 
         String newUsername;
-        while(true){
+        while (true) {
             System.out.print("Nhap username moi (bo trong neu giu nguyen): ");
             newUsername = sc.nextLine().trim();
-            if(um.exists(newUsername)){
-                System.out.println("Username da ton tai!");
+            if (newUsername.isEmpty()) {
+                newUsername = oldUser.getUsername();
+                break;
             }
-            else break;
+            if (newUsername.equals(oldUser.getUsername())) {
+                break;
+            }
+
+            if (um.exists(newUsername)) {
+                System.out.println("Username da ton tai! Vui long nhap ten khac.");
+            } else {
+                break;
+            }
         }
         if (newUsername.isEmpty()) newUsername = oldUser.getUsername();
 
@@ -210,37 +236,67 @@ public class ManageUserMenu {
         String newPassword = sc.nextLine().trim();
         if (newPassword.isEmpty()) newPassword = oldUser.getPassword();
 
-        int newRole;
+        int newRole = -1;
         while (true) {
-            System.out.print("Nhap role moi (Admin: 2 / Customer: 1 / Guest: 0 / -1 neu giu nguyen): ");
+            System.out.print("Nhap role moi (Admin: 2 / Customer: 1 / Guest: 0 / bo trong neu giu nguyen): ");
+            String input = sc.nextLine().trim();
+
+            if (input.isEmpty()) {
+                // giữ nguyên role cũ
+                if (oldUser instanceof Admin) newRole = 2;
+                else if (oldUser instanceof Customer) newRole = 1;
+                else newRole = 0;
+                break;
+            }
+
             try {
-                newRole = Integer.parseInt(sc.nextLine());
-                if (newRole == -1 || newRole == 0 || newRole == 1 || newRole == 2) break;
-                System.out.println("Role chi duoc 0, 1, 2 hoac -1!");
+                newRole = Integer.parseInt(input);
+                if (newRole == 0 || newRole == 1 || newRole == 2) {
+                    break;
+                } else {
+                    System.out.println("Role chi duoc 0, 1, hoac 2!");
+                }
             } catch (NumberFormatException e) {
-                System.out.println("Nhap so nguyen!");
+                System.out.println("Nhap so nguyen hop le (0-2) hoac bo trong de giu nguyen!");
             }
         }
 
-        if (newRole == -1) {
-            if (oldUser instanceof Admin) newRole = 2;
-            else if (oldUser instanceof Customer) newRole = 1;
-            else newRole = 0;
-        }
-        
         Authenticable newUser = null;
         switch (newRole) {
             case 0 -> newUser = new Guest(newUsername, newPassword);
-            case 1 -> newUser = new Customer(newUsername, newPassword);
+
+            case 1 -> {
+                if (oldUser instanceof Customer) {
+                    Customer fullOld = cm.getbyUsername(oldUsername);
+                    if (fullOld != null) {
+                        newUser = new Customer(
+                            newUsername,
+                            newPassword,
+                            fullOld.getCID(),
+                            fullOld.getFullname(),
+                            fullOld.getDob(),
+                            fullOld.getAddress(),
+                            fullOld.getEmail(),
+                            fullOld.getPhone()
+                        );
+                    } else {
+                        newUser = new Customer(newUsername, newPassword);
+                    }
+                } else {
+                    newUser = new Customer(newUsername, newPassword);
+                }
+            }
+
             case 2 -> newUser = new Admin(newUsername, newPassword);
         }
-        um.updateWithRole(newUser, oldUsername);
 
+        um.updateWithRole(newUser, oldUsername);
         System.out.println("Cap nhat thanh cong user: " + newUsername);
         um.save();
     }
 
-    public static void ViewUser(Scanner sc, UserManager um, CustomerManager cm) {
+    @Override
+    public void viewMenu() {
         while(true){
             MainMenu.clearScreen();
             System.out.println("==== VIEW USER ====");
@@ -265,21 +321,17 @@ public class ManageUserMenu {
             if (user instanceof Admin) {
                 System.out.println("Role: [Admin]");
             } else if (user instanceof Customer c) {
-                c = cm.getbyUsername(username);
                 System.out.println("Role: [Customer]");
-                System.out.println("CID: " + c.getCID());
-                System.out.println("Ho ten: " + c.getFullname());
-                System.out.println("Ngay sinh: " + c.getDob());
-                System.out.println("Dia chi: " + c.getAddress());
-                System.out.println("Email: " + c.getEmail());
-                System.out.println("So dien thoai: " + c.getPhone());
+                c = cm.getbyUsername(username);
+                if(c != null) ManageCustomerMenu.printCustomer(c);
+                else System.out.println("Khach hang khong ton tai trong he thong!");
             } else if (user instanceof Guest) {
                 System.out.println("Role: [Guest]");
             }
             System.out.print("Quay lai? Hay nhap 0: ");
             String choice = sc.nextLine().trim();
             if (choice.equals("0")) {
-                System.out.println("Huy thao tac xoa, quay lai menu chinh.");
+                System.out.println("Da quay lai menu chinh.");
                 return;
             }
         }

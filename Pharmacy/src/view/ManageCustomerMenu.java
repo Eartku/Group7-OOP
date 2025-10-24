@@ -1,6 +1,7 @@
 package view;
 
 import data.Data;
+import interfaces.ManageMenu;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -9,9 +10,20 @@ import models.Customer;
 import service.CustomerManager;
 import service.UserManager;
 
-public class ManageCustomerMenu {
-    public static void showMenu(CustomerManager cm, UserManager um){
-        Scanner sc = new Scanner(System.in);
+public class ManageCustomerMenu implements ManageMenu{
+
+    private final CustomerManager cm;
+    private final UserManager um;
+    private final Scanner sc;
+
+    public ManageCustomerMenu(CustomerManager cm, UserManager um, Scanner sc) {
+        this.cm = cm;
+        this.um = um;
+        this.sc = sc;
+    }
+
+    @Override
+    public void mainMenu(){
         MainMenu.clearScreen();
 
         if (cm == null) {
@@ -40,16 +52,16 @@ public class ManageCustomerMenu {
 
             switch (choice) {
                 case 1 -> {
-                    AddMenu(sc, um, cm);
+                    addMenu();
                 }
                 case 2 -> {
-                    BlockCustomer(sc, cm);
+                    removeMenu();
                 }
                 case 3 -> {
-                    UpdateCustomer(sc, cm);
+                    updateMenu();
                 }
                 case 4 -> {
-                    ViewCustomer(sc, cm);
+                    viewMenu();
                 }
                 case 0 -> {
                     System.out.println("Thoat chuong trinh. Tam biet!");
@@ -60,7 +72,8 @@ public class ManageCustomerMenu {
         }
     }
 
-    public static void AddMenu(Scanner sc, UserManager um, CustomerManager cm){
+    @Override
+    public void addMenu(){
         MainMenu.clearScreen();
         System.out.println("==== ADD CUSTOMER ====");
         System.out.println("Truoc tien, ban can phai dang ky tai khoan: ");
@@ -120,7 +133,8 @@ public class ManageCustomerMenu {
         cm.save();
     }
 
-    public static void BlockCustomer(Scanner sc, CustomerManager cm) {
+    @Override
+    public void removeMenu() {
         MainMenu.clearScreen();
         while (true) {
             System.out.println("==== BLOCK CUSTOMER ====");
@@ -156,7 +170,8 @@ public class ManageCustomerMenu {
         }
     }
 
-    public static void UpdateCustomer(Scanner sc, CustomerManager cm) {
+    @Override
+    public void updateMenu() {
         MainMenu.clearScreen();
         System.out.println("==== UPDATE CUSTOMER ====");
         cm.showList();
@@ -183,9 +198,7 @@ public class ManageCustomerMenu {
             try {
                 oldCus.setDob(dob);
                 break;
-            } catch (Exception e) {
-                System.out.println("Ngay sinh khong hop le! Nhap lai theo dd/MM/yyyy");
-            }
+            } catch(Exception e) { System.out.println(e.getMessage()); }
         }
 
         System.out.print("Dia chi: ");
@@ -204,7 +217,8 @@ public class ManageCustomerMenu {
         System.out.println("Cap nhat thong tin khach hang thanh cong!");
     }
 
-        public static void ViewCustomer(Scanner sc, CustomerManager cm) {
+    @Override
+    public void viewMenu() {
         MainMenu.clearScreen();
         System.out.println("==== VIEW CUSTOMER ====");
         cm.showList();
@@ -226,10 +240,8 @@ public class ManageCustomerMenu {
             }
             System.out.print("\nNhap STT cua khach hang muon xem: ");
             int choice = Integer.parseInt(sc.nextLine().trim()); 
-            i = 0;
-            for(Customer u : list){
-                if(i == choice) user = cm.get(u.getCID());
-                i++;
+            if (choice >= 0 && choice < list.size()) {
+                user = list.get(choice);
             }
         }
 
@@ -238,7 +250,16 @@ public class ManageCustomerMenu {
             return;
         }
 
-        System.out.println("----- THONG TIN KHACH HANG [" + user.getFullname() +"] -----");
+        printCustomer(user);
+        System.out.print("Quay lai? Hay nhap 0: ");
+        String choice = sc.nextLine().trim();
+        if (choice.equals("0")) {
+            System.out.println("Huy thao tac xoa, quay lai menu chinh.");
+        }
+    }
+
+    public static void printCustomer(Customer user) {
+        System.out.println("----- THONG TIN KHACH HANG [" + user.getFullname() + "] -----");
         System.out.println("Role: [Customer]");
         System.out.println("CID: " + user.getCID());
         System.out.println("Ho ten: " + user.getFullname());
@@ -246,10 +267,6 @@ public class ManageCustomerMenu {
         System.out.println("Dia chi: " + user.getAddress());
         System.out.println("Email: " + user.getEmail());
         System.out.println("So dien thoai: " + user.getPhone());
-        System.out.print("Quay lai? Hay nhap 0: ");
-        String choice = sc.nextLine().trim();
-        if (choice.equals("0")) {
-            System.out.println("Huy thao tac xoa, quay lai menu chinh.");
-        }
     }
+
 }

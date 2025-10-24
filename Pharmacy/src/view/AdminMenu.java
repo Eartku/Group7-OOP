@@ -12,6 +12,9 @@ public class AdminMenu {
     private static final Scanner sc = new Scanner(System.in);
 
     public static void showMenu(Authenticable user, UserManager um, CustomerManager cm, ProductManager pm, Inventory inv, OrderManager om){
+        ManageUserMenu mu = new ManageUserMenu(cm, um, sc);
+        ManageCustomerMenu mc = new ManageCustomerMenu(cm, um, sc);
+        ManageProductsMenu mp = new ManageProductsMenu(pm, sc);
         MainMenu.clearScreen();
         while (true) {
             System.out.println();
@@ -32,16 +35,16 @@ public class AdminMenu {
                 }
                 case 1 -> {
                     System.out.println("Quan ly nguoi dung...");
-                    ManageUserMenu.showMenu(um, cm);
+                    mu.mainMenu();
                     break;
                 }
                 case 2 -> {
                     System.out.println("Quan ly san pham kha dung...");
-                    ManageProductsMenu.showMenu(pm);
+                    mp.mainMenu();
                 }
                 case 3 -> {
                     System.out.println("Quan ly khach hang...");
-                    ManageCustomerMenu.showMenu(cm, um);
+                    mc.mainMenu();
                 }
                 case 4 -> {
                     System.out.println("Quan ly kho/ lo hang...");

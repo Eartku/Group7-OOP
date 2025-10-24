@@ -12,6 +12,7 @@ public class CustomerMenu {
 
     public static void showMenu(Authenticable user, ProductManager pm, OrderManager om, Inventory inv){
         MainMenu.clearScreen();
+        ManageProductsMenu mp = new ManageProductsMenu(pm, sc);
         Customer customer = (Customer) user;
         while (true) {
                 System.out.println("==== MENU CUSTOMER ====");
@@ -30,7 +31,7 @@ public class CustomerMenu {
                     }
                     case 1 -> {
                         System.out.println("Xem danh sach san pham...");
-                        ManageProductsMenu.ViewProduct(sc,pm);
+                        mp.viewMenu();
                     }
                     case 2 -> {
                         System.out.println("Dang ky mua san pham...");
@@ -38,7 +39,7 @@ public class CustomerMenu {
                     }
                     case 3 -> {
                         System.out.println("Xem thong tin ca nhan...");
-                        System.out.println(customer.toStringProfile());
+                        ManageCustomerMenu.printCustomer(customer);
                     }
                     case 4 -> {
                         System.out.println("Xem lich su mua hang...");
