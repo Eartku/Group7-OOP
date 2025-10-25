@@ -27,7 +27,7 @@ public class ManageUserMenu implements ManageMenu {
 
     @Override
     public void mainMenu(){
-        MainMenu.clearScreen();
+        Extension.clearScreen();
 
         if (um == null) {
             System.out.println("Khong the quan ly user!");
@@ -35,7 +35,7 @@ public class ManageUserMenu implements ManageMenu {
         }
 
         while (true) {
-            MainMenu.clearScreen();
+            Extension.clearScreen();
             System.out.println("==== USER MANAGER ====");
             System.out.println(um.report());
             um.showList();
@@ -45,13 +45,7 @@ public class ManageUserMenu implements ManageMenu {
             System.out.println("4. Xem thong tin user theo username");
             System.out.println("0. Thoat");
             System.out.print("Chon: ");
-            int choice;
-            try {
-                choice = Integer.parseInt(sc.nextLine());
-            } catch (NumberFormatException _) {
-                System.out.println("Nhap so tu 0-4!");
-                continue;
-            }
+            int choice = Extension.readIntInRange("Nhap lua chon (0-4):", 0, 4, sc);
 
             switch (choice) {
                 case 1 -> {
@@ -78,7 +72,7 @@ public class ManageUserMenu implements ManageMenu {
 
     @Override
     public void addMenu(){
-        MainMenu.clearScreen();
+        Extension.clearScreen();
         System.out.println("==== ADD USER ====");
         String username;
         while(true){
@@ -158,7 +152,7 @@ public class ManageUserMenu implements ManageMenu {
 
     @Override
         public void removeMenu() {
-        MainMenu.clearScreen();
+        Extension.clearScreen();
         while (true) {
             System.out.println("==== REMOVE USER ====");
             um.showList();
@@ -195,7 +189,7 @@ public class ManageUserMenu implements ManageMenu {
 
     @Override
     public void updateMenu() {
-        MainMenu.clearScreen();
+        Extension.clearScreen();
         System.out.println("==== EDIT USER ====");
         um.showList();
         System.out.print("Nhap username muon cap nhat (hoac nhap 0 de quay lai): ");
@@ -298,7 +292,7 @@ public class ManageUserMenu implements ManageMenu {
     @Override
     public void viewMenu() {
         while(true){
-            MainMenu.clearScreen();
+            Extension.clearScreen();
             System.out.println("==== VIEW USER ====");
             um.showList();
             System.out.print("Nhap username ban muon xem (Nhap 0 de quay lai): ");

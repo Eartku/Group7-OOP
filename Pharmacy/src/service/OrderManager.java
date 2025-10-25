@@ -16,6 +16,7 @@ import models.Customer;
 import models.Order;
 import models.OrderItem;
 import models.Product;
+import view.Extension;
 
 
 public class OrderManager implements Management<Order> {
@@ -56,7 +57,7 @@ public class OrderManager implements Management<Order> {
         return items;
     }
     // load các đơn hàng từ file dựa vào OID
-    private static List<Order> loadOrders(ProductManager pm, CustomerManager cm){ // định dạng file: OID|CID|puschasedate
+    private static List<Order> loadOrders(ProductManager pm, CustomerManager cm){ // định dạng file: OID|CID|puschasedate|status
         List<Order> list = new ArrayList<>();
         java.io.File file = new File(FILE_PATH);
         if(!file.exists()) return list;
@@ -66,13 +67,14 @@ public class OrderManager implements Management<Order> {
                 String parts[] = line.split("\\|");
                 String oid = parts[0];
                 String cid = parts[1];
+                String status = parts[3];
                 LocalDate purchaseDate;
                 try {
                     purchaseDate = LocalDate.parse(parts[2], DateTimeFormatter.ofPattern("dd/MM/yyyy"));
                 } catch (Exception e) {
                     purchaseDate = null;
                 }
-                list.add(new Order(oid, loadItems(oid, pm), cm.get(cid), purchaseDate));
+                list.add(new Order(oid, loadItems(oid, pm), cm.get(cid), purchaseDate, status));
             }
         } catch(Exception e){
             System.out.println("Error: "+ e.getMessage());
@@ -128,11 +130,11 @@ public class OrderManager implements Management<Order> {
     }
 
 
-
     @Override
     public void showList(){
+        Extension.printTableHeader("Ma don hang","Ma khach hang","So san pham","Trang thai","Ngay dat mua");
         for (Order elem : orders) {
-            System.out.println(elem.getOID() + "|" + elem.getCustomer().getCID() + "|"+ elem.getpurchaseDate());
+            Extension.printTableRow(elem.getOID(),elem.getCustomer().getCID(),elem.getItems().size(),elem.getStatus(),elem.getpurchaseDate());
         }
     }
 
@@ -141,7 +143,7 @@ public class OrderManager implements Management<Order> {
         while(true){
             pm.showList();
             System.out.println("Moi chon san pham muon mua (Nhap 0 de thoat): ");
-            int choice = Integer.parseInt(sc.nextLine().trim());
+            int choice = Extension.readIntInRange("Nhap lua chon (0-4):", 0, pm.length(), sc);
             if(choice == 0) break;
 
             Product selected = pm.getbyIndex(choice);
@@ -195,8 +197,9 @@ public class OrderManager implements Management<Order> {
     public void history(Customer cs){
         for (Order o: orders){
             if(o.getCustomer().equals(cs)){
-                System.out.println(o.getOID() + "|" + o.getTotal() + "VND");
+                System.out.println(o.getOID() + "|\t" + o.getTotal() + "VND");
             }
         }
     }
+    
 }

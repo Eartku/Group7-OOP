@@ -17,7 +17,7 @@ import service.UserManager;
 public class AuthMenu {
 
     public static Authenticable Register(Scanner sc, UserManager um, CustomerManager cm){
-        MainMenu.clearScreen();
+        Extension.clearScreen();
         System.out.println("______DANG KY_____");
         String username;
         while(true){
@@ -62,7 +62,7 @@ public class AuthMenu {
     }
 
     public static Authenticable Login(Scanner sc, UserManager um, CustomerManager cm){
-        MainMenu.clearScreen();
+        Extension.clearScreen();
         String username, password; 
         try {
             System.out.println("______DANG NHAP_____");
@@ -123,7 +123,7 @@ public class AuthMenu {
     }
 
     public static Customer updateProfile(Guest g, Scanner sc, UserManager um){
-        MainMenu.clearScreen();
+        Extension.clearScreen();
         System.out.println("=== CAP NHAT THONG TIN CA NHAN ===");
         String CID = Data.generateNewID("resources/customers.txt", 'C');
 

@@ -24,7 +24,7 @@ public class ManageCustomerMenu implements ManageMenu{
 
     @Override
     public void mainMenu(){
-        MainMenu.clearScreen();
+        Extension.clearScreen();
 
         if (cm == null) {
             System.out.println("Khong the quan ly khach hang!");
@@ -32,7 +32,7 @@ public class ManageCustomerMenu implements ManageMenu{
         }
 
         while (true) {
-            MainMenu.clearScreen();
+            Extension.clearScreen();
             System.out.println("==== CUSTOMER MANAGER ====");
             System.out.println(cm.report());
             cm.showList();
@@ -42,13 +42,7 @@ public class ManageCustomerMenu implements ManageMenu{
             System.out.println("4. Xem thong tin khach hang theo ID");
             System.out.println("0. Thoat");
             System.out.print("Chon: ");
-            int choice;
-            try {
-                choice = Integer.parseInt(sc.nextLine());
-            } catch (NumberFormatException _) {
-                System.out.println("Nhap so tu 0-4!");
-                continue;
-            }
+            int choice = Extension.readIntInRange("Nhap lua chon (0-4):", 0, 4, sc);
 
             switch (choice) {
                 case 1 -> {
@@ -74,7 +68,7 @@ public class ManageCustomerMenu implements ManageMenu{
 
     @Override
     public void addMenu(){
-        MainMenu.clearScreen();
+        Extension.clearScreen();
         System.out.println("==== ADD CUSTOMER ====");
         System.out.println("Truoc tien, ban can phai dang ky tai khoan: ");
         String username;
@@ -135,7 +129,7 @@ public class ManageCustomerMenu implements ManageMenu{
 
     @Override
     public void removeMenu() {
-        MainMenu.clearScreen();
+        Extension.clearScreen();
         while (true) {
             System.out.println("==== BLOCK CUSTOMER ====");
             cm.showList();
@@ -152,7 +146,7 @@ public class ManageCustomerMenu implements ManageMenu{
                 continue;
             }
 
-            System.out.print("Ban co chac muon xoa khach hang nay:  " + inputID + " ? (y/n): ");
+            System.out.print("Ban co chac muon xoa khach hang nay khoi danh sach:  " + inputID + " ? (y/n): ");
             String confirm = sc.nextLine().trim();
 
             if (confirm.equalsIgnoreCase("y")) {
@@ -172,7 +166,7 @@ public class ManageCustomerMenu implements ManageMenu{
 
     @Override
     public void updateMenu() {
-        MainMenu.clearScreen();
+        Extension.clearScreen();
         System.out.println("==== UPDATE CUSTOMER ====");
         cm.showList();
         System.out.print("Nhap ID khach hang muon cap nhat (hoac nhap 0 de quay lai): ");
@@ -219,7 +213,7 @@ public class ManageCustomerMenu implements ManageMenu{
 
     @Override
     public void viewMenu() {
-        MainMenu.clearScreen();
+        Extension.clearScreen();
         System.out.println("==== VIEW CUSTOMER ====");
         cm.showList();
         System.out.print("Nhap ID (hoac Ho va Ten) khach hang muon xem (Nhap 0 de quay lai): ");

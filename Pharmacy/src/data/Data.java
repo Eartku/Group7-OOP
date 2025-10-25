@@ -118,55 +118,55 @@ public class Data {
         P00006|Metformin|Hop|65000.0|24|2 vien/ngay|Metformin 500mg|true|D
         P00007|Loratadine|Hop|50000.0|18|1 vien/ngay|Loratadine 10mg|false|D
         P00008|Prednisolone|Hop|90000.0|12|1 vien/ngay|Prednisolone 5mg|true|D
-        P00009|Dung dich muoi sinh ly|Chai|20000.0|12|Rua mui, ve sinh vet thuong|Bidiphar|Ve sinh|N
+        P00009|DD NaCl 0,9%|Chai|20000.0|12|Rua mui, ve sinh vet thuong|Bidiphar|Ve sinh|N
         P00010|Gel rua tay|Chai|45000.0|18|Diet khuan tay|Lifebuoy|Ve sinh|N
-        P00011|Khau trang y te|Hop|40000.0|6|Loc bui, bao ve ho hap|Nam Anh|Dung cu y te|N
+        P00011|Khau trang|Hop|40000.0|6|Loc bui, bao ve ho hap|Nam Anh|Dung cu y te|N
         P00012|Bong y te|Go|25000.0|48|Dung de sat trung vet thuong|Viet Duc|Dung cu y te|N
         P00013|Nuoc sat trung|Chai|60000.0|24|Diet khuan nhanh tren tay|Green Cross|Ve sinh|N
-        P00014|Dau goi dau thao duoc|Chai|80000.0|18|Giam rung toc, lam mem toc|Thorakao|My pham|N
+        P00014|Dau thao duoc|Chai|80000.0|18|Giam rung toc, lam mem toc|Thorakao|My pham|N
         """;
 
         String batches =
         """
-        B00001|P00001|120|05/03/2024|true
-        B00002|P00002|150|10/03/2024|true
-        B00003|P00003|200|15/03/2024|true
-        B00004|P00004|180|22/03/2024|true
-        B00005|P00005|160|30/03/2024|false
-        B00006|P00006|140|02/04/2024|true
-        B00007|P00007|220|10/04/2024|true
-        B00008|P00008|130|15/04/2024|false
-        B00009|P00009|250|25/04/2024|true
-        B00010|P00010|300|02/05/2024|true
-        B00011|P00011|400|10/05/2024|true
-        B00012|P00012|350|18/05/2024|true
-        B00013|P00013|270|25/05/2024|true
-        B00014|P00014|180|01/06/2024|true
-        B00015|P00002|190|15/06/2024|false
+        B00001|P00001|120|05/03/2025|true
+        B00002|P00002|150|10/03/2025|true
+        B00003|P00003|200|15/03/2025|true
+        B00004|P00004|180|22/03/2025|true
+        B00005|P00005|160|30/03/2025|false
+        B00006|P00006|140|02/04/2025|true
+        B00007|P00007|220|10/04/2025|true
+        B00008|P00008|130|15/04/2025|false
+        B00009|P00009|250|25/04/2025|true
+        B00010|P00010|300|02/05/2025|true
+        B00011|P00011|400|10/05/2025|true
+        B00012|P00012|350|18/05/2025|true
+        B00013|P00013|270|25/05/2025|true
+        B00014|P00014|180|01/06/2025|true
+        B00015|P00002|190|15/06/2025|false
         """;
 
         String orders =
         """
-        O00001|C00001|05/10/2025
-        O00002|C00001|12/10/2025
-        O00003|C00001|20/10/2025
-        O00004|C00002|06/10/2025
-        O00005|C00002|14/10/2025
-        O00006|C00002|21/10/2025
-        O00007|C00003|08/10/2025
-        O00008|C00003|15/10/2025
-        O00009|C00003|22/10/2025
-        O00010|C00004|09/10/2025
-        O00011|C00004|18/10/2025
-        O00012|C00005|10/10/2025
-        O00013|C00005|19/10/2025
-        O00014|C00006|11/10/2025
-        O00015|C00006|20/10/2025
-        O00016|C00007|12/10/2025
-        O00017|C00007|21/10/2025
-        O00018|C00007|22/10/2025
-        O00019|C00005|25/10/2025
-        O00020|C00002|28/10/2025
+        O00001|C00001|05/10/2025|Confirmed
+        O00002|C00001|12/10/2025|Confirmed
+        O00003|C00001|20/10/2025|Confirmed
+        O00004|C00002|06/10/2025|Confirmed
+        O00005|C00002|14/10/2025|Confirmed
+        O00006|C00002|21/10/2025|Confirmed
+        O00007|C00003|08/10/2025|Confirmed
+        O00008|C00003|15/10/2025|Confirmed
+        O00009|C00003|22/10/2025|Confirmed
+        O00010|C00004|09/10/2025|Confirmed
+        O00011|C00004|18/10/2025|Confirmed
+        O00012|C00005|10/10/2025|Confirmed
+        O00013|C00005|19/10/2025|Confirmed
+        O00014|C00006|11/10/2025|Confirmed
+        O00015|C00006|20/10/2025|Confirmed
+        O00016|C00007|12/10/2025|Confirmed
+        O00017|C00007|21/10/2025|Confirmed
+        O00018|C00007|22/10/2025|Confirmed
+        O00019|C00005|25/10/2025|Confirmed
+        O00020|C00002|28/10/2025|Confirmed
         """;
 
         String orderItems =

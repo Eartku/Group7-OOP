@@ -19,7 +19,7 @@ public class ManageProductsMenu implements ManageMenu{
 
     @Override
     public void mainMenu(){
-        MainMenu.clearScreen();
+        Extension.clearScreen();
 
         if (pm == null) {
             System.out.println("Khong the quan ly san pham!");
@@ -27,7 +27,7 @@ public class ManageProductsMenu implements ManageMenu{
         }
 
         while (true) {
-            MainMenu.clearScreen();
+            Extension.clearScreen();
             System.out.println("==== PRODUCT MANAGER ====");
             System.out.println(pm.report());
             pm.showList();
@@ -37,13 +37,7 @@ public class ManageProductsMenu implements ManageMenu{
             System.out.println("4. Tim kiem san pham");
             System.out.println("0. Thoat");
             System.out.print("Chon: ");
-            int choice;
-            try {
-                choice = Integer.parseInt(sc.nextLine().trim());
-            } catch (NumberFormatException _) {
-                System.out.println("Nhap so tu 0-4!");
-                continue;
-            }
+            int choice = Extension.readIntInRange("Nhap lua chon (0-4):", 0, 4, sc);
 
             switch (choice) {
                 case 1 -> {
@@ -69,7 +63,7 @@ public class ManageProductsMenu implements ManageMenu{
 
     @Override
     public void addMenu(){
-        MainMenu.clearScreen();
+        Extension.clearScreen();
         System.out.println("==== ADD NEW PRODUCT ====");
         
         String PID = Data.generateNewID(ProductManager.FILE_PATH, 'P');
@@ -156,7 +150,7 @@ public class ManageProductsMenu implements ManageMenu{
 
     @Override
     public void removeMenu() {
-        MainMenu.clearScreen();
+        Extension.clearScreen();
         while (true) {
             System.out.println("==== REMOVE PRODUCT ====");
             pm.showList();
@@ -193,7 +187,7 @@ public class ManageProductsMenu implements ManageMenu{
 
     @Override
     public void updateMenu() {
-        MainMenu.clearScreen();
+        Extension.clearScreen();
         System.out.println("==== EDIT PRODUCT ====");
         pm.showList();
         System.out.print("Nhap ID hoac ten san pham muon chinh sua (hoac nhap 0 de quay lai): ");
@@ -265,7 +259,7 @@ public class ManageProductsMenu implements ManageMenu{
 
     @Override
     public void viewMenu() {
-            MainMenu.clearScreen();
+            Extension.clearScreen();
             while(true){
             System.out.println("==== VIEW PRODUCTS ====");
             pm.showList();

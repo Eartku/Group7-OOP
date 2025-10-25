@@ -7,13 +7,13 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import models.Batch;
 import models.OrderItem;
 import models.Product;
+import view.Extension;
 
 
 // Inventory hay Batch_Management
@@ -117,11 +117,16 @@ public class Inventory implements Management<Batch>{
     }
 
     @Override
-    public void showList(){
-        int i = 1;
-        for(Batch b : inv){
-            System.out.println(i+ ". " + b.getBatchId() + "[" + b.getProduct().getName() + "," + b.getQuantity() + "]" + b.getImportDate());
-            i++;
+     public void showList(){
+        Extension.printTableHeader("Ma lo hang","Ma san pham","Ten san pham","So luong","Ngay nhap lo hang","Trang thai","Canh bao");
+        for (Batch elem : inv) {
+            String status = switch(elem.getExpiryStatus(30)){
+                case 1 -> "Sap het han";
+                case 0 -> "Con han";
+                case -1 ->"Qua han";
+                default -> "Nothing";
+            };
+            Extension.printTableRow(elem.getBatchId(),elem.getProduct().getPID(),elem.getProduct().getName(),elem.getQuantity(),elem.getImportDate(), elem.getActive()?"Hoat dong":"Da khoa", status);
         }
     }
 
@@ -134,24 +139,6 @@ public class Inventory implements Management<Batch>{
     public void delete(String ID){
         inv.removeIf(u -> u.getBatchId().equals(ID));
     } 
-
-    public void reportExpiringBatch(ProductManager pm){
-        LocalDate today = LocalDate.now();
-        final int warningDay = 30;
-        boolean found = false;
-
-        System.out.println("DANH SACH LO HANG SAP HET HAN (Duoi 30 ngay)");
-        for(Batch b : inv){
-            long daysleft = ChronoUnit.DAYS.between(today, b.getExpiryDate());
-            if(daysleft <= warningDay){
-                Product p = pm.get(b.getProduct().getPID());
-                System.out.println(b.getBatchId() + "| SP: "+ p.getName() + "| Nhap ngay: " + b.getImportDate() + "| còn" + daysleft + "ngay | SL: " + b.getQuantity());
-                found = true;
-            }
-        }
-        if(!found) System.out.println("Khong co san pham sap het han");
-
-    }
 
 
     @Override

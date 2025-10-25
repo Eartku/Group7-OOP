@@ -13,6 +13,7 @@ import java.util.Scanner;
 import models.Drug;
 import models.NonDrug;
 import models.Product;
+import view.Extension;
 
 
 public class ProductManager implements Management<Product>{
@@ -120,7 +121,7 @@ public class ProductManager implements Management<Product>{
         System.out.println("Co nhieu san pham trung ten, hay chon STT:");
         for (int i = 0; i < matched.size(); i++) {
             Product p = matched.get(i);
-            System.out.println((i + 1) + ". " + p.getPID() + " | " + p.getName() + " | " + p.getPrice() + " VND");
+            System.out.println((i + 1) + "\t|\t" + p.getPID() + "\t|\t " + p.getName() + "\t|\t " + p.getPrice() + " VND");
         }
 
         System.out.print("Nhap STT: ");
@@ -138,10 +139,9 @@ public class ProductManager implements Management<Product>{
 
     @Override
     public void showList(){
-        int i = 1;
-        for (Product p : products) {
-            System.out.println(i + ". " + p.getPID() + "-" + p.getName() + ": " + p.getPrice() +" VND");
-            i++;
+        Extension.printTableHeader("Ma san pham","Ten san pham","Don vi","Gia ca","Han dung");
+        for (Product elem : products) {
+            Extension.printTableRow(elem.getPID(),elem.getName(),elem.getUnit(),elem.getPrice()+"VND",elem.getShelfLifeInfo());
         }
     }
 
@@ -212,5 +212,6 @@ public class ProductManager implements Management<Product>{
             System.out.println("Loi khi luu san pham: " + e.getMessage());
         }
     }
+    public int length(){return products.size();}
 }
 

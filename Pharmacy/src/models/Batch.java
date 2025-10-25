@@ -3,6 +3,7 @@ package models;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
+import java.time.temporal.ChronoUnit;
 
 public class Batch implements Comparable<Batch>{
     private String BID;
@@ -64,6 +65,16 @@ public class Batch implements Comparable<Batch>{
     public boolean isExpired() {
         return expiryDate != null && LocalDate.now().isAfter(expiryDate);
     }
+    public int getExpiryStatus(int warningDays) {
+        if (expiryDate == null) return 0;
+        LocalDate today = LocalDate.now();
+        long daysLeft = ChronoUnit.DAYS.between(today, expiryDate);
+
+        if (daysLeft < 0) return -1;            // quá hạn
+        if (daysLeft <= warningDays) return 1;  // sắp hết hạn
+        return 0;                               // còn hạn
+    }
+
 
     @Override
     public String toString() {

@@ -14,31 +14,24 @@ import service.ProductManager;
 public class InventoryMenu {
     public static void showMenu(Inventory inv, ProductManager pm){
         Scanner sc = new Scanner(System.in);
-        MainMenu.clearScreen();
+        Extension.clearScreen();
 
         if (inv == null) {
             System.out.println("Khong the quan ly Kho hang!");
             return;
         }
         while (true) {
-            MainMenu.clearScreen();
+            Extension.clearScreen();
             System.out.println("==== INVENTORY MANAGER ====\n");
             System.out.println(inv.report() + "\n");
             inv.showList();
-            inv.reportExpiringBatch(pm);
             System.out.println("\n1. Nhap lo hang moi");
             System.out.println("2. Xuat lo hang trong kho");
             System.out.println("3. Chinh sua lo hang");
             System.out.println("4. Tim kiem lo hang");
             System.out.println("0. Thoat");
             System.out.print("Chon: ");
-            int choice;
-            try {
-                choice = Integer.parseInt(sc.nextLine());
-            } catch (NumberFormatException _) {
-                System.out.println("Nhap so tu 0-4!");
-                continue;
-            }
+            int choice = Extension.readIntInRange("Nhap lua chon (0-4):", 0, 4, sc);
 
             switch (choice) {
                 case 1 -> {
@@ -63,7 +56,7 @@ public class InventoryMenu {
     }
 
     public static void AddBatch(Scanner sc, Inventory inv, ProductManager pm){
-        MainMenu.clearScreen();
+        Extension.clearScreen();
         System.out.println("==== ADD NEW BATCH ====");
         
         String BID = Data.generateNewID(Inventory.FILE_PATH, 'B');
@@ -114,7 +107,7 @@ public class InventoryMenu {
 
     //Menu 
         public static void RemoveBatch(Scanner sc, Inventory inv) {
-        MainMenu.clearScreen();
+        Extension.clearScreen();
         System.out.println("==== REMOVE BATCH ====");
 
         while (true) {
@@ -163,7 +156,7 @@ public class InventoryMenu {
 
 
     public static void EditBatch(Scanner sc, Inventory inv) {
-        MainMenu.clearScreen();
+        Extension.clearScreen();
         System.out.println("==== EDIT BATCH ====");
 
         while (true) {
@@ -261,7 +254,7 @@ public class InventoryMenu {
 
 
     public static void ViewBatch(Scanner sc, Inventory inv) {
-        MainMenu.clearScreen();
+        Extension.clearScreen();
         System.out.println("==== VIEW BATCH ====");
         inv.showList(); // hiển thị danh sách các lô hiện có
 

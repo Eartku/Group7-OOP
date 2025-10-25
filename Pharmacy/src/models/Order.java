@@ -11,6 +11,7 @@ public class Order implements  Comparable<Order>{
     private final List<OrderItem> items;
     private Customer customer;
     private LocalDate purchaseDate;
+    private String status;
 
     private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 
@@ -21,18 +22,20 @@ public class Order implements  Comparable<Order>{
         this.purchaseDate = null;
     }
 
-    public Order(String OID, List<OrderItem> items, Customer customer) {
+    public Order(String OID, List<OrderItem> items, Customer customer, String status) {
         this.OID = OID;
         this.items = new ArrayList<>(items);
         this.customer = customer;
         this.purchaseDate = LocalDate.now();
+        this.status = status;
     }
 
-    public Order(String OID, List<OrderItem> items, Customer customer, LocalDate purchasDate) {
+    public Order(String OID, List<OrderItem> items, Customer customer, LocalDate purchasDate, String status) {
         this.OID = OID;
         this.items = new ArrayList<>(items);
         this.customer = customer;
         this.purchaseDate = purchasDate;
+        this.status = status;
     }
 
     public String getOID() { return OID; }
@@ -70,6 +73,9 @@ public class Order implements  Comparable<Order>{
         }
         return total;
     }
+
+    public String getStatus() { return status; }
+    public void setStatus(String status) { this.status = status; }
 
     @Override
     public String toString() {

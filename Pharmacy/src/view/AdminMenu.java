@@ -15,7 +15,8 @@ public class AdminMenu {
         ManageUserMenu mu = new ManageUserMenu(cm, um, sc);
         ManageCustomerMenu mc = new ManageCustomerMenu(cm, um, sc);
         ManageProductsMenu mp = new ManageProductsMenu(pm, sc);
-        MainMenu.clearScreen();
+        ManageOrderMenu mo = new ManageOrderMenu(sc, pm, cm, um, inv, om);
+        Extension.clearScreen();
         while (true) {
             System.out.println();
             System.out.println("==== MENU ADMIN ====");
@@ -26,11 +27,11 @@ public class AdminMenu {
             System.out.println("5. Quan ly cac don hang");
             System.out.println("0. Dang xuat");
             System.out.print("Nhap lua chon: ");
-            int choice = Integer.parseInt(sc.nextLine().trim());
+            int choice = Extension.readIntInRange("Nhap lua chon (0-5):", 0, 5, sc);
 
             switch (choice) {
                 case 0 -> {
-                    System.out.println("Dang xuat thanh cong!\n");
+                    Extension.dotAnimation("Dang dang xuat", choice, "Dang xuat thanh cong!");
                     return;
                 }
                 case 1 -> {
@@ -52,7 +53,7 @@ public class AdminMenu {
                 }
                 case 5 -> {
                     System.out.println("Quan ly cac don hang");
-                    ManageOrderMenu.showMenu(pm, cm, um, inv, om);
+                    mo.mainMenu();
                 }
                 default -> System.out.println("Khong hop le!");
             }

@@ -2,7 +2,6 @@ package view;
 
 import data.Data;
 import interfaces.Authenticable;
-import java.io.IOException;
 import java.util.Scanner;
 import service.CustomerManager;
 import service.Inventory;
@@ -11,20 +10,7 @@ import service.ProductManager;
 import service.UserManager;
 
 public class MainMenu{
-    public static void clearScreen() {
-        try {
-            if (System.getProperty("os.name").toLowerCase().contains("windows")) {
-                // Windows
-                new ProcessBuilder("cmd", "/c", "cls").inheritIO().start().waitFor();
-            } else {
-       
-                System.out.print("\033[H\033[2J");
-                System.out.flush();
-            }
-        } catch (IOException | InterruptedException e) {
-            System.out.println("Không thể xóa màn hình: " + e.getMessage());
-        }
-    }
+
     public static void showMenu(){
         Data.initData();
         UserManager um = new UserManager();
@@ -43,17 +29,17 @@ public class MainMenu{
             System.out.println("2. Dang ky tai khoan");
             System.out.println("0. Thoat");
             System.out.print("Chon: ");
-            int choice;
-            try {
-                choice = Integer.parseInt(sc.nextLine());
-            } catch (NumberFormatException _) {
-                System.out.println("Nhap so tu 0-2!");
-                continue;
-            }
+            int choice =Extension.readIntInRange("Nhap lua chon (0-2):", 0, 2, sc);
 
             switch (choice) {
-                case 1 -> {currentUser = AuthMenu.Login(sc, um, cm);}
-                case 2 -> {currentUser = AuthMenu.Register(sc, um, cm);}
+                case 1 -> {
+                    currentUser = AuthMenu.Login(sc, um, cm);
+                    Extension.dotAnimation("Dang dang nhap", choice, "Dang nhap thanh cong!");
+                }
+                case 2 -> {
+                    currentUser = AuthMenu.Register(sc, um, cm);
+                    Extension.dotAnimation("...", choice, "Dang ky thanh cong!");
+                }
                 case 0 -> {
                     System.out.println("Thoat chuong trinh. Tam biet!");
                     sc.close();

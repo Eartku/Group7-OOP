@@ -14,14 +14,14 @@ public class GuestMenu {
     private static final Scanner sc = new Scanner(System.in);
 
     public static void showMenu(Authenticable user, UserManager um, CustomerManager cm, ProductManager pm,  Inventory inv, OrderManager om){
-        MainMenu.clearScreen();
+        Extension.clearScreen();
         Guest guest = (Guest) user;
         while (true) {
             System.out.println("==== MENU GUEST ====");
             System.out.println("1. Cap nhat thong tin ca nhan");
             System.out.println("0. Dang xuat");
             System.out.print("Nhap lua chon: ");
-            int choice = Integer.parseInt(sc.nextLine().trim());
+            int choice = Extension.readIntInRange("Nhap lua chon (0 & 1):", 0, 1, sc);
 
             switch (choice) {
                 case 0 -> {

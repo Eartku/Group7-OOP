@@ -102,7 +102,7 @@ public class CustomerManager implements Management<Customer>{
         @Override
     public void showList(){
         for (Customer p : customers) {
-            System.out.println(p.getCID() + "-" + p.getFullname());
+            System.out.println(p.getCID() + "|\t" + p.getFullname());
         }
     }
 
