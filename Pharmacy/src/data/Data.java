@@ -98,99 +98,99 @@ public class Data {
         
         String customers =
         """
-        C00001|Aurora Le|01/01/2000|Hanoi|aurora01@example.com|0900000001|aurora01
-        C00002|Lan Anh|10/10/1992|Ho Chi Minh City|lan_anh92@example.com|0900000002|lan_anh92
-        C00003|Shadow X|05/05/1995|Da Nang|shadowx@example.com|0900000003|shadowx
-        C00004|Minh Trang|12/12/1998|Hanoi|minhtrang@example.com|0900000004|minhtrang
-        C00005|Beta Tester|03/03/1990|Hue|beta_tester@example.com|0900000005|beta_tester
-        C00006|Nguyen Rey|07/07/1993|Can Tho|vietnam_rey@example.com|0900000006|vietnam_rey
-        C00007|Guest One|15/08/2001|Hanoi|guest101@example.com|0900000007|guest101
+        C001|Aurora Le|01/01/2000|Hanoi|aurora01@example.com|0900000001|aurora01
+        C002|Lan Anh|10/10/1992|Ho Chi Minh City|lan_anh92@example.com|09000002|lan_anh92
+        C003|Shadow X|05/05/1995|Da Nang|shadowx@example.com|09000003|shadowx
+        C004|Minh Trang|12/12/1998|Hanoi|minhtrang@example.com|0900000004|minhtrang
+        C005|Beta Tester|03/03/1990|Hue|beta_tester@example.com|0900000005|beta_tester
+        C006|Nguyen Rey|07/07/1993|Can Tho|vietnam_rey@example.com|0900000006|vietnam_rey
+        C007|Guest One|15/08/2001|Hanoi|guest101@example.com|0900000007|guest101
         """ 
         ;
         
         String products =
         """
-        P00001|Paracetamol|Hop|50000.0|6|4 vien/ngay|Paracetamol 500mg|false|D
-        P00002|Amoxicillin|Hop|75000.0|12|3 vien/ngay|Amoxicillin 500mg|true|D
-        P00003|Vitamin C|Lo|30000.0|24|1 vien/ngay|Acid Ascorbic 1000mg|false|D
-        P00004|Cetirizine|Hop|45000.0|12|1 vien/ngay|Cetirizine Hydrochloride 10mg|false|D
-        P00005|Azithromycin|Hop|85000.0|18|1 vien/ngay|Azithromycin 250mg|true|D
-        P00006|Metformin|Hop|65000.0|24|2 vien/ngay|Metformin 500mg|true|D
-        P00007|Loratadine|Hop|50000.0|18|1 vien/ngay|Loratadine 10mg|false|D
-        P00008|Prednisolone|Hop|90000.0|12|1 vien/ngay|Prednisolone 5mg|true|D
-        P00009|DD NaCl 0,9%|Chai|20000.0|12|Rua mui, ve sinh vet thuong|Bidiphar|Ve sinh|N
-        P00010|Gel rua tay|Chai|45000.0|18|Diet khuan tay|Lifebuoy|Ve sinh|N
-        P00011|Khau trang|Hop|40000.0|6|Loc bui, bao ve ho hap|Nam Anh|Dung cu y te|N
-        P00012|Bong y te|Go|25000.0|48|Dung de sat trung vet thuong|Viet Duc|Dung cu y te|N
-        P00013|Nuoc sat trung|Chai|60000.0|24|Diet khuan nhanh tren tay|Green Cross|Ve sinh|N
-        P00014|Dau thao duoc|Chai|80000.0|18|Giam rung toc, lam mem toc|Thorakao|My pham|N
+        P001|Paracetamol|Hop|50000.0|6|4 vien/ngay|Paracetamol 500mg|false|D
+        P002|Amoxicillin|Hop|75000.0|12|3 vien/ngay|Amoxicillin 500mg|true|D
+        P003|Vitamin C|Lo|30000.0|24|1 vien/ngay|Acid Ascorbic 1000mg|false|D
+        P004|Cetirizine|Hop|45000.0|12|1 vien/ngay|Cetirizine Hydrochloride 10mg|false|D
+        P005|Azithromycin|Hop|85000.0|18|1 vien/ngay|Azithromycin 250mg|true|D
+        P006|Metformin|Hop|65000.0|24|2 vien/ngay|Metformin 500mg|true|D
+        P007|Loratadine|Hop|50000.0|18|1 vien/ngay|Loratadine 10mg|false|D
+        P008|Prednisolone|Hop|90000.0|12|1 vien/ngay|Prednisolone 5mg|true|D
+        P009|DD NaCl 0,9%|Chai|20000.0|12|Rua mui, ve sinh vet thuong|Bidiphar|Ve sinh|N
+        P010|Gel rua tay|Chai|45000.0|18|Diet khuan tay|Lifebuoy|Ve sinh|N
+        P011|Khau trang|Hop|40000.0|6|Loc bui, bao ve ho hap|Nam Anh|Dung cu y te|N
+        P012|Bong y te|Go|25000.0|48|Dung de sat trung vet thuong|Viet Duc|Dung cu y te|N
+        P013|Nuoc sat trung|Chai|60000.0|24|Diet khuan nhanh tren tay|Green Cross|Ve sinh|N
+        P014|Dau thao duoc|Chai|80000.0|18|Giam rung toc, lam mem toc|Thorakao|My pham|N
         """;
 
         String batches =
         """
-        B00001|P00001|120|05/03/2025|true
-        B00002|P00002|150|10/03/2025|true
-        B00003|P00003|200|15/03/2025|true
-        B00004|P00004|180|22/03/2025|true
-        B00005|P00005|160|30/03/2025|false
-        B00006|P00006|140|02/04/2025|true
-        B00007|P00007|220|10/04/2025|true
-        B00008|P00008|130|15/04/2025|false
-        B00009|P00009|250|25/04/2025|true
-        B00010|P00010|300|02/05/2025|true
-        B00011|P00011|400|10/05/2025|true
-        B00012|P00012|350|18/05/2025|true
-        B00013|P00013|270|25/05/2025|true
-        B00014|P00014|180|01/06/2025|true
-        B00015|P00002|190|15/06/2025|false
+        B001|P001|120|05/03/2025|true
+        B002|P002|150|10/03/2025|true
+        B003|P003|200|15/03/2025|true
+        B004|P004|180|22/03/2025|true
+        B005|P005|160|30/03/2025|false
+        B006|P006|140|02/08/2024|true
+        B007|P007|220|10/04/2025|true
+        B008|P008|130|15/04/2025|false
+        B009|P009|250|25/08/2024|true
+        B0010|P0010|300|02/05/2025|true
+        B0011|P0011|400|10/05/2023|true
+        B0012|P012|350|18/05/2025|true
+        B013|P0013|270|25/05/2025|true
+        B0014|P0014|180|01/06/2025|true
+        B0015|P002|190|15/06/2025|false
         """;
 
         String orders =
         """
-        O00001|C00001|05/10/2025|Confirmed
-        O00002|C00001|12/10/2025|Confirmed
-        O00003|C00001|20/10/2025|Confirmed
-        O00004|C00002|06/10/2025|Confirmed
-        O00005|C00002|14/10/2025|Confirmed
-        O00006|C00002|21/10/2025|Confirmed
-        O00007|C00003|08/10/2025|Confirmed
-        O00008|C00003|15/10/2025|Confirmed
-        O00009|C00003|22/10/2025|Confirmed
-        O00010|C00004|09/10/2025|Confirmed
-        O00011|C00004|18/10/2025|Confirmed
-        O00012|C00005|10/10/2025|Confirmed
-        O00013|C00005|19/10/2025|Confirmed
-        O00014|C00006|11/10/2025|Confirmed
-        O00015|C00006|20/10/2025|Confirmed
-        O00016|C00007|12/10/2025|Confirmed
-        O00017|C00007|21/10/2025|Confirmed
-        O00018|C00007|22/10/2025|Confirmed
-        O00019|C00005|25/10/2025|Confirmed
-        O00020|C00002|28/10/2025|Confirmed
+        H001|C001|05/10/2025|Confirmed
+        H002|C001|12/10/2025|Confirmed
+        H003|C001|20/10/2025|Confirmed
+        H004|C002|06/10/2025|Confirmed
+        H005|C002|14/10/2025|Confirmed
+        H006|C002|21/10/2025|Confirmed
+        H007|C003|08/10/2025|Confirmed
+        H008|C003|15/10/2025|Confirmed
+        H009|C003|22/10/2025|Confirmed
+        H010|C004|09/10/2025|Confirmed
+        H011|C004|18/10/2025|Confirmed
+        H012|C005|10/10/2025|Confirmed
+        H013|C005|19/10/2025|Confirmed
+        H014|C006|11/10/2025|Confirmed
+        H015|C006|20/10/2025|Confirmed
+        H016|C007|12/10/2025|Confirmed
+        H017|C007|21/10/2025|Confirmed
+        H018|C007|22/10/2025|Confirmed
+        H019|C005|25/10/2025|Confirmed
+        H020|C002|28/10/2025|Confirmed
         """;
 
         String orderItems =
         """
-        O00001|P00001|2|P00003|1|P00007|3
-        O00002|P00002|1|P00005|2|P00006|1
-        O00003|P00003|3|P00004|2
-        O00004|P00005|2|P00001|1|P00009|1
-        O00005|P00002|2|P00006|3
-        O00006|P00007|2|P00008|1
-        O00007|P00003|2|P00004|2|P00010|1
-        O00008|P00001|1|P00005|1|P00013|2
-        O00009|P00006|3|P00007|1
-        O00010|P00008|2|P00009|1
-        O00011|P00010|2|P00012|3
-        O00012|P00011|3|P00013|2
-        O00013|P00002|2|P00003|1|P00014|1
-        O00014|P00005|2|P00006|2
-        O00015|P00007|3|P00009|2
-        O00016|P00004|1|P00011|2|P00012|1
-        O00017|P00001|2|P00013|2
-        O00018|P00002|1|P00010|1|P00014|1
-        O00019|P00003|2|P00007|3
-        O00020|P00006|2|P00008|1|P00009|2
+        H001|P001|2|P003|1|P007|3
+        H002|P002|1|P005|2|P006|1
+        H003|P003|3|P004|2
+        H004|P005|2|P001|1|P009|1
+        H005|P002|2|P006|3
+        H006|P007|2|P008|1
+        H007|P003|2|P004|2|P0010|1
+        H008|P001|1|P005|1|P013|2
+        H009|P006|3|P007|1
+        H010|P008|2|P009|1
+        H011|P010|2|P012|3
+        H012|P011|3|P013|2
+        H013|P002|2|P003|1|P014|1
+        H014|P005|2|P006|2
+        H015|P007|3|P009|2
+        H016|P004|1|P001|2|P012|1
+        H017|P001|2|P013|2
+        H018|P002|1|P010|1|P014|1
+        H019|P003|2|P007|3
+        H020|P006|2|P008|1|P009|2
         """;
 
         createdata("resources/users.txt", users);

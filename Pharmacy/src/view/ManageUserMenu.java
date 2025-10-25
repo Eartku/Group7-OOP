@@ -17,6 +17,7 @@ public class ManageUserMenu implements ManageMenu {
     private final CustomerManager cm;
     private final UserManager um;
     private final Scanner sc;
+    private boolean active = false;
 
     public ManageUserMenu(CustomerManager cm, UserManager um, Scanner sc) {
         this.cm = cm;
@@ -38,14 +39,16 @@ public class ManageUserMenu implements ManageMenu {
             Extension.clearScreen();
             System.out.println("==== USER MANAGER ====");
             System.out.println(um.report());
-            um.showList();
+            if(active) um.showList(); else um.hidePassList();
             System.out.println("1. Them User");
             System.out.println("2. Xoa User theo username");
             System.out.println("3. Cap nhat User theo username");
             System.out.println("4. Xem thong tin user theo username");
+            System.out.println("5. Che do AN mat khau");
+            System.out.println("6. che do HIEN mat khau");
             System.out.println("0. Thoat");
             System.out.print("Chon: ");
-            int choice = Extension.readIntInRange("Nhap lua chon (0-4):", 0, 4, sc);
+            int choice = Extension.readIntInRange("Nhap lua chon (0-4):", 0, 6, sc);
 
             switch (choice) {
                 case 1 -> {
@@ -60,6 +63,12 @@ public class ManageUserMenu implements ManageMenu {
                 }
                 case 4 -> {
                     viewMenu();
+                }
+                case 5 -> {
+                    this.active = false;
+                }
+                case 6 -> {
+                    this.active = true;
                 }
                 case 0 -> {
                     System.out.println("Thoat chuong trinh. Tam biet!");
@@ -155,7 +164,7 @@ public class ManageUserMenu implements ManageMenu {
         Extension.clearScreen();
         while (true) {
             System.out.println("==== REMOVE USER ====");
-            um.showList();
+            if(active) um.showList(); else um.hidePassList();
             System.out.print("Nhap Username ban muon xoa (hoac nhap 0 de quay lai): ");
             String username = sc.nextLine().trim();
 
@@ -191,7 +200,7 @@ public class ManageUserMenu implements ManageMenu {
     public void updateMenu() {
         Extension.clearScreen();
         System.out.println("==== EDIT USER ====");
-        um.showList();
+        if(active) um.showList(); else um.hidePassList();
         System.out.print("Nhap username muon cap nhat (hoac nhap 0 de quay lai): ");
         String oldUsername = sc.nextLine().trim();
         
@@ -294,7 +303,7 @@ public class ManageUserMenu implements ManageMenu {
         while(true){
             Extension.clearScreen();
             System.out.println("==== VIEW USER ====");
-            um.showList();
+            if(active) um.showList(); else um.hidePassList();
             System.out.print("Nhap username ban muon xem (Nhap 0 de quay lai): ");
             String username = sc.nextLine().trim();
 
@@ -309,19 +318,22 @@ public class ManageUserMenu implements ManageMenu {
                 return;
             }
 
-            System.out.println("----- THONG TIN USER [" + username +"] -----");
-            System.out.println("Username: " + user.getUsername());
-            System.out.println("Password: " + user.getPassword());
-            if (user instanceof Admin) {
-                System.out.println("Role: [Admin]");
-            } else if (user instanceof Customer c) {
-                System.out.println("Role: [Customer]");
-                c = cm.getbyUsername(username);
-                if(c != null) ManageCustomerMenu.printCustomer(c);
-                else System.out.println("Khach hang khong ton tai trong he thong!");
-            } else if (user instanceof Guest) {
-                System.out.println("Role: [Guest]");
-            }
+            Extension.printInBox(() -> {
+                System.out.println("----- THONG TIN USER [" + username +"] -----");
+                System.out.println("Username: " + user.getUsername());
+                System.out.println("Password: " + user.getPassword());
+                if (user instanceof Admin) {
+                    System.out.println("Role: [Admin]");
+                } else if (user instanceof Customer c) {
+                    System.out.println("Role: [Customer]");
+                    c = cm.getbyUsername(username);
+                    if(c != null) ManageCustomerMenu.printCustomer(c);
+                    else System.out.println("Khach hang khong ton tai trong he thong!");
+                } else if (user instanceof Guest) {
+                    System.out.println("Role: [Guest]");
+                }
+            });
+
             System.out.print("Quay lai? Hay nhap 0: ");
             String choice = sc.nextLine().trim();
             if (choice.equals("0")) {

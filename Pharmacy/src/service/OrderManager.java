@@ -42,7 +42,7 @@ public class OrderManager implements Management<Order> {
         try(BufferedReader br = new BufferedReader(new FileReader(file))){
             String line;
             while((line = br.readLine())!=null){
-                String[] parts = line.split(";");
+                String[] parts = line.split("\\|");
                 if(parts[0].equals(OID)){
                     for (int i = 1; i < parts.length; i+= 2){
                         String pid = parts[i];

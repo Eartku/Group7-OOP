@@ -1,6 +1,8 @@
 package view;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.PrintStream;
 import java.util.Scanner;
 
 public class Extension {
@@ -82,6 +84,43 @@ public class Extension {
             System.out.print("-".repeat(colWidth));
         }
         System.out.println();
+    }
+    public static String maskPassword(String password, String mode) {
+        if (password == null) return null;
+        return mode.repeat(password.length());
+    }
+
+    public static void printInBox(Runnable r) {
+        // Bước 1: redirect output
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        PrintStream ps = new PrintStream(baos);
+        PrintStream oldOut = System.out;
+        System.setOut(ps);
+
+        // Bước 2: chạy code gốc
+        r.run();
+
+        // Bước 3: khôi phục output
+        System.out.flush();
+        System.setOut(oldOut);
+
+        // Bước 4: in khung
+        String[] lines = baos.toString().split("\r?\n");
+        int boxWidth = 33;
+        String border = "+" + "-".repeat(boxWidth+2) + "+";
+        System.out.println(border);
+        for (String line : lines) {
+            if (line.length() > boxWidth) {
+                // Tự động wrap dòng dài
+                for (int i = 0; i < line.length(); i += boxWidth) {
+                    String sub = line.substring(i, Math.min(i + boxWidth, line.length()));
+                    System.out.printf("| %-33s |\n", sub);
+                }
+            } else {
+                System.out.printf("| %-33s |\n", line);
+            }
+        }
+        System.out.println(border);
     }
 
 }

@@ -12,6 +12,7 @@ import java.util.List;
 import models.Admin;
 import models.Customer;
 import models.Guest;
+import view.Extension;
 
 
 public class UserManager implements Management<Authenticable>{
@@ -99,8 +100,28 @@ public class UserManager implements Management<Authenticable>{
 
     @Override
     public void showList(){
-        for (Authenticable u : users) {
-            System.out.println(u.getUsername() + "|" + u.getRole());
+        Extension.printTableHeader("Username","Password(Show)","Role");
+        for (Authenticable elem : users) {
+            String role = switch(elem.getRole()){
+                case 1 -> "Customer";
+                case 2 -> "Admin";
+                case 0 -> "Guest";
+                default -> "Nothing";
+            };
+            Extension.printTableRow(elem.getUsername(),elem.getPassword(),role);
+        }
+    }
+
+    public void hidePassList(){
+        Extension.printTableHeader("Username","Password(Hide)","Role");
+        for (Authenticable elem : users) {
+            String role = switch(elem.getRole()){
+                case 1 -> "Customer";
+                case 2 -> "Admin";
+                case 0 -> "Guest";
+                default -> "Nothing";
+            };
+            Extension.printTableRow(elem.getUsername(),Extension.maskPassword(elem.getPassword(),"*"),role);
         }
     }
 
