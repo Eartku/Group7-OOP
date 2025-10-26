@@ -13,7 +13,7 @@ public class UserManager implements Management<Authenticable> {
 
     private static final String FILE_PATH = System.getProperty("user.dir") + "/resources/users.txt";
 
-    private final Map<String, Authenticable> users = new HashMap<>(); // key = username
+    private final Map<String, Authenticable> users = new TreeMap<>(); // key = username
     private final CustomerManager cm;
 
     public UserManager(CustomerManager cm) {
