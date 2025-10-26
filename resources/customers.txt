@@ -1,7 +1,7 @@
-C001|Aurora Le|01/01/2000|Hanoi|aurora01@example.com|0900000001|aurora01
-C002|Lan Anh|10/10/1992|Ho Chi Minh City|lan_anh92@example.com|09000002|lan_anh92
-C003|Shadow X|05/05/1995|Da Nang|shadowx@example.com|09000003|shadowx
-C004|Minh Trang|12/12/1998|Hanoi|minhtrang@example.com|0900000004|minhtrang
-C005|Beta Tester|03/03/1990|Hue|beta_tester@example.com|0900000005|beta_tester
-C006|Nguyen Rey|07/07/1993|Can Tho|vietnam_rey@example.com|0900000006|vietnam_rey
-C007|Guest One|15/08/2001|Hanoi|guest101@example.com|0900000007|guest101
+lan_anh92|lanA!992021|1
+aurora01|P@ssw0rd!23|1
+guest101|guest_pass101|1
+vietnam_rey|VnR3y_88|1
+beta_tester|B3taTest#1|1
+minhtrang|MtR@ng2025|1
+shadowx|sh4d0wX777|1

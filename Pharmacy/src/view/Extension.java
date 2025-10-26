@@ -56,11 +56,11 @@ public class Extension {
         System.out.println(end);
     }
     public static void printTableHeader(String... headers) {
-        int colWidth = 20;
+        int colWidth = 30;
         printLine(headers.length, colWidth);
         // In tên cột
         for (String h : headers) {
-            System.out.printf(" %-20s", h);
+            System.out.printf(" %-30s", h);
         }
         System.out.println();
 
@@ -71,10 +71,10 @@ public class Extension {
     public static void printTableRow(Object... values) {
         System.out.print("|");
         for (Object v : values) {
-            System.out.printf(" %-20s", v);
+            System.out.printf(" %-30s", v);
         }
         System.out.println();
-        printLine(values.length, 20);
+        printLine(values.length, 30);
     }
 
     // Hàm phụ in dòng kẻ

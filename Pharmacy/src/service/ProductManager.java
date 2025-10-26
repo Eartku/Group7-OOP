@@ -17,7 +17,7 @@ import view.Extension;
 
 
 public class ProductManager implements Management<Product>{
-    public static final String FILE_PATH = "resources/products.txt";
+    public static final String FILE_PATH = System.getProperty("user.dir") + "/resources/products.txt";
     private final List<Product> products;
 
     public ProductManager() {

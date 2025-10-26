@@ -13,8 +13,8 @@ public class MainMenu{
 
     public static void showMenu(){
         Data.initData();
-        UserManager um = new UserManager();
         CustomerManager cm = new CustomerManager();
+        UserManager um = new UserManager(cm);
         ProductManager pm = new ProductManager();
         Inventory inv = new Inventory(pm);
         OrderManager om = new OrderManager(pm, cm);

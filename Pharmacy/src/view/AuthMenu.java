@@ -54,7 +54,7 @@ public class AuthMenu {
                 break;
             }
         }
-        Authenticable newUser = new Guest(username, password);
+        Authenticable newUser = new Guest(username, password, true);
         um.add(newUser);
         um.save();
         System.out.println("Dang ky thanh cong!");
@@ -82,7 +82,7 @@ public class AuthMenu {
                         if(user.checkPassword(password)){
                             System.out.println("Password hop le!");
                             if (user instanceof Customer) {
-                                Customer c = cm.getbyUsername(user.getUsername());
+                                Customer c = cm.getByUsername(username);
                                 if (c != null) return c; // trả về Customer đầy đủ
                             }
                                 return user;
@@ -122,7 +122,7 @@ public class AuthMenu {
         } else throw new IllegalArgumentException("Unknown user type!");
     }
 
-    public static Customer updateProfile(Guest g, Scanner sc, UserManager um){
+    public static Customer updateProfile(Guest g, Scanner sc, UserManager um, CustomerManager cm){
         Extension.clearScreen();
         System.out.println("=== CAP NHAT THONG TIN CA NHAN ===");
         String CID = Data.generateNewID("resources/customers.txt", 'C');
@@ -159,12 +159,18 @@ public class AuthMenu {
             dobDate,
             address, 
             email, 
-            phone
+            phone,
+            true
         );
-        Data.changeRole(g.getUsername(), "resources/users.txt", 1);
-        um.appendCustomer("resources/customers.txt", customer);
 
+        cm.add(customer);
+        cm.save();
 
+        um.replaceUser(g, customer);
+        um.save();
+
+        System.out.println("Đã cập nhật hồ sơ thành công! Bạn đã trở thành khách hàng chính thức.");
         return customer;
     }
+
 }

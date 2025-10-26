@@ -14,6 +14,9 @@ public interface Authenticable {
     // Lấy role 
     int getRole();
 
+    boolean getStatus();
+    void setStatus(boolean status);
+
     // Đặt role 
     void setRole(int role);
 }

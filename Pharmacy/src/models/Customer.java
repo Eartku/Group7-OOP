@@ -15,8 +15,8 @@ public class Customer extends User implements Comparable<Customer>{
 
     private static DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 
-    public Customer(String username, String password) {
-        super(username, password, 1);
+    public Customer(String username, String password, boolean  status) {
+        super(username, password, 1, status);
         this.CID = "";
         this.fullname = "";
         this.dob = null;
@@ -24,9 +24,9 @@ public class Customer extends User implements Comparable<Customer>{
         this.email = "";
         this.phone = "";
     }
-    // Constructor
-    public Customer(String username, String password, String CID, String fullname, LocalDate dob, String address, String email, String phone) {
-    super(username, password, 1); 
+    // Constructor cho việc tạo khách hàng trong admin ( giao dịch tại nhà thuốc)
+    public Customer(String username, String password, String CID, String fullname, LocalDate dob, String address, String email, String phone, boolean status) {
+    super(username, password, 1, status); 
     this.CID = CID;
     this.fullname = fullname;
     this.dob = dob;
@@ -35,14 +35,16 @@ public class Customer extends User implements Comparable<Customer>{
     this.phone = phone; 
     }
 
-    public Customer(String username, String CID, String fullname, LocalDate dob, String address, String email, String phone) {
-    super(username, "", 1); 
+    // constructor cho việc đọc lại file
+    public Customer(String username, String CID, String fullname, LocalDate dob, String address, String email, String phone, boolean status) {
+    super(username, "", 1, status); 
     this.CID = CID;
     this.fullname = fullname;
     this.dob = dob;
     this.address = address;
     this.email = email;
-    this.phone = phone; 
+    this.phone = phone;
+    this.status = status;
     }
 
     // Getter và Setter
@@ -81,7 +83,7 @@ public class Customer extends User implements Comparable<Customer>{
     }
 
     public String toStringProfile(){
-        return  CID + "|" + fullname + "|" + getDobdate() + "|" + address + "|" + email + "|" + phone + "|" + username;
+        return  CID + "|" + fullname + "|" + getDobdate() + "|" + address + "|" + email + "|" + phone + "|" + username + "|" + status;
     }
 
     @Override

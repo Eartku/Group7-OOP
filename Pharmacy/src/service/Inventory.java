@@ -18,7 +18,7 @@ import view.Extension;
 
 // Inventory hay Batch_Management
 public class Inventory implements Management<Batch>{
-    public static final String FILE_PATH = "resources/inventory.txt";
+    public static final String FILE_PATH = System.getProperty("user.dir") + "/resources/inventory.txt";
     private final List<Batch> inv;
 
     public Inventory(ProductManager pm) {

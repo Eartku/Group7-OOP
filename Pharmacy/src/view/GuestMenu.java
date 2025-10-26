@@ -19,9 +19,10 @@ public class GuestMenu {
         while (true) {
             System.out.println("==== MENU GUEST ====");
             System.out.println("1. Cap nhat thong tin ca nhan");
+            System.out.println("2. Xem san pham");
             System.out.println("0. Dang xuat");
             System.out.print("Nhap lua chon: ");
-            int choice = Extension.readIntInRange("Nhap lua chon (0 & 1):", 0, 1, sc);
+            int choice = Extension.readIntInRange("Nhap lua chon (0-2):", 0, 2, sc);
 
             switch (choice) {
                 case 0 -> {
@@ -32,7 +33,7 @@ public class GuestMenu {
                     Customer newCustomer = guest.toCustomer();
                     if (newCustomer != null) {
                         System.out.println("=== CAP NHAT THONG TIN ===");
-                        AuthMenu.updateProfile(guest, sc, um);
+                        AuthMenu.updateProfile(guest, sc, um, cm);
                         um.upgradeGuestToCustomer(guest, newCustomer);
 
                     System.out.println("Ban da duoc nang cap thanh KHACH HANG thanh cong!");
@@ -40,6 +41,10 @@ public class GuestMenu {
                     AuthMenu.getMenu(newCustomer, um, cm, pm, inv, om);
                     return;
                     }
+                }
+                case 2 ->{
+                    ManageProductsMenu mp = new ManageProductsMenu(pm, sc);
+                    mp.viewMenu();
                 }
                 default -> System.out.println("Khong hop le!");
             }

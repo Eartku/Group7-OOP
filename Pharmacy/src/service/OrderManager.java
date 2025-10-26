@@ -21,8 +21,8 @@ import view.Extension;
 
 public class OrderManager implements Management<Order> {
     //các đơn hàng sẽ được lưu trong file "orders.txt"
-    public static final String FILE_PATH = "resources/orders.txt";
-    private static final String FILE_PATH_2 = "resources/orderitems.txt";
+    public static final String FILE_PATH = System.getProperty("user.dir") + "/resources/orders.txt";
+    private static final String FILE_PATH_2 = System.getProperty("user.dir") +"/resources/orderitems.txt";
 
     //quản lý bằng ArrayList
     private final List<Order> orders;
@@ -119,6 +119,10 @@ public class OrderManager implements Management<Order> {
             for (Order u : orders) {
                 fl.append(u.getOID()); 
                 for (OrderItem item : u.getItems()) {
+                    if (item.getProduct() == null) {
+                        System.err.println("Bỏ qua item NULL trong hóa đơn " + u.getOID());
+                        continue; // bỏ qua sản phẩm lỗi
+                    }
                     fl.append("|").append(item.getProduct().getPID());
                     fl.append("|").append(String.valueOf(item.getQuantity()));
                 }
@@ -134,7 +138,20 @@ public class OrderManager implements Management<Order> {
     public void showList(){
         Extension.printTableHeader("Ma don hang","Ma khach hang","So san pham","Trang thai","Ngay dat mua");
         for (Order elem : orders) {
-            Extension.printTableRow(elem.getOID(),elem.getCustomer().getCID(),elem.getItems().size(),elem.getStatus(),elem.getpurchaseDate());
+            if(!elem.getStatus().equals("Canceled")){
+                if(elem.getCustomer() == null){
+                    System.out.println("Error Customer data");
+                }
+                Extension.printTableRow(elem.getOID(),elem.getCustomer().getCID(),elem.getItems().size(),elem.getStatus(),elem.getpurchaseDate());
+            }
+        }
+    }
+
+    public void showBlackList(){
+        Extension.printTableHeader("Ma don hang","Ma khach hang","So san pham","Trang thai","Ngay dat mua");
+        for (Order elem : orders) {
+            if(elem.getStatus().equals("Canceled"))
+                Extension.printTableRow(elem.getOID(),elem.getCustomer().getCID(),elem.getItems().size(),elem.getStatus(),elem.getpurchaseDate());
         }
     }
 

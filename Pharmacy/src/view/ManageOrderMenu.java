@@ -56,6 +56,7 @@ public class ManageOrderMenu implements ManageMenu{
             System.out.println("2. Xoa HOA DON");
             System.out.println("3. Cap nhat thong tin HOA DON (Khong co)");
             System.out.println("4. Truy xuat HOA DON");
+            System.out.println("5. Xem cac HOA DON bi huy");
             System.out.println("0. Thoat");
             System.out.print("Chon: ");
             int choice = Extension.readIntInRange("Nhap lua chon (0-4):", 0, 4, sc);
@@ -71,6 +72,9 @@ public class ManageOrderMenu implements ManageMenu{
                     updateMenu();
                 }
                 case 4 -> {
+                    viewMenu();
+                }
+                case 5 -> {
                     viewMenu();
                 }
                 case 0 -> {
@@ -163,8 +167,8 @@ public class ManageOrderMenu implements ManageMenu{
                     } else break;
                 }
 
-                Guest g = new Guest(username, password);
-                c = AuthMenu.updateProfile(g, sc, um);
+                Guest g = new Guest(username, password, true);
+                c = AuthMenu.updateProfile(g, sc, um, cm);
 
                 if (c instanceof Customer customer) {
                     um.add(customer);
@@ -277,7 +281,7 @@ public class ManageOrderMenu implements ManageMenu{
 
     //Menu 
     @Override
-    public void removeMenu() {
+    public void removeMenu() { // hàm xóa này chỉ đơn giản là đặt trang thái đon hàng là "Canceled"
         Extension.clearScreen();
         while (true) {
             System.out.println("==== REMOVE ORDER ====");
@@ -296,7 +300,7 @@ public class ManageOrderMenu implements ManageMenu{
             String confirm = sc.nextLine().trim();
 
             if (confirm.equalsIgnoreCase("y")) {
-                om.delete(inputID); // giả sử là hàm void
+                om.get(inputID).setStatus("Canceled");
                 System.out.println("Da xoa san pham: " + inputID);
                 om.save();
             } else {
@@ -357,7 +361,7 @@ public class ManageOrderMenu implements ManageMenu{
 
             // chi tiet HOA DON
             Extension.printInBox(() -> printOrderDetails(order));
-
+            
             System.out.println("\nNhan Enter de xem don khac, hoac nhap 0 de quay lai.");
             String choice = sc.nextLine().trim();
             if (choice.equals("0")) break;
@@ -370,6 +374,7 @@ public class ManageOrderMenu implements ManageMenu{
         System.out.println("Ma HOA DON: " + order.getOID());
         System.out.println("Ngay dat: " + order.getpurchaseDate().format(FORMATTER));
         System.out.println("Khach hang: " + order.getCustomer().getFullname());
+        System.out.println("Trang thai: " + order.getStatus());
         double total = 0;
         for (OrderItem item : order.getItems()) {
             Product product = item.getProduct();
@@ -413,6 +418,7 @@ public class ManageOrderMenu implements ManageMenu{
             sc.nextLine();
             return;
         }
+        Extension.printInBox(() -> printOrderDetails(order));
 
         System.out.println("Trang thai hien tai: " + order.getStatus());
         System.out.println("Chon trang thai moi:");
@@ -440,34 +446,6 @@ public class ManageOrderMenu implements ManageMenu{
             order.setStatus(newStatus);
             om.save();
             System.out.println("Cap nhat thanh cong trang thai hoa don!");
-        }
-
-        System.out.println("Nhan Enter de quay lai...");
-        sc.nextLine();
-    }
-
-        public void cancelOrderMenu() {
-        Extension.clearScreen();
-        System.out.println("==== HUY HOA DON ====");
-        om.showList();
-        System.out.print("Nhap ID HOA DON muon huy (hoac 0 de quay lai): ");
-        String id = sc.nextLine().trim();
-
-        if (id.equals("0")) return;
-
-        Order order = om.get(id);
-        if (order == null) {
-            System.out.println("Khong tim thay HOA DON!");
-            return;
-        }
-
-        String status = order.getStatus();
-        if (status.equalsIgnoreCase(OrderStatus.PENDING)) {
-            order.setStatus(OrderStatus.CANCELED);
-            om.save();
-            System.out.println("HOA DON da duoc huy thanh cong!");
-        } else {
-            System.out.println("Khong the huy HOA DON da xu ly (" + status + ")");
         }
 
         System.out.println("Nhan Enter de quay lai...");

@@ -6,6 +6,7 @@ abstract class User implements Authenticable{
     protected String username;
     protected String password;
     protected int role;
+    protected boolean status;
     
     public User(){
         this.username = "";
@@ -13,10 +14,11 @@ abstract class User implements Authenticable{
         this.role = -1;
     }
 
-    public User(String username, String password, int role) {
+    public User(String username, String password, int role, boolean status) {
         this.username = username;
         this.password = password;
         this.role = role;
+        this.status = status;
     }
 
     @Override
@@ -37,6 +39,13 @@ abstract class User implements Authenticable{
     public boolean checkPassword(String inputPassword) {
         return getPassword().equals(inputPassword);
     }
+
+    public String getStatusString() { return this.status?"Active":"Block"; }
+    @Override
+    public boolean getStatus() { return this.status;}
+
+    @Override
+    public void setStatus(boolean status) { this.status = status; }
 
     @Override
     public abstract String toString(); // hàm trừu tượng

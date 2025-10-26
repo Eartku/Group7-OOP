@@ -119,7 +119,7 @@ public class ManageCustomerMenu implements ManageMenu{
         System.out.print("So dien thoai: ");
         String phone = sc.nextLine();
 
-        Customer newUser = new Customer(username, password, CID, fullname, dobDate, address, email, phone);
+        Customer newUser = new Customer(username, password, CID, fullname, dobDate, address, email, phone, true);
         cm.add(newUser);
         um.add(newUser);
         System.out.println("Da them khach hang thanh cong!");
@@ -226,7 +226,7 @@ public class ManageCustomerMenu implements ManageMenu{
         Customer user = null;
         if(cm.exists(input)) user = cm.get(input);
         else{
-            ArrayList<Customer> list = cm.getCustomerbyName(input);
+            ArrayList<Customer> list = cm.getCustomerByName(input);
             int i = 0;
             for(Customer u : list){
                 System.out.println(i+ "|| " + u.getCID() + "|" + u.getFullname() + "|"+ u.getUsername());

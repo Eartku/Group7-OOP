@@ -44,8 +44,9 @@ public class ManageUserMenu implements ManageMenu {
             System.out.println("2. Xoa User theo username");
             System.out.println("3. Cap nhat User theo username");
             System.out.println("4. Xem thong tin user theo username");
-            System.out.println("5. Che do AN mat khau");
-            System.out.println("6. che do HIEN mat khau");
+            System.out.println("5. Xem danh sach chan (Blocked)");
+            System.out.println("6. Che do AN mat khau");
+            System.out.println("7. che do HIEN mat khau");
             System.out.println("0. Thoat");
             System.out.print("Chon: ");
             int choice = Extension.readIntInRange("Nhap lua chon (0-4):", 0, 6, sc);
@@ -54,7 +55,6 @@ public class ManageUserMenu implements ManageMenu {
                 case 1 -> {
                     addMenu();
                 }
-
                 case 2 -> {
                     removeMenu();
                 }
@@ -65,9 +65,12 @@ public class ManageUserMenu implements ManageMenu {
                     viewMenu();
                 }
                 case 5 -> {
-                    this.active = false;
+                    viewBlackList();
                 }
                 case 6 -> {
+                    this.active = false;
+                }
+                case 7 -> {
                     this.active = true;
                 }
                 case 0 -> {
@@ -120,8 +123,8 @@ public class ManageUserMenu implements ManageMenu {
         }
 
         Authenticable newUser = switch (role) {
-            case 0 -> new Guest(username, password);
-            case 2 -> new Admin(username, password);
+            case 0 -> new Guest(username, password, true);
+            case 2 -> new Admin(username, password, true);
             case 1 -> {
                 String CID = Data.generateNewID(username, 'C');
                 System.out.print("Ho va ten: ");
@@ -145,8 +148,7 @@ public class ManageUserMenu implements ManageMenu {
                 System.out.print("So dien thoai: ");
                 String phone = sc.nextLine();
 
-                Customer c = new Customer(username, password, CID, fullname, dobDate, address, email, phone);
-                um.appendCustomer("resources/customers.txt", c);
+                Customer c = new Customer(username, password, CID, fullname, dobDate, address, email, phone, true);
                 yield c;
             }
             default -> null;
@@ -154,67 +156,95 @@ public class ManageUserMenu implements ManageMenu {
 
         if (newUser != null) {
             um.add(newUser);
+            if (newUser instanceof Customer c) {
+                cm.add(c);       // thêm vào danh sách khách hàng trong bộ nhớ
+            }
             System.out.println("Da them user thanh cong!");
             um.save();
+            cm.save();
         }
     }
 
     @Override
-        public void removeMenu() {
-        Extension.clearScreen();
-        while (true) {
-            System.out.println("==== REMOVE USER ====");
-            if(active) um.showList(); else um.hidePassList();
-            System.out.print("Nhap Username ban muon xoa (hoac nhap 0 de quay lai): ");
-            String username = sc.nextLine().trim();
-
-            if (username.equals("0")) {
-                System.out.println("Huy thao tac xoa, quay lai menu chinh.");
-                return;
-            }
-
-            if (!um.exists(username)) {
-                System.out.println("Khong co User nao co username: " + username);
-                continue;
-            }
-
-            System.out.print("Ban co chac muon xoa user " + username + " ? (y/n): ");
-            String confirm = sc.nextLine().trim();
-
-            if (confirm.equalsIgnoreCase("y")) {
-                um.delete(username); // hàm void
-                if (!um.exists(username)) {
-                    System.out.println("Da xoa user: " + username);
-                    um.save();
-                } else {
-                    System.out.println("Xoa khong thanh cong!");
-                }
-            } else {
-                System.out.println("Da huy thao tac xoa.");
-            }
-            break;
+    public void removeMenu() {
+        System.out.print("Nhap username (hoac nhap 0 de quay lai): ");
+        String username = sc.nextLine().trim();
+        if (username.equals("0")) {
+            System.out.println("Huy thao tac xoa, quay lai menu chinh.");
+            return;
         }
+        Authenticable user = um.get(username);
+        if (user == null) {
+            System.out.println("Khong tim thay user: " + username);
+            return;
+        }
+
+        if (user instanceof Admin) {
+            System.out.println("Khong the block admin dang dang nhap!");
+            return;
+        }
+
+        user.setStatus(false); // Block user
+        um.save();
+        System.out.println("User " + username + " da bi block (xoa logic).");
     }
+
+    
+    public void removeMenuPhysical() {
+        System.out.print("Nhap username (hoac nhap 0 de quay lai): ");
+        String username = sc.nextLine().trim();
+        if (username.equals("0")) {
+            System.out.println("Huy thao tac xoa, quay lai menu chinh.");
+            return;
+        }
+        Authenticable user = um.get(username);
+        if (user == null) {
+            System.out.println("Khong tim thay user: " + username);
+            return;
+        }
+
+        System.out.print("Ban co chac muon xoa vat ly user " + username + "? (y/n): ");
+        String confirm = sc.nextLine().trim();
+        if (!confirm.equalsIgnoreCase("y")) {
+            System.out.println("Da huy thao tac xoa vat ly.");
+            return;
+        }
+
+        um.delete(username); // xoa khoi UserManager
+        if (user instanceof Customer c) {
+            cm.delete(c.getCID()); 
+            cm.save();
+        }
+        um.save();
+        System.out.println("Da xoa vat ly user: " + username);
+    }
+
 
     @Override
     public void updateMenu() {
         Extension.clearScreen();
         System.out.println("==== EDIT USER ====");
-        if(active) um.showList(); else um.hidePassList();
+        
+        // Hiển thị danh sách user
+        if (active) um.showList(); 
+        else um.hidePassList();
+        
+        // Nhập username cần chỉnh sửa
         System.out.print("Nhap username muon cap nhat (hoac nhap 0 de quay lai): ");
         String oldUsername = sc.nextLine().trim();
-        
         if (oldUsername.equals("0")) {
-                System.out.println("Huy thao tac xoa, quay lai menu chinh.");
-                return;
-            }
+            System.out.println("Huy thao tac, quay lai menu chinh.");
+            return;
+        }
 
-        if (!um.exists(oldUsername)) {
+        // Lấy user cũ, kiểm tra null
+        Authenticable oldUser = um.get(oldUsername);
+        if (oldUser == null) {
             System.out.println("Khong ton tai user voi username: " + oldUsername);
             return;
         }
-        Authenticable oldUser = um.get(oldUsername);
 
+        // Nhập username mới
         String newUsername;
         while (true) {
             System.out.print("Nhap username moi (bo trong neu giu nguyen): ");
@@ -223,80 +253,113 @@ public class ManageUserMenu implements ManageMenu {
                 newUsername = oldUser.getUsername();
                 break;
             }
-            if (newUsername.equals(oldUser.getUsername())) {
-                break;
-            }
-
+            if (newUsername.equals(oldUser.getUsername())) break;
             if (um.exists(newUsername)) {
                 System.out.println("Username da ton tai! Vui long nhap ten khac.");
             } else {
                 break;
             }
         }
-        if (newUsername.isEmpty()) newUsername = oldUser.getUsername();
 
+        // Nhập password mới
         System.out.print("Nhap password moi (bo trong neu giu nguyen): ");
         String newPassword = sc.nextLine().trim();
         if (newPassword.isEmpty()) newPassword = oldUser.getPassword();
 
+        // Nhập role mới
         int newRole = -1;
         while (true) {
             System.out.print("Nhap role moi (Admin: 2 / Customer: 1 / Guest: 0 / bo trong neu giu nguyen): ");
             String input = sc.nextLine().trim();
-
             if (input.isEmpty()) {
-                // giữ nguyên role cũ
                 if (oldUser instanceof Admin) newRole = 2;
                 else if (oldUser instanceof Customer) newRole = 1;
                 else newRole = 0;
                 break;
             }
-
             try {
                 newRole = Integer.parseInt(input);
-                if (newRole == 0 || newRole == 1 || newRole == 2) {
-                    break;
-                } else {
-                    System.out.println("Role chi duoc 0, 1, hoac 2!");
-                }
+                if (newRole >= 0 && newRole <= 2) break;
+                System.out.println("Role chi duoc 0, 1, hoac 2!");
             } catch (NumberFormatException e) {
                 System.out.println("Nhap so nguyen hop le (0-2) hoac bo trong de giu nguyen!");
             }
         }
 
-        Authenticable newUser = null;
-        switch (newRole) {
-            case 0 -> newUser = new Guest(newUsername, newPassword);
-
-            case 1 -> {
-                if (oldUser instanceof Customer) {
-                    Customer fullOld = cm.getbyUsername(oldUsername);
-                    if (fullOld != null) {
-                        newUser = new Customer(
-                            newUsername,
-                            newPassword,
-                            fullOld.getCID(),
-                            fullOld.getFullname(),
-                            fullOld.getDob(),
-                            fullOld.getAddress(),
-                            fullOld.getEmail(),
-                            fullOld.getPhone()
-                        );
-                    } else {
-                        newUser = new Customer(newUsername, newPassword);
-                    }
-                } else {
-                    newUser = new Customer(newUsername, newPassword);
-                }
-            }
-
-            case 2 -> newUser = new Admin(newUsername, newPassword);
+        // Lấy trạng thái cũ
+        boolean oldStatus = oldUser.getStatus();
+        System.out.println("Chon trang thai tai khoan:");
+        System.out.println("1. Active");
+        System.out.println("2. Blocked");
+        System.out.print("Nhap lua chon (1-2, bo trong de giu nguyen): ");
+        String statusInput = sc.nextLine().trim();
+        boolean newStatus = oldStatus; // mặc định giữ nguyên
+        if (!statusInput.isEmpty()) {
+            if (statusInput.equals("1")) newStatus = true;
+            else if (statusInput.equals("2")) newStatus = false;
         }
 
-        um.updateWithRole(newUser, oldUsername);
+        // Tạo user mới theo role
+        Authenticable newUser = null;
+        switch (newRole) {
+            case 0 -> newUser = new Guest(newUsername, newPassword, oldStatus);
+            case 1 -> {
+                Customer fullOld = (oldUser instanceof Customer) ? cm.getByUsername(oldUsername) : null;
+                if (fullOld != null) {
+                    newUser = new Customer(
+                        newUsername,
+                        newPassword,
+                        fullOld.getCID(),
+                        fullOld.getFullname(),
+                        fullOld.getDob(),
+                        fullOld.getAddress(),
+                        fullOld.getEmail(),
+                        fullOld.getPhone(),
+                        newStatus
+                    );
+                } else {
+                    newUser = new Customer(newUsername, newPassword, oldStatus);
+                }
+            }
+            case 2 -> newUser = new Admin(newUsername, newPassword, oldStatus);
+        }
+
+        if (newUser instanceof Customer customer) {
+            Customer oldC = cm.getByUsername(oldUsername);
+            if (oldC != null) {
+                cm.updateCustomer(customer, oldC.getCID());
+            } else {
+                cm.add(customer);
+            }
+        }
+
+
+        if (newUser instanceof Customer customer) {
+            cm.updateCustomer(customer, oldUsername);
+        }
+
         System.out.println("Cap nhat thanh cong user: " + newUsername);
         um.save();
     }
+
+    public void UserInfo(Authenticable user){
+        Extension.printInBox(() -> {
+            System.out.println("----- THONG TIN USER [" + user.getUsername() +"] -----");
+            System.out.println("Username: " + user.getUsername());
+            System.out.println("Password: " + user.getPassword());
+            if (user instanceof Admin) {
+                System.out.println("Role: [Admin]");
+            } else if (user instanceof Customer c) {
+                System.out.println("Role: [Customer]");
+                c = cm.getByUsername(user.getUsername());
+                if(c != null) ManageCustomerMenu.printCustomer(c);
+                else System.out.println("Khach hang khong ton tai trong he thong!");
+            } else if (user instanceof Guest) {
+                System.out.println("Role: [Guest]");
+            }
+        });
+    }
+
 
     @Override
     public void viewMenu() {
@@ -318,21 +381,37 @@ public class ManageUserMenu implements ManageMenu {
                 return;
             }
 
-            Extension.printInBox(() -> {
-                System.out.println("----- THONG TIN USER [" + username +"] -----");
-                System.out.println("Username: " + user.getUsername());
-                System.out.println("Password: " + user.getPassword());
-                if (user instanceof Admin) {
-                    System.out.println("Role: [Admin]");
-                } else if (user instanceof Customer c) {
-                    System.out.println("Role: [Customer]");
-                    c = cm.getbyUsername(username);
-                    if(c != null) ManageCustomerMenu.printCustomer(c);
-                    else System.out.println("Khach hang khong ton tai trong he thong!");
-                } else if (user instanceof Guest) {
-                    System.out.println("Role: [Guest]");
-                }
-            });
+            UserInfo(user);
+            
+            System.out.print("Quay lai? Hay nhap 0: ");
+            String choice = sc.nextLine().trim();
+            if (choice.equals("0")) {
+                System.out.println("Da quay lai menu chinh.");
+                return;
+            }
+        }
+    }
+
+    public void viewBlackList() {
+        while(true){
+            Extension.clearScreen();
+            System.out.println("==== VIEW USER IN BLACKLIST ====");
+            um.blackList();
+            System.out.print("Nhap username ban muon xem (Nhap 0 de quay lai): ");
+            String username = sc.nextLine().trim();
+
+            if (username.equals("0")) {
+                System.out.println("Huy thao tac xoa, quay lai menu chinh.");
+                return;
+            }
+
+            Authenticable user = um.get(username);
+            if (user == null) {
+                System.out.println("Khong tim thay user voi username: " + username);
+                return;
+            }
+
+            UserInfo(user);
 
             System.out.print("Quay lai? Hay nhap 0: ");
             String choice = sc.nextLine().trim();
