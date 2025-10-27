@@ -1,9 +1,10 @@
-admin|admindev|2|true
+admin101|admindev|2|true
+admin3|11223344|2|true
 aurora01|P@ssw0rd!23|1|false
-lan_anh92|lanA!992021|1|true
-shadowx|sh4d0wX777|1|true
-sysroot|r00tAcc3ss!|2|false
-minhtrang|MtR@ng2025|1|false
 beta_tester|B3taTest#1|1|true
-vietnam_rey|VnR3y_88|1|true
 guest101|guest_pass101|1|false
+lan_anh92|lanA!992021|1|false
+shadowfight|sh4d0wX777|1|true
+sysroot|r00tAcc3ss!|2|true
+trang|MtR@ng2025|1|true
+vietnam_rey|VnR3y_88|1|true

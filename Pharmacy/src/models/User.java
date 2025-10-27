@@ -40,6 +40,7 @@ abstract class User implements Authenticable{
         return getPassword().equals(inputPassword);
     }
 
+    @Override
     public String getStatusString() { return this.status?"Active":"Block"; }
     @Override
     public boolean getStatus() { return this.status;}

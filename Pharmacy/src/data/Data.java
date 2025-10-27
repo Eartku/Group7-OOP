@@ -58,8 +58,8 @@ public class Data {
         aurora01|P@ssw0rd!23|1|false
         lan_anh92|lanA!992021|1|true
         shadowx|sh4d0wX777|1|true
-        sysroot|r00tAcc3ss!|2|false
-        minhtrang|MtR@ng2025|1|false
+        sysroot|r00tAcc3ss!|2|true
+        minhtrang|MtR@ng2025|1|true
         beta_tester|B3taTest#1|1|true
         vietnam_rey|VnR3y_88|1|true
         guest101|guest_pass101|1|false
@@ -69,7 +69,7 @@ public class Data {
         C001|Aurora Le|01/01/2000|Hanoi|aurora01@example.com|0900000001|aurora01|false
         C002|Lan Anh|10/10/1992|Ho Chi Minh City|lan_anh92@example.com|0900000002|lan_anh92|true
         C003|Shadow X|05/05/1995|Da Nang|shadowx@example.com|0900000003|shadowx|true
-        C004|Minh Trang|12/12/1998|Hanoi|minhtrang@example.com|0900000004|minhtrang|false
+        C004|Minh Trang|12/12/1998|Hanoi|minhtrang@example.com|0900000004|minhtrang|true
         C005|Beta Tester|03/03/1990|Hue|beta_tester@example.com|0900000005|beta_tester|true
         C006|Nguyen Rey|07/07/1993|Can Tho|vietnam_rey@example.com|0900000006|vietnam_rey|true
         C007|Guest One|15/08/2001|Hanoi|guest101@example.com|0900000007|guest101|false

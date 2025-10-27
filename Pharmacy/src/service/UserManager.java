@@ -85,8 +85,19 @@ public class UserManager implements Management<Authenticable> {
     }
 
     public void replaceUser(Authenticable oldUser, Authenticable newUser) {
-        users.put(oldUser.getUsername(), newUser);
+        if (oldUser == null || newUser == null) return;
+
+        // Xóa user cũ khỏi map (theo username cũ)
+        users.remove(oldUser.getUsername());
+
+        // Thêm user mới vào map (theo username mới)
+        users.put(newUser.getUsername(), newUser);
+
+        // Lưu lại file để đồng bộ dữ liệu
+        save();
     }
+
+
 
     public void updateUser(Authenticable newUser) {
         users.put(newUser.getUsername(), newUser);
@@ -103,7 +114,7 @@ public class UserManager implements Management<Authenticable> {
                     case 0 -> "Guest";
                     default -> "Nothing";
                 };
-                Extension.printTableRow(u.getUsername(), u.getPassword(), role, u.getStatus());
+                Extension.printTableRow(u.getUsername(), u.getPassword(), role, u.getStatusString());
             }
         }
     }
@@ -118,7 +129,7 @@ public class UserManager implements Management<Authenticable> {
                     case 0 -> "Guest";
                     default -> "Nothing";
                 };
-                Extension.printTableRow(u.getUsername(), Extension.maskPassword(u.getPassword(), "-"), role, u.getStatus());
+                Extension.printTableRow(u.getUsername(), Extension.maskPassword(u.getPassword(), "-"), role, u.getStatusString());
             }
         }
     }
@@ -133,7 +144,7 @@ public class UserManager implements Management<Authenticable> {
                     case 0 -> "Guest";
                     default -> "Nothing";
                 };
-                Extension.printTableRow(u.getUsername(), u.getPassword(), role, u.getStatus());
+                Extension.printTableRow(u.getUsername(), u.getPassword(), role, u.getStatusString());
             }
         }
     }

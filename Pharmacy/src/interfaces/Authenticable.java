@@ -15,6 +15,7 @@ public interface Authenticable {
     int getRole();
 
     boolean getStatus();
+    String getStatusString();
     void setStatus(boolean status);
 
     // Đặt role 

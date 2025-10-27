@@ -49,7 +49,7 @@ public class ManageUserMenu implements ManageMenu {
             System.out.println("7. che do HIEN mat khau");
             System.out.println("0. Thoat");
             System.out.print("Chon: ");
-            int choice = Extension.readIntInRange("Nhap lua chon (0-4):", 0, 6, sc);
+            int choice = Extension.readIntInRange("Nhap lua chon (0-4):", 0, 7, sc);
 
             switch (choice) {
                 case 1 -> {
@@ -244,6 +244,9 @@ public class ManageUserMenu implements ManageMenu {
             return;
         }
 
+        String role = (oldUser.getRole() == 0)? "Guest": (oldUser.getRole() == 1 ? "Customer" : "Admin");
+
+        System.out.println("[INFO]: Hien tai User["+ oldUsername + "] dang la "+ role + ", trang thai: " + oldUser.getStatusString());
         // Nhập username mới
         String newUsername;
         while (true) {
@@ -266,7 +269,7 @@ public class ManageUserMenu implements ManageMenu {
         String newPassword = sc.nextLine().trim();
         if (newPassword.isEmpty()) newPassword = oldUser.getPassword();
 
-        // Nhập role mới
+        int oldRole = oldUser.getRole();
         int newRole = -1;
         while (true) {
             System.out.print("Nhap role moi (Admin: 2 / Customer: 1 / Guest: 0 / bo trong neu giu nguyen): ");
@@ -286,6 +289,18 @@ public class ManageUserMenu implements ManageMenu {
             }
         }
 
+        boolean canChange = switch (oldRole) {
+            case 0 -> newRole == 1;
+            case 1, 2 -> newRole == oldRole;
+            default -> false;
+        };
+
+        if (!canChange) {
+            System.out.println("Khong duoc phep thay doi vai tro nay!");
+            return;
+        }
+
+
         // Lấy trạng thái cũ
         boolean oldStatus = oldUser.getStatus();
         System.out.println("Chon trang thai tai khoan:");
@@ -300,13 +315,13 @@ public class ManageUserMenu implements ManageMenu {
         }
 
         // Tạo user mới theo role
-        Authenticable newUser = null;
-        switch (newRole) {
-            case 0 -> newUser = new Guest(newUsername, newPassword, oldStatus);
+        Authenticable newUser = switch (newRole) {
+            case 0 -> new Guest(newUsername, newPassword, oldStatus);
+            case 2 -> new Admin(newUsername, newPassword, oldStatus);
             case 1 -> {
                 Customer fullOld = (oldUser instanceof Customer) ? cm.getByUsername(oldUsername) : null;
                 if (fullOld != null) {
-                    newUser = new Customer(
+                    yield new Customer(
                         newUsername,
                         newPassword,
                         fullOld.getCID(),
@@ -318,24 +333,17 @@ public class ManageUserMenu implements ManageMenu {
                         newStatus
                     );
                 } else {
-                    newUser = new Customer(newUsername, newPassword, oldStatus);
+                    yield new Customer(newUsername, newPassword, newStatus);
                 }
             }
-            case 2 -> newUser = new Admin(newUsername, newPassword, oldStatus);
-        }
+            default -> null;
+        };
 
-        if (newUser instanceof Customer customer) {
-            Customer oldC = cm.getByUsername(oldUsername);
-            if (oldC != null) {
-                cm.updateCustomer(customer, oldC.getCID());
-            } else {
-                cm.add(customer);
-            }
-        }
+        um.replaceUser(oldUser, newUser);
 
-
-        if (newUser instanceof Customer customer) {
-            cm.updateCustomer(customer, oldUsername);
+        if (newUser instanceof Customer newCustomer) {
+            cm.updateCustomer(newCustomer, oldUsername);
+            cm.save();
         }
 
         System.out.println("Cap nhat thanh cong user: " + newUsername);
