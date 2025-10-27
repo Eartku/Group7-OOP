@@ -36,13 +36,14 @@ public class ManageCustomerMenu implements ManageMenu{
             System.out.println("==== CUSTOMER MANAGER ====");
             System.out.println(cm.report());
             cm.showList();
-            System.out.println("1. Them khach hang (Giao dich tai quay)");
-            System.out.println("2. Xoa khach hang theo ID");
-            System.out.println("3. Cap nhat thong tin khach hang theo ID");
-            System.out.println("4. Xem thong tin khach hang theo ID");
+            System.out.println("1. Them khach hang - Add Customer (Danh cho giao dich tai quay)");
+            System.out.println("2. Chan khach hang - Block Customers");
+            System.out.println("3. Bo chan khach hang - Activate Customers");
+            System.out.println("4. Chinh sua thong tin khach hang - Edit Customers INFO");
+            System.out.println("5. Xem thong tin khach hang - View Customers INFO");
             System.out.println("0. Thoat");
             System.out.print("Chon: ");
-            int choice = Extension.readIntInRange("Nhap lua chon (0-4):", 0, 4, sc);
+            int choice = Extension.readIntInRange("Nhap lua chon (0-4):", 0, 5, sc);
 
             switch (choice) {
                 case 1 -> {
@@ -52,9 +53,12 @@ public class ManageCustomerMenu implements ManageMenu{
                     removeMenu();
                 }
                 case 3 -> {
-                    updateMenu();
+                    activeMenu();
                 }
                 case 4 -> {
+                    updateMenu();
+                }
+                case 5 -> {
                     viewMenu();
                 }
                 case 0 -> {
@@ -150,7 +154,7 @@ public class ManageCustomerMenu implements ManageMenu{
             String confirm = sc.nextLine().trim();
 
             if (confirm.equalsIgnoreCase("y")) {
-                cm.delete(inputID); // hàm void
+                cm.get(inputID).setStatus(false);
                 if (!cm.exists(inputID)) {
                     System.out.println("Da chan khach hang: " + inputID );
                     cm.save();
@@ -160,7 +164,54 @@ public class ManageCustomerMenu implements ManageMenu{
             } else {
                 System.out.println("Da huy thao tac CHAN.");
             }
-            break;
+            System.out.println("Ban co muon tiep tuc Chan? [Nhap 0 de thoat | Nhap !=0 de tiep tuc]");
+            String confirm0 = sc.nextLine().trim();
+            if (confirm0.equals("0")) {
+                System.out.println("Quay lai menu chinh.");
+                return;
+            }
+        }
+    }
+
+
+    public void activeMenu() {
+        Extension.clearScreen();
+        while (true) {
+            System.out.println("==== ACTIVE CUSTOMER IN BLACKLIST====");
+            cm.showBlackList();
+            System.out.print("Nhap ID khach hang muon bo chan (hoac nhap 0 de quay lai): ");
+            String inputID = sc.nextLine().trim();
+
+            if (inputID.equals("0")) {
+                System.out.println("Huy thao tac xoa, quay lai menu chinh.");
+                return;
+            }
+
+            if (!cm.exists(inputID)) {
+                System.out.println("Khong co khach hang nao co ID: " + inputID);
+                continue;
+            }
+
+            System.out.print("Ban co chac muon kich hoat lai khach hang nay?:  " + inputID + " ? (y/n): ");
+            String confirm = sc.nextLine().trim();
+
+            if (confirm.equalsIgnoreCase("y")) {
+                cm.get(inputID).setStatus(true);
+                if (!cm.exists(inputID)) {
+                    System.out.println("Da kich hoat khach hang: " + inputID );
+                    cm.save();
+                } else {
+                    System.out.println("Kich hoat khong thanh cong!");
+                }
+            } else {
+                System.out.println("Da huy thao tac KICH HOAT.");
+            }
+            System.out.println("Ban co muon tiep tuc kich hoạt? [Nhap 0 de thoat | Nhap !=0 de tiep tuc]");
+            String confirm0 = sc.nextLine().trim();
+            if (confirm0.equals("0")) {
+                System.out.println("Quay lai menu chinh.");
+                return;
+            }
         }
     }
 

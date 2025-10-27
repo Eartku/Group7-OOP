@@ -64,7 +64,7 @@ public class InventoryMenu {
         while(true){
             System.out.println("Chỉ được nhập các sản phẩm có trong danh mục sau:");
             pm.showList();
-            System.out.print("Nhập số thứ tự sản phẩm (0 để quay lại): ");
+            System.out.print("Nhập ID sản phẩm (0 để quay lại): ");
 
             String input = sc.nextLine().trim();
 
@@ -72,13 +72,16 @@ public class InventoryMenu {
                 System.out.println("Huy thao tac xoa, quay lai menu chinh.");
                 return;
             }
-            int productnum = Integer.parseInt(input);
-            if( productnum < 1) System.out.println("Nam ngoai danh muc san pham");
-            else{
-                p = pm.getbyIndex(productnum);
+            if(!pm.exists(input)) System.out.println("Khong tim thay san pham voi ID: " + input);
+
+            p = pm.get(input);
+            if(p!= null){
+                System.out.println("Them san pham thanh cong!");
                 break;
             }
+            else System.out.println("[WARN] San pham null, vui long chon lai");
         }
+
         long quantity;
         while(true){
             System.out.print("So luong san pham nhap vao: ");

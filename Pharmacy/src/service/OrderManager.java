@@ -159,11 +159,12 @@ public class OrderManager implements Management<Order> {
         ArrayList<OrderItem> list = new ArrayList<>();
         while(true){
             pm.showList();
-            System.out.println("Moi chon san pham muon mua (Nhap 0 de thoat): ");
-            int choice = Extension.readIntInRange("Nhap lua chon (0-4):", 0, pm.length(), sc);
-            if(choice == 0) break;
+            System.out.println("Nhap ten hay ID pham muon mua (Nhap 0 de thoat): ");
+            String choice = sc.nextLine().trim();
+            if(choice.equals("0")) break;
 
-            Product selected = pm.getbyIndex(choice);
+            Product selected = pm.selectProduct(choice, sc);
+
             if(selected == null){
                 System.out.println("San pham khong ton tai!");
                 continue;

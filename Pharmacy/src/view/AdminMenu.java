@@ -20,12 +20,12 @@ public class AdminMenu {
         while (true) {
             System.out.println();
             System.out.println("==== MENU ADMIN ====");
-            System.out.println("1. Quan ly nguoi dung");
-            System.out.println("2. Quan ly san pham kha dung");
-            System.out.println("3. Quan ly khach hang");
-            System.out.println("4. Quan ly kho/lo hang");
-            System.out.println("5. Quan ly cac don hang");
-            System.out.println("0. Dang xuat");
+            System.out.println("1. Quan ly tai khoan - Accounts");
+            System.out.println("2. Quan ly san pham kha dung - Products");
+            System.out.println("3. Quan ly khach hang - Customers");
+            System.out.println("4. Quan ly kho/lo hang - Inventory");
+            System.out.println("5. Quan ly cac don hang - Orders");
+            System.out.println("0. Dang xuat - Logout");
             System.out.print("Nhap lua chon: ");
             int choice = Extension.readIntInRange("Nhap lua chon (0-5):", 0, 5, sc);
 

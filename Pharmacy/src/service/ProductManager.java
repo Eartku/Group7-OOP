@@ -7,9 +7,9 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.Map;
 import java.util.Scanner;
+import java.util.TreeMap;
 import models.Drug;
 import models.NonDrug;
 import models.Product;
@@ -18,88 +18,76 @@ import view.Extension;
 
 public class ProductManager implements Management<Product>{
     public static final String FILE_PATH = System.getProperty("user.dir") + "/resources/products.txt";
-    private final List<Product> products;
+ 
+    private final Map<String, Product> byPID = new TreeMap<>();
 
     public ProductManager() {
-        products = loadProducts();
-        Collections.sort(products);
+        loadProducts();
     }
 
     // lấy p từ file
-        private static List<Product> loadProducts() {
-        List<Product> list = new ArrayList<>();
+        private void loadProducts() {
         File file = new File(FILE_PATH);
-        if (!file.exists()) return list;
+        if (!file.exists()) return ;
+
+        byPID.clear();
 
         try (BufferedReader br = new BufferedReader(new FileReader(file))) {
             String line;
             while ((line = br.readLine()) != null) {
                 String[] parts = line.split("\\|");
-                if (parts.length < 9) continue; // bỏ qua dòng lỗi
+                if (parts.length < 9){
+                    System.out.println("[WARN] Invalid line in customers.txt: " + line);
+                    continue; // bỏ qua dòng lỗi
+                }
 
-                String type = parts[8].trim(); // lấy ký tự D hoặc N để phân biệt trong file txt
-
-                switch (type) {
-                    case "D" -> list.add(new Drug(
-                            parts[0], // PID
-                            parts[1], // name
-                            parts[2], // unit
-                            Double.parseDouble(parts[3]), //price
-                            Integer.parseInt(parts[4]),//SLM
+                String key = parts[8].trim(); // lấy ký tự D hoặc N để phân biệt trong file txt
+                String PID = parts[0].trim(); // PID
+                String name = parts[1].trim();// name
+                String unit = parts[2].trim();
+                double price = Double.parseDouble(parts[3].trim());
+                Integer SLM = Integer.valueOf(parts[4]);
+                Product p = switch (key) {
+                    case "D" -> new Drug(
+                            PID, name, unit, price, SLM,
                             parts[5], // dosage
                             parts[6], // ingredient
-                            Boolean.parseBoolean(parts[7])
-                    ));
+                            Boolean.parseBoolean(parts[7])//pR
+                    );
 
-                    case "N" -> list.add(new NonDrug(
-                            parts[0],
-                            parts[1],
-                            parts[2],
-                            Double.parseDouble(parts[3]),
-                            Integer.parseInt(parts[4]),
-                            parts[5], //type
-                            parts[6], // 
+                    case "N" -> new NonDrug(
+                            PID, name, unit, price, SLM,
+                            parts[5], //man
+                            parts[6], // type
                             parts[7]  // usage
-                    ));
+                    );
 
-                    default -> System.out.println("San phan khong xac dinh: " + type);
-                }
+                    default -> null;
+                };
+                byPID.put(PID, p);
             }
         } catch (Exception e) {
-            System.out.println("Error loading products: " + e.getMessage());
+            System.out.println("[WARN] Error loading products: " + e.getMessage());
         }
-        return list;
     }
 
     // kiểm tra tồn tại pname
     @Override
     public boolean exists(String ID) {
-        for (Product u : products) {
-            if (u.getPID().equals(ID)) {
-                return true;
-            }
-        }
-        return false;
+        boolean found = byPID.containsKey(ID);
+        return found;
     }
 
     @Override
     public Product get(String ID){
-        for (Product u : products) {
-            if (u.getPID().equals(ID))
-                return u;
-        }
-        return null;
+        return byPID.get(ID);
     }
 
-    public Product getbyIndex(int index){
-        return products.get(index-1);
-    }
-
-    public ArrayList<Product> getProductbyName(String keyword){
+    public ArrayList<Product> getProductByName(String keyword) {
         ArrayList<Product> matched = new ArrayList<>();
-        for (Product u : products) {
-            if (u.getName().toLowerCase().contains(keyword.toLowerCase().trim())){
-                matched.add(u);
+        for (Product p : byPID.values()) {
+            if (p.getName().toLowerCase().contains(keyword.toLowerCase().trim())) {
+                matched.add(p);
             }
         }
         return matched;
@@ -107,14 +95,12 @@ public class ProductManager implements Management<Product>{
 
     // thay vì làm dài code phần menu, tái sử dụng trong ProductManger
     public Product selectProduct(String keyword, Scanner sc) {
-        for (Product p : products) {
-            if (p.getPID().equalsIgnoreCase(keyword)) {
-                return p;
-            }
-        }
+        Product direct = byPID.get(keyword);
+        if(direct != null) return direct;
 
-        ArrayList<Product> matched = getProductbyName(keyword);
+        ArrayList<Product> matched = getProductByName(keyword);
         if (matched.isEmpty()) return null;
+        System.out.println("Tìm thấy: " + matched.size());
 
         if (matched.size() == 1) return matched.get(0);
 
@@ -140,36 +126,36 @@ public class ProductManager implements Management<Product>{
     @Override
     public void showList(){
         Extension.printTableHeader("Ma san pham","Ten san pham","Don vi","Gia ca","Han dung");
-        for (Product elem : products) {
+        for (Product elem : byPID.values()) {
             Extension.printTableRow(elem.getPID(),elem.getName(),elem.getUnit(),elem.getPrice()+"VND",elem.getShelfLifeInfo());
         }
     }
 
     @Override
     public void add(Product p){
-        products.add(p);
+        byPID.put(p.getPID(), p);
     }  
 
     @Override
     public void delete(String ID){
-        products.removeIf(u -> u.getPID().equals(ID));
+        byPID.remove(ID);
     }
 
     @Override
     public String report(){
         int count = 0;
-        for (Product p : products) {
+        for (Product p : byPID.values()) {
             if (p instanceof Drug) {
                 count++;
             }
         }
         int count2 = 0;
-        for (Product p : products) {
+        for (Product p : byPID.values()) {
             if (p instanceof NonDrug) {
                 count2++;
             }
         }
-        return "Tong so luong san pham trong he thong: " + products.size() + "\n"
+        return "Tong so luong san pham trong he thong: " + byPID.size() + "\n"
         +  "So luong thuoc: " +  count + "\n"
         +  "So luong phi thuoc " +  count2 + "\n";
     } 
@@ -177,7 +163,7 @@ public class ProductManager implements Management<Product>{
     @Override
     public void save() {
         try (BufferedWriter bw = new BufferedWriter(new FileWriter(FILE_PATH, false))) {
-            for (Product p : products) {
+            for (Product p : byPID.values()) {
                 String line = "";
                 switch (p) {
                     case Drug d -> line = String.join("|",  
@@ -212,6 +198,7 @@ public class ProductManager implements Management<Product>{
             System.out.println("Loi khi luu san pham: " + e.getMessage());
         }
     }
-    public int length(){return products.size();}
+
+    public int length(){return byPID.size();}
 }
 

@@ -6,6 +6,7 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 import models.Customer;
+import view.Extension;
 
 public final class CustomerManager implements Management<Customer> {
 
@@ -20,7 +21,7 @@ public final class CustomerManager implements Management<Customer> {
     }
 
     // Load profile từ file
-    public void loadProfiles() {
+    private void loadProfiles() {
         File file = new File(FILE_PATH);
         if (!file.exists()) {
             return;
@@ -124,9 +125,18 @@ public final class CustomerManager implements Management<Customer> {
 
     @Override
     public void showList() {
-        System.out.println("CID | Fullname");
+        Extension.printTableHeader("Ma khach hang","Ho va ten","Ngay sinh","Dia chi","So dien thoai","Email","Trang thai","Username");
         for (Customer c : byCID.values()) {
-            System.out.println(c.getCID() + " | " + c.getFullname());
+            if(c.getStatus())
+                Extension.printTableRow(c.getCID(),c.getFullname(),c.getDobdate(),c.getAddress(),c.getPhone(),c.getEmail(),c.getStatusString(),c.getUsername());
+        }
+    }
+
+    public void showBlackList() {
+        Extension.printTableHeader("Ma khach hang","Ho va ten","Ngay sinh","Dia chi","So dien thoai","Email","Trang thai","Username");
+        for (Customer c : byCID.values()) {
+            if(!c.getStatus())
+                Extension.printTableRow(c.getCID(),c.getFullname(),c.getDobdate(),c.getAddress(),c.getPhone(),c.getEmail(),c.getStatusString(),c.getUsername());
         }
     }
 

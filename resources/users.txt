@@ -1,8 +1,10 @@
 admin101|admindev|2|true
 admin3|11223344|2|true
+admin4|223606|1|true
 aurora01|P@ssw0rd!23|1|false
 beta_tester|B3taTest#1|1|true
 guest101|guest_pass101|1|false
+huylore|1234567|1|true
 lan_anh92|lanA!992021|1|false
 shadowfight|sh4d0wX777|1|true
 sysroot|r00tAcc3ss!|2|true

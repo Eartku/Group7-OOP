@@ -55,36 +55,45 @@ public class Extension {
         System.out.print("\r" + " ".repeat(message.length() + 2) + "\r");
         System.out.println(end);
     }
+
+
     public static void printTableHeader(String... headers) {
-        int colWidth = 30;
-        printLine(headers.length, colWidth);
-        // In tên cột
-        for (String h : headers) {
-            System.out.printf(" %-30s", h);
-        }
-        System.out.println();
+    int colWidth = 20; // <-- chỉnh ở đây
+    printLine(headers.length, colWidth);
 
-        printLine(headers.length, colWidth);
+    System.out.print("|");
+    for (String h : headers) {
+        System.out.printf(" %-18s |", h); // 18 + 2 khoảng trắng + | = 20
     }
+    System.out.println();
 
-    // In từng hàng dữ liệu có viền
-    public static void printTableRow(Object... values) {
+    printLine(headers.length, colWidth);
+}
+
+public static void printTableRow(Object... values) {
+    int colWidth = 20; // <-- chỉnh ở đây
+    System.out.print("|");
+    for (Object v : values) {
+        String str = v == null ? "" : v.toString();
+        if (str.length() > 18) str = str.substring(0, 15) + "..."; // cắt nếu quá dài
+        System.out.printf(" %-18s |", str);
+    }
+    System.out.println();
+    printLine(values.length, colWidth);
+}
+
+private static void printLine(int colCount, int colWidth) {
+    System.out.print("|");
+    for (int i = 0; i < colCount; i++) {
+        System.out.print("-".repeat(colWidth));
         System.out.print("|");
-        for (Object v : values) {
-            System.out.printf(" %-30s", v);
-        }
-        System.out.println();
-        printLine(values.length, 30);
     }
+    System.out.println();
+}
 
-    // Hàm phụ in dòng kẻ
-    private static void printLine(int colCount, int colWidth) {
-        System.out.print("|");
-        for (int i = 0; i < colCount; i++) {
-            System.out.print("-".repeat(colWidth));
-        }
-        System.out.println();
-    }
+
+
+
     public static String maskPassword(String password, String mode) {
         if (password == null) return null;
         return mode.repeat(password.length());
