@@ -1,6 +1,6 @@
 package service;
 
-import interfaces.Management;
+import interfaces.IManagement;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
@@ -9,9 +9,10 @@ import java.io.IOException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.Scanner;
+import java.util.TreeMap;
 import models.Customer;
 import models.Order;
 import models.OrderItem;
@@ -19,24 +20,27 @@ import models.Product;
 import view.Extension;
 
 
-public class OrderManager implements Management<Order> {
+public class OrderManager implements IManagement<Order> {
     //các đơn hàng sẽ được lưu trong file "orders.txt"
     public static final String FILE_PATH = System.getProperty("user.dir") + "/resources/orders.txt";
     private static final String FILE_PATH_2 = System.getProperty("user.dir") +"/resources/orderitems.txt";
+    private final CustomerManager cm;
+    private final ProductManager pm;
 
     //quản lý bằng ArrayList
-    private final List<Order> orders;
+    private final Map<String, Order> orders = new TreeMap<>();
 
     //constructor
-    public OrderManager(ProductManager pm, CustomerManager cm) {
-        orders = loadOrders(pm, cm);
-        Collections.sort(orders);
+    public OrderManager(CustomerManager cm, ProductManager pm) {
+        this.cm = cm;
+        this.pm = pm;
+        loadOrders();
     }
 
     // load các sản phẩm của lô hàng đó thông qua OID
-    private static List<OrderItem> loadItems(String OID, ProductManager pm){
+    private List<OrderItem> loadItems(String OID){
         List<OrderItem> items = new ArrayList<>();
-        java.io.File file = new File("resources/orderitems.txt"); // định dạng OID;Item1;q1;item2;q2;item3;q3;... với item là obj product
+        java.io.File file = new File(FILE_PATH_2); // định dạng OID;Item1;q1;item2;q2;item3;q3;... với item là obj product
 
         if(!file.exists()) return items;
         try(BufferedReader br = new BufferedReader(new FileReader(file))){
@@ -57,50 +61,42 @@ public class OrderManager implements Management<Order> {
         return items;
     }
     // load các đơn hàng từ file dựa vào OID
-    private static List<Order> loadOrders(ProductManager pm, CustomerManager cm){ // định dạng file: OID|CID|puschasedate|status
-        List<Order> list = new ArrayList<>();
+    private void loadOrders(){ // định dạng file: OID|CID|puschasedate|status
         java.io.File file = new File(FILE_PATH);
-        if(!file.exists()) return list;
+        if(!file.exists()) return;
+        orders.clear();
         try(BufferedReader br = new BufferedReader(new FileReader(file))){
             String line;
             while ((line = br.readLine())!= null){
                 String parts[] = line.split("\\|");
                 String oid = parts[0];
                 String cid = parts[1];
-                String status = parts[3];
+                boolean status = Boolean.parseBoolean(parts[3]);
                 LocalDate purchaseDate;
                 try {
                     purchaseDate = LocalDate.parse(parts[2], DateTimeFormatter.ofPattern("dd/MM/yyyy"));
                 } catch (Exception e) {
                     purchaseDate = null;
                 }
-                list.add(new Order(oid, loadItems(oid, pm), cm.get(cid), purchaseDate, status));
+                orders.put(oid, new Order(oid, loadItems(oid), cm.get(cid), purchaseDate, status));
+
             }
         } catch(Exception e){
             System.out.println("Error: "+ e.getMessage());
         }
-        return list;
     }
 
     // kiểm tra tồn tại theo OID
     @Override
     public boolean exists(String ID) {
-        for (Order u : orders) {
-            if (u.getOID().equals(ID)) {
-                return true;
-            }
-        }
-        return false;
+        boolean found = orders.containsKey(ID);
+        return found;
     }
 
     // lấy đơn hàng theo ID
     @Override
     public Order get(String ID){
-        for (Order u : orders) {
-            if (u.getOID().equals(ID))
-                return u;
-        }
-        return null;
+        return orders.get(ID);
     }
 
     //lưu file cả list user
@@ -108,7 +104,7 @@ public class OrderManager implements Management<Order> {
     public void save() {
         // Ghi order
         try (FileWriter fw = new FileWriter(FILE_PATH, false)) {
-            for (Order u : orders) {
+            for (Order u : orders.values()) {
                 fw.append(u.toString()).append("\n");
             }
         } catch (IOException e) {
@@ -116,7 +112,7 @@ public class OrderManager implements Management<Order> {
         }
 
         try (FileWriter fl = new FileWriter(FILE_PATH_2, false)) {
-            for (Order u : orders) {
+            for (Order u : orders.values()) {
                 fl.append(u.getOID()); 
                 for (OrderItem item : u.getItems()) {
                     if (item.getProduct() == null) {
@@ -137,20 +133,17 @@ public class OrderManager implements Management<Order> {
     @Override
     public void showList(){
         Extension.printTableHeader("Ma don hang","Ma khach hang","So san pham","Trang thai","Ngay dat mua");
-        for (Order elem : orders) {
-            if(!elem.getStatus().equals("Canceled")){
-                if(elem.getCustomer() == null){
-                    System.out.println("Error Customer data");
-                }
+        for (Order elem : orders.values()) {
+            if(elem.getStatus())
                 Extension.printTableRow(elem.getOID(),elem.getCustomer().getCID(),elem.getItems().size(),elem.getStatus(),elem.getpurchaseDate());
-            }
         }
     }
 
-    public void showBlackList(){
+    @Override
+    public void blackList(){
         Extension.printTableHeader("Ma don hang","Ma khach hang","So san pham","Trang thai","Ngay dat mua");
-        for (Order elem : orders) {
-            if(elem.getStatus().equals("Canceled"))
+        for (Order elem : orders.values()) {
+            if(!elem.getStatus())
                 Extension.printTableRow(elem.getOID(),elem.getCustomer().getCID(),elem.getItems().size(),elem.getStatus(),elem.getpurchaseDate());
         }
     }
@@ -199,12 +192,12 @@ public class OrderManager implements Management<Order> {
 
     @Override
     public void add(Order order){
-        orders.add(order);
+        orders.put(order.getOID(), order);
     }  
 
     @Override
     public void delete(String ID){
-        orders.removeIf(u -> u.getOID().equals(ID));
+        orders.remove(ID);
     } 
 
     @Override
@@ -213,7 +206,7 @@ public class OrderManager implements Management<Order> {
     } 
 
     public void history(Customer cs){
-        for (Order o: orders){
+        for (Order o: orders.values()){
             if(o.getCustomer().equals(cs)){
                 System.out.println(o.getOID() + "|\t" + o.getTotal() + "VND");
             }

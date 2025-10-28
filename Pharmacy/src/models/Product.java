@@ -1,6 +1,8 @@
 package models;
 
-public abstract class Product implements Comparable<Product> {
+import interfaces.IStatus;
+
+public abstract class Product implements Comparable<Product>,IStatus {
     protected String PID;
     protected String Name;
     protected String unit;

@@ -17,7 +17,7 @@ public class MainMenu{
         UserManager um = new UserManager(cm);
         ProductManager pm = new ProductManager();
         Inventory inv = new Inventory(pm);
-        OrderManager om = new OrderManager(pm, cm);
+        OrderManager om = new OrderManager(cm, pm);
 
         Scanner sc = new Scanner(System.in);
         Authenticable currentUser = null;

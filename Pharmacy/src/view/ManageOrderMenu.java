@@ -1,8 +1,8 @@
 package view;
 
 import data.Data;
-import interfaces.Authenticable;
-import interfaces.ManageMenu;
+import interfaces.IAuthenticable;
+import interfaces.IManageMenu;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
@@ -20,7 +20,7 @@ import service.OrderManager;
 import service.ProductManager;
 import service.UserManager;
 
-public class ManageOrderMenu implements ManageMenu{
+public class ManageOrderMenu implements IManageMenu{
     private final ProductManager pm;
     private final CustomerManager cm;
     private final UserManager um;
@@ -66,7 +66,7 @@ public class ManageOrderMenu implements ManageMenu{
                     addMenu();
                 }
                 case 2 -> {
-                    removeMenu();
+                    blockMenu();
                 }
                 case 3 -> {
                     updateMenu();
@@ -91,7 +91,7 @@ public class ManageOrderMenu implements ManageMenu{
         Extension.clearScreen();
         System.out.println("==== ADD NEW ORDER ====");
         String OID = Data.generateNewID(OrderManager.FILE_PATH, 'O');
-        Authenticable c;
+        IAuthenticable c;
 
         while (true) {
             System.out.print("Khach hang da co tai khoan chua (y/n): ");
@@ -129,7 +129,7 @@ public class ManageOrderMenu implements ManageMenu{
                         for (OrderItem o : ordered) inv.deductStock(o);
                         inv.save();
 
-                        om.add(new Order(OID, ordered, customer, "Confirmed"));
+                        om.add(new Order(OID, ordered, customer, true));
                         om.save();
 
                         System.out.println("Tao HOA DON thanh cong! Ma don: " + OID);
@@ -195,7 +195,7 @@ public class ManageOrderMenu implements ManageMenu{
                         for (OrderItem o : ordered) inv.deductStock(o);
                         inv.save();
 
-                        om.add(new Order(OID, ordered, customer, "Confirmed"));
+                        om.add(new Order(OID, ordered, customer, true));
                         om.save();
 
                         System.out.println("Tao HOA DON thanh cong! Ma don: " + OID);
@@ -211,8 +211,6 @@ public class ManageOrderMenu implements ManageMenu{
                     return;
                 }
             }
-
-            // ===== TRƯỜNG HỢP: NHẬP LINH TINH =====
             else {
                 System.out.println("Lua chon khong hop le! Vui long nhap lai (y/n).");
             }
@@ -264,7 +262,7 @@ public class ManageOrderMenu implements ManageMenu{
         String confirm = sc.nextLine().trim();
 
         if (confirm.equalsIgnoreCase("y")) {
-            Order order = new Order(OID, ordered, customer, "Pending");
+            Order order = new Order(OID, ordered, customer, true);
             om.add(order);
             om.save();
             inv.save();
@@ -281,10 +279,11 @@ public class ManageOrderMenu implements ManageMenu{
 
     //Menu 
     @Override
-    public void removeMenu() { // hàm xóa này chỉ đơn giản là đặt trang thái đon hàng là "Canceled"
+    public void blockMenu() { 
         Extension.clearScreen();
         while (true) {
-            System.out.println("==== REMOVE ORDER ====");
+            System.out.println("==== INACTIVE ORDER ====");
+            System.out.println("DANH SACH DON HANG ACTIVE ");
             om.showList();
             System.out.print("Nhap ID HOA DON muon xoa (hoac nhap 0 de quay lai): ");
             String inputID = sc.nextLine().trim();
@@ -300,7 +299,38 @@ public class ManageOrderMenu implements ManageMenu{
             String confirm = sc.nextLine().trim();
 
             if (confirm.equalsIgnoreCase("y")) {
-                om.get(inputID).setStatus("Canceled");
+                om.get(inputID).setStatus(false);
+                System.out.println("Da xoa san pham: " + inputID);
+                om.save();
+            } else {
+                System.out.println("Da huy thao tac xoa.");
+            }
+            break; // ra khỏi vòng while sau khi thao tác xong
+        }
+    }
+
+    @Override
+    public void activeMenu() { 
+        Extension.clearScreen();
+        while (true) {
+            System.out.println("==== ACTIVE ORDER ====");
+            System.out.println("DANH SACH DON HANG INACTIVE ");
+            om.blackList();
+            System.out.print("Nhap ID HOA DON muon xoa (hoac nhap 0 de quay lai): ");
+            String inputID = sc.nextLine().trim();
+
+            // 0 → quay lại menu chính
+            if (inputID.equals("0")) {
+                System.out.println("Huy thao tac xoa, quay lai menu chinh.");
+                return;
+            }
+
+            // Xác nhận xóa
+            System.out.print("Ban co chac muon xoa san pham " + inputID + "? (y/n): ");
+            String confirm = sc.nextLine().trim();
+
+            if (confirm.equalsIgnoreCase("y")) {
+                om.get(inputID).setStatus(false);
                 System.out.println("Da xoa san pham: " + inputID);
                 om.save();
             } else {
@@ -422,25 +452,23 @@ public class ManageOrderMenu implements ManageMenu{
 
         System.out.println("Trang thai hien tai: " + order.getStatus());
         System.out.println("Chon trang thai moi:");
-        System.out.println("1. Pending");
-        System.out.println("2. Confirmed");
-        System.out.println("3. Canceled");
+        System.out.println("1. Active");
+        System.out.println("2. Inactive");
         System.out.print("Nhap lua chon: ");
 
-        int choice = Extension.readIntInRange("Nhap lua chon (1-3):", 1, 3, sc);
-        String newStatus;
+        int choice = Extension.readIntInRange("Nhap lua chon (1-3):", 1, 2, sc);
+        boolean newStatus;
 
         switch (choice) {
-            case 1 -> newStatus = OrderStatus.PENDING;
-            case 2 -> newStatus = OrderStatus.CONFIRMED;
-            case 3 -> newStatus = OrderStatus.CANCELED;
+            case 1 -> newStatus = true;
+            case 2 -> newStatus = false;
             default -> {
                 System.out.println("Lua chon khong hop le!");
                 return;
             }
         }
 
-        if (order.getStatus().equalsIgnoreCase(newStatus)) {
+        if (order.getStatus() == (newStatus)){
             System.out.println("Trang thai khong thay doi.");
         } else {
             order.setStatus(newStatus);
@@ -450,13 +478,6 @@ public class ManageOrderMenu implements ManageMenu{
 
         System.out.println("Nhan Enter de quay lai...");
         sc.nextLine();
-    }
-
-
-    public class OrderStatus {
-        public static final String PENDING = "Pending";
-        public static final String CONFIRMED = "Confirmed";
-        public static final String CANCELED = "Canceled";
     }
 
 }

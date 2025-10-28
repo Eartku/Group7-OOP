@@ -186,9 +186,9 @@ public class InventoryMenu {
             System.out.println(" - Ngay nhap: " + b.getImportDate());
             if (b.getExpiryDate() != null)
                 System.out.println(" - Han dung: " + b.getExpiryDate());
-            System.out.println(" - Trang thai lo hang: " + (b.getActive() ? "Active" : "Inactive"));
+            System.out.println(" - Trang thai lo hang: " + (b.getStatusString()));
 
-            //Bat buoc voi cac phan
+
             System.out.println("\nDanh muc chinh sua:");
             System.out.println("1. So luong");
             System.out.println("2. Ngay nhap hang");
@@ -226,11 +226,11 @@ public class InventoryMenu {
                     break;
                 }
                 case "3"-> {
-                    System.out.print("Trang thai hien tai" + (b.getActive() ? "Active" : "Inactive") + ". Xac nhan doi trang thai (y/n): ");
+                    System.out.print("Trang thai hien tai" + (b.getStatusString()) + ". Xac nhan doi trang thai (y/n): ");
                     String c = sc.nextLine().trim();
                     if (c.equalsIgnoreCase("y")) {
-                        b.setActive(!b.getActive());
-                        System.out.println("Doi thanh cong: " + (b.getActive() ? "Active" : "Inactive"));
+                        b.setStatus(!b.getStatus());
+                        System.out.println("Doi thanh cong: " + (b.getStatusString()));
                     }
                     break;
                 }
@@ -284,7 +284,7 @@ public class InventoryMenu {
         System.out.println("Don vi: " + p.getUnit());
         System.out.println("So luong: " + batch.getQuantity());
         System.out.println("Ngay nhap hang: " + batch.getImportDate());
-        System.out.println("Trang thai: " + (batch.getActive() ? "Hoat dong" : "Ngung su dung"));
+        System.out.println("Trang thai: " + (batch.getStatus() ? "Hoat dong" : "Ngung su dung"));
         
         // Nếu sản phẩm là Drug
         switch (p) {

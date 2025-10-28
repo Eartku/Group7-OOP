@@ -1,6 +1,6 @@
 package view;
 
-import interfaces.Authenticable;
+import interfaces.IAuthenticable;
 import java.util.Scanner;
 import models.Customer;
 import service.Inventory;
@@ -10,7 +10,7 @@ import service.ProductManager;
 public class CustomerMenu {
     private static final Scanner sc = new Scanner(System.in);
 
-    public static void showMenu(Authenticable user, ProductManager pm, OrderManager om, Inventory inv){
+    public static void showMenu(IAuthenticable user, ProductManager pm, OrderManager om, Inventory inv){
         
         ManageProductsMenu mp = new ManageProductsMenu(pm, sc);
         Customer customer = (Customer) user;

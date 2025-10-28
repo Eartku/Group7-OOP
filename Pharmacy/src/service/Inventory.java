@@ -1,5 +1,5 @@
 package service;
-import interfaces.Management;
+import interfaces.IManagement;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
@@ -7,9 +7,8 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
 import models.Batch;
 import models.OrderItem;
 import models.Product;
@@ -17,20 +16,21 @@ import view.Extension;
 
 
 // Inventory hay Batch_Management
-public class Inventory implements Management<Batch>{
+public class Inventory implements IManagement<Batch>{
     public static final String FILE_PATH = System.getProperty("user.dir") + "/resources/inventory.txt";
-    private final List<Batch> inv;
+    private final ProductManager pm;
+    private final Map<String, Batch> inv = new TreeMap<>();
 
     public Inventory(ProductManager pm) {
-        inv = loadInventory(pm);
-        Collections.sort(inv);
+        this.pm = pm;
+        loadInventory();
     }
 
     // lấy lo hang từ file
-    private static List<Batch> loadInventory(ProductManager pm){
-        List<Batch> list = new ArrayList<>();
+    private void loadInventory(){
         java.io.File file = new File(FILE_PATH);
-        if(!file.exists()) return list;
+        if(!file.exists()) return;
+        inv.clear();
         try(BufferedReader br = new BufferedReader(new FileReader(file))){
             String line;
             while ((line = br.readLine())!= null){
@@ -46,39 +46,30 @@ public class Inventory implements Management<Batch>{
                     importDate = null;
                 }
                 boolean active = Boolean.parseBoolean(parts[4]);
-                list.add(new Batch(BID, p, quantity, importDate, active));
+                inv.put(BID,(new Batch(BID, p, quantity, importDate, active)));
             }
         }
         catch(Exception e){
             System.out.println("Error: "+ e.getMessage());
         }
-        return list;
     }
 
     // kiểm tra tồn tại ID lo hang
     @Override
     public boolean exists(String ID) {
-        for (Batch u : inv) {
-            if (u.getBatchId().equals(ID)) {
-                return true;
-            }
-        }
-        return false;
+        boolean found = inv.containsKey(ID);
+        return found;
     }
 
     @Override
     public Batch get(String ID){
-        for (Batch u : inv) {
-            if (u.getBatchId().equals(ID))
-                return u;
-        }
-        return null;
+        return inv.get(ID);
     }
 
     public long getStockbyProduct(Product product){
         long total = 0;
-        for (Batch b : inv) {
-            if(b.getProduct().equals(product) && b.getActive() && !b.isExpired()){
+        for (Batch b : inv.values()) {
+            if(b.getProduct().equals(product) && b.getStatus() && !b.isExpired()){
                 total += b.getQuantity();
             }
         }
@@ -87,8 +78,8 @@ public class Inventory implements Management<Batch>{
 
     public void deductStock(OrderItem ordered) {
         long needed = ordered.getQuantity(); 
-        for (Batch b : inv) {
-            if (b.getProduct().equals(ordered.getProduct()) && b.getActive() && !b.isExpired()) {
+        for (Batch b : inv.values()) {
+            if (b.getProduct().equals(ordered.getProduct()) && b.getStatus() && !b.isExpired()) {
                 long available = b.getQuantity();
                 if (needed <= 0) break;
 
@@ -108,7 +99,7 @@ public class Inventory implements Management<Batch>{
     @Override
     public void save() {
         try (FileWriter fw = new FileWriter(FILE_PATH, false)) {
-            for (Batch u : inv) {
+            for (Batch u : inv.values()) {
                 fw.append(u.toString()).append("\n");
             }
         } catch (IOException e) {
@@ -119,31 +110,45 @@ public class Inventory implements Management<Batch>{
     @Override
      public void showList(){
         Extension.printTableHeader("Ma lo hang","Ma san pham","Ten san pham","So luong","Ngay nhap lo hang","Trang thai","Canh bao");
-        for (Batch elem : inv) {
+        for (Batch elem : inv.values()) {
             String status = switch(elem.getExpiryStatus(30)){
                 case 1 -> "Sap het han";
                 case 0 -> "Con han";
                 case -1 ->"Qua han";
                 default -> "Nothing";
             };
-            Extension.printTableRow(elem.getBatchId(),elem.getProduct().getPID(),elem.getProduct().getName(),elem.getQuantity(),elem.getImportDate(), elem.getActive()?"Hoat dong":"Da khoa", status);
+            Extension.printTableRow(elem.getBatchId(),elem.getProduct().getPID(),elem.getProduct().getName(),elem.getQuantity(),elem.getImportDate(), elem.getStatusString(), status);
         }
     }
+    @Override
+    public void blackList(){
+        Extension.printTableHeader("Ma lo hang","Ma san pham","Ten san pham","So luong","Ngay nhap lo hang","Trang thai","Canh bao");
+        for (Batch elem : inv.values()) {
+            String status = switch(elem.getExpiryStatus(30)){
+                case 1 -> "Sap het han";
+                case 0 -> "Con han";
+                case -1 ->"Qua han";
+                default -> "Nothing";
+            };
+            Extension.printTableRow(elem.getBatchId(),elem.getProduct().getPID(),elem.getProduct().getName(),elem.getQuantity(),elem.getImportDate(), elem.getStatusString(), status);
+        }
+    }
+    
 
     @Override
     public void add(Batch batch){
-        inv.add(batch);
+        inv.put(batch.getBatchId(), batch);
     }    
 
     @Override
     public void delete(String ID){
-        inv.removeIf(u -> u.getBatchId().equals(ID));
+        inv.remove(ID);
     } 
 
 
     @Override
     public String report(){
-        return "Tong so luong lo hang ton kho trong he thong: " + inv.size() + "\n";
+        return "Tong so luong lo hang trong he thong: " + inv.size() + "\n";
     }
 }
 

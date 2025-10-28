@@ -1,6 +1,6 @@
 package view;
 
-import interfaces.Authenticable;
+import interfaces.IAuthenticable;
 import java.util.Scanner;
 import models.Customer;
 import models.Guest;
@@ -13,7 +13,7 @@ import service.UserManager;
 public class GuestMenu {
     private static final Scanner sc = new Scanner(System.in);
 
-    public static void showMenu(Authenticable user, UserManager um, CustomerManager cm, ProductManager pm,  Inventory inv, OrderManager om){
+    public static void showMenu(IAuthenticable user, UserManager um, CustomerManager cm, ProductManager pm,  Inventory inv, OrderManager om){
         Guest guest = (Guest) user;
         while (true) {
             Extension.clearScreen();

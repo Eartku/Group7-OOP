@@ -1,7 +1,7 @@
 package view;
 
 import data.Data;
-import interfaces.Authenticable;
+import interfaces.IAuthenticable;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Scanner;
@@ -16,7 +16,7 @@ import service.UserManager;
 
 public class AuthMenu {
 
-    public static Authenticable Register(Scanner sc, UserManager um, CustomerManager cm){
+    public static IAuthenticable Register(Scanner sc, UserManager um, CustomerManager cm){
         Extension.clearScreen();
         System.out.println("______DANG KY_____");
         String username;
@@ -54,14 +54,14 @@ public class AuthMenu {
                 break;
             }
         }
-        Authenticable newUser = new Guest(username, password, true);
+        IAuthenticable newUser = new Guest(username, password, true);
         um.add(newUser);
         um.save();
         System.out.println("Dang ky thanh cong!");
         return newUser;
     }
 
-    public static Authenticable Login(Scanner sc, UserManager um, CustomerManager cm){
+    public static IAuthenticable Login(Scanner sc, UserManager um, CustomerManager cm){
         Extension.clearScreen();
         String username, password; 
         try {
@@ -75,7 +75,7 @@ public class AuthMenu {
                     break;
                 }
                 if(um.exists(username)){
-                    Authenticable user = um.get(username);
+                    IAuthenticable user = um.get(username);
                     while (true){
                         System.out.println("Nhap mat khau: ");
                         password = sc.nextLine();
@@ -112,7 +112,7 @@ public class AuthMenu {
     }
 
     
-    public static void getMenu(Authenticable user, UserManager um, CustomerManager cm, ProductManager pm, Inventory inv, OrderManager om) {
+    public static void getMenu(IAuthenticable user, UserManager um, CustomerManager cm, ProductManager pm, Inventory inv, OrderManager om) {
         if (user instanceof Admin) {
             AdminMenu.showMenu(user,um, cm, pm, inv, om);
         } else if (user instanceof Customer) {

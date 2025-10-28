@@ -1,6 +1,6 @@
 package view;
 
-import interfaces.Authenticable;
+import interfaces.IAuthenticable;
 import java.util.Scanner;
 import service.CustomerManager;
 import service.Inventory;
@@ -11,7 +11,7 @@ import service.UserManager;
 public class AdminMenu {
     private static final Scanner sc = new Scanner(System.in);
 
-    public static void showMenu(Authenticable user, UserManager um, CustomerManager cm, ProductManager pm, Inventory inv, OrderManager om){
+    public static void showMenu(IAuthenticable user, UserManager um, CustomerManager cm, ProductManager pm, Inventory inv, OrderManager om){
         ManageUserMenu mu = new ManageUserMenu(cm, um, sc);
         ManageCustomerMenu mc = new ManageCustomerMenu(cm, um, sc);
         ManageProductsMenu mp = new ManageProductsMenu(pm, sc);

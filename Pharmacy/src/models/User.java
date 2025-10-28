@@ -1,8 +1,9 @@
 package models;
 
-import interfaces.Authenticable;
+import interfaces.IAuthenticable;
+import interfaces.IStatus;
 
-abstract class User implements Authenticable{
+abstract class User implements IAuthenticable, IStatus{
     protected String username;
     protected String password;
     protected int role;

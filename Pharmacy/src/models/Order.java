@@ -1,17 +1,18 @@
 package models;
 
+import interfaces.IStatus;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Order implements  Comparable<Order>{
+public class Order implements  Comparable<Order>,IStatus{
     private String OID;
     private final List<OrderItem> items;
     private Customer customer;
     private LocalDate purchaseDate;
-    private String status;
+    private boolean status;
 
     private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 
@@ -22,7 +23,7 @@ public class Order implements  Comparable<Order>{
         this.purchaseDate = null;
     }
 
-    public Order(String OID, List<OrderItem> items, Customer customer, String status) {
+    public Order(String OID, List<OrderItem> items, Customer customer, boolean status) {
         this.OID = OID;
         this.items = new ArrayList<>(items);
         this.customer = customer;
@@ -30,11 +31,11 @@ public class Order implements  Comparable<Order>{
         this.status = status;
     }
 
-    public Order(String OID, List<OrderItem> items, Customer customer, LocalDate purchasDate, String status) {
+    public Order(String OID, List<OrderItem> items, Customer customer, LocalDate purchaseDate, boolean status) {
         this.OID = OID;
         this.items = new ArrayList<>(items);
         this.customer = customer;
-        this.purchaseDate = purchasDate;
+        this.purchaseDate = purchaseDate;
         this.status = status;
     }
 
@@ -74,8 +75,12 @@ public class Order implements  Comparable<Order>{
         return total;
     }
 
-    public String getStatus() { return status; }
-    public void setStatus(String status) { this.status = status; }
+    @Override
+    public boolean getStatus() { return status; }
+    @Override
+    public void setStatus(boolean status) { this.status = status; }
+    @Override
+    public String getStatusString() {return status?"Active":"Inactive"; }
 
     @Override
     public String toString() {

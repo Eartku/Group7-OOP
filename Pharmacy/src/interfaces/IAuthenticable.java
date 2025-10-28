@@ -1,6 +1,6 @@
 package interfaces;
 
-public interface Authenticable {
+public interface IAuthenticable {
     // một user cần phải được kiểm tra mật khẩu, cần username và role
     
     // Kiểm tra mật khẩu 

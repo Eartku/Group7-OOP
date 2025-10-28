@@ -1,5 +1,5 @@
 package service;
-import interfaces.Management;
+import interfaces.IManagement;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -16,21 +16,21 @@ import models.Product;
 import view.Extension;
 
 
-public class ProductManager implements Management<Product>{
+public class ProductManager implements IManagement<Product>{
     public static final String FILE_PATH = System.getProperty("user.dir") + "/resources/products.txt";
  
-    private final Map<String, Product> byPID = new TreeMap<>();
+    private final Map<String, Product> products = new TreeMap<>();
 
     public ProductManager() {
         loadProducts();
     }
 
     // lấy p từ file
-        private void loadProducts() {
+    private void loadProducts() {
         File file = new File(FILE_PATH);
         if (!file.exists()) return ;
 
-        byPID.clear();
+        products.clear();
 
         try (BufferedReader br = new BufferedReader(new FileReader(file))) {
             String line;
@@ -68,7 +68,7 @@ public class ProductManager implements Management<Product>{
 
                     default -> null;
                 };
-                byPID.put(PID, p);
+                products.put(PID, p);
             }
         } catch (Exception e) {
             System.out.println("[WARN] Error loading products: " + e.getMessage());
@@ -78,18 +78,18 @@ public class ProductManager implements Management<Product>{
     // kiểm tra tồn tại pname
     @Override
     public boolean exists(String ID) {
-        boolean found = byPID.containsKey(ID);
+        boolean found = products.containsKey(ID);
         return found;
     }
 
     @Override
     public Product get(String ID){
-        return byPID.get(ID);
+        return products.get(ID);
     }
 
     public ArrayList<Product> getProductByName(String keyword) {
         ArrayList<Product> matched = new ArrayList<>();
-        for (Product p : byPID.values()) {
+        for (Product p : products.values()) {
             if (p.getName().toLowerCase().contains(keyword.toLowerCase().trim())) {
                 matched.add(p);
             }
@@ -99,7 +99,7 @@ public class ProductManager implements Management<Product>{
 
     // thay vì làm dài code phần menu, tái sử dụng trong ProductManger
     public Product selectProduct(String keyword, Scanner sc) {
-        Product direct = byPID.get(keyword);
+        Product direct = products.get(keyword);
         if(direct != null) return direct;
 
         ArrayList<Product> matched = getProductByName(keyword);
@@ -130,15 +130,16 @@ public class ProductManager implements Management<Product>{
     @Override
     public void showList(){
         Extension.printTableHeader("Ma san pham","Ten san pham","Don vi","Gia ca","Han dung","Trang thai");
-        for (Product elem : byPID.values()) {
+        for (Product elem : products.values()) {
             if(elem.getStatus())
                 Extension.printTableRow(elem.getPID(),elem.getName(),elem.getUnit(),elem.getPrice()+"VND",elem.getShelfLifeInfo(),elem.getStatusString());
         }
     }
 
-    public void showUnvaiableList(){
+    @Override
+    public void blackList(){
         Extension.printTableHeader("Ma san pham","Ten san pham","Don vi","Gia ca","Han dung","Trang thai");
-        for (Product elem : byPID.values()) {
+        for (Product elem : products.values()) {
             if(!elem.getStatus())
             Extension.printTableRow(elem.getPID(),elem.getName(),elem.getUnit(),elem.getPrice()+"VND",elem.getShelfLifeInfo(),elem.getStatusString());
         }
@@ -146,29 +147,29 @@ public class ProductManager implements Management<Product>{
 
     @Override
     public void add(Product p){
-        byPID.put(p.getPID(), p);
+        products.put(p.getPID(), p);
     }  
 
     @Override
     public void delete(String ID){
-        byPID.remove(ID);
+        products.remove(ID);
     }
 
     @Override
     public String report(){
         int count = 0;
-        for (Product p : byPID.values()) {
+        for (Product p : products.values()) {
             if (p instanceof Drug) {
                 count++;
             }
         }
         int count2 = 0;
-        for (Product p : byPID.values()) {
+        for (Product p : products.values()) {
             if (p instanceof NonDrug) {
                 count2++;
             }
         }
-        return "Tong so luong san pham trong he thong: " + byPID.size() + "\n"
+        return "Tong so luong san pham trong he thong: " + products.size() + "\n"
         +  "So luong thuoc: " +  count + "\n"
         +  "So luong phi thuoc " +  count2 + "\n";
     } 
@@ -176,7 +177,7 @@ public class ProductManager implements Management<Product>{
     @Override
     public void save() {
         try (BufferedWriter bw = new BufferedWriter(new FileWriter(FILE_PATH, false))) {
-            for (Product p : byPID.values()) {
+            for (Product p : products.values()) {
                 String line = "";
                 switch (p) {
                     case Drug d -> line = String.join("|",  
@@ -214,6 +215,6 @@ public class ProductManager implements Management<Product>{
         }
     }
 
-    public int length(){return byPID.size();}
+    public int length(){return products.size();}
 }
 

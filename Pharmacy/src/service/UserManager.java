@@ -14,7 +14,6 @@ public class UserManager implements Management<Authenticable> {
     private static final String FILE_PATH = System.getProperty("user.dir") + "/resources/users.txt";
 
     private final Map<String, Authenticable> users = new TreeMap<>(); // key = username
-    private final CustomerManager cm;
 
     public UserManager(CustomerManager cm) {
         this.cm = cm;
@@ -86,21 +85,9 @@ public class UserManager implements Management<Authenticable> {
 
     public void replaceUser(Authenticable oldUser, Authenticable newUser) {
         if (oldUser == null || newUser == null) return;
-
-        // Xóa user cũ khỏi map (theo username cũ)
         users.remove(oldUser.getUsername());
-
-        // Thêm user mới vào map (theo username mới)
         users.put(newUser.getUsername(), newUser);
-
-        // Lưu lại file để đồng bộ dữ liệu
         save();
-    }
-
-
-
-    public void updateUser(Authenticable newUser) {
-        users.put(newUser.getUsername(), newUser);
     }
 
     @Override

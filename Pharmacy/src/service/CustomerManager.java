@@ -1,6 +1,6 @@
 package service;
 
-import interfaces.Management;
+import interfaces.IManagement;
 import java.io.*;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -8,13 +8,13 @@ import java.util.*;
 import models.Customer;
 import view.Extension;
 
-public final class CustomerManager implements Management<Customer> {
+public final class CustomerManager implements IManagement<Customer> {
 
     public static final String FILE_PATH = System.getProperty("user.dir") + "/resources/customers.txt";
 
     // 2 map để lookup nhanh
-    private final Map<String, Customer> byCID = new TreeMap<>();
-    private final Map<String, Customer> byUsername = new TreeMap<>();
+    private final Map<String, Customer> customerByID = new TreeMap<>();
+    private final Map<String, Customer> customerByUsername = new TreeMap<>();
 
     public CustomerManager() {
         loadProfiles();
@@ -27,8 +27,8 @@ public final class CustomerManager implements Management<Customer> {
             return;
         }
 
-        byCID.clear();
-        byUsername.clear();
+        customerByID.clear();
+        customerByUsername.clear();
 
         try (BufferedReader br = new BufferedReader(new FileReader(file))) {
             String line;
@@ -58,8 +58,8 @@ public final class CustomerManager implements Management<Customer> {
                 boolean status = Boolean.parseBoolean(parts[7].trim());
 
                 Customer c = new Customer(username, "", CID, fullName, dob, address, email, phone, status);
-                byCID.put(CID, c);
-                byUsername.put(username, c);
+                customerByID.put(CID, c);
+                customerByUsername.put(username, c);
             }
 
         } catch (Exception e) {
@@ -68,23 +68,23 @@ public final class CustomerManager implements Management<Customer> {
     }
 
     public Customer getByUsername(String username) {
-        return byUsername.get(username);
+        return customerByUsername.get(username);
     }
 
     @Override
     public boolean exists(String ID) {
-        boolean found = byCID.containsKey(ID);
+        boolean found = customerByID.containsKey(ID);
         return found;
     }
 
     @Override
     public Customer get(String ID) {
-        return byCID.get(ID);
+        return customerByID.get(ID);
     }
 
     public ArrayList<Customer> getCustomerByName(String keyword) {
         ArrayList<Customer> matched = new ArrayList<>();
-        for (Customer c : byCID.values()) {
+        for (Customer c : customerByID.values()) {
             if (c.getFullname().toLowerCase().contains(keyword.toLowerCase()))
                 matched.add(c);
         }
@@ -92,49 +92,50 @@ public final class CustomerManager implements Management<Customer> {
     }
 
     public void updateUser(Customer newCustomer, String oldUsername) {
-        Customer oldCustomer = byUsername.remove(oldUsername);
+        Customer oldCustomer = customerByUsername.remove(oldUsername);
         if (oldCustomer != null) {
-            byCID.remove(oldCustomer.getCID());
+            customerByID.remove(oldCustomer.getCID());
         }
-        byUsername.put(newCustomer.getUsername(), newCustomer);
-        byCID.put(newCustomer.getCID(), newCustomer);
+        customerByUsername.put(newCustomer.getUsername(), newCustomer);
+        customerByID.put(newCustomer.getCID(), newCustomer);
     }
 
     @Override
     public void add(Customer c) {
-        byCID.put(c.getCID(), c);
-        byUsername.put(c.getUsername(), c);
+        customerByID.put(c.getCID(), c);
+        customerByUsername.put(c.getUsername(), c);
     }
 
     @Override
     public void delete(String ID) {
-        Customer c = byCID.remove(ID);
+        Customer c = customerByID.remove(ID);
         if (c != null) {
-            byUsername.remove(c.getUsername());
+            customerByUsername.remove(c.getUsername());
         }
     }
 
     public void updateCustomer(Customer newCustomer, String oldCID) {
-        Customer oldCustomer = byCID.get(oldCID);
+        Customer oldCustomer = customerByID.get(oldCID);
         if (oldCustomer != null) {
-            byUsername.remove(oldCustomer.getUsername());
+            customerByUsername.remove(oldCustomer.getUsername());
         }
-        byCID.put(newCustomer.getCID(), newCustomer);
-        byUsername.put(newCustomer.getUsername(), newCustomer);
+        customerByID.put(newCustomer.getCID(), newCustomer);
+        customerByUsername.put(newCustomer.getUsername(), newCustomer);
     }
 
     @Override
     public void showList() {
         Extension.printTableHeader("Ma khach hang","Ho va ten","Ngay sinh","Dia chi","So dien thoai","Email","Trang thai");
-        for (Customer c : byCID.values()) {
+        for (Customer c : customerByID.values()) {
             if(c.getStatus())
                 Extension.printTableRow(c.getCID(),c.getFullname(),c.getDobdate(),c.getAddress(),c.getPhone(),c.getEmail(),c.getStatusString());
         }
     }
 
-    public void showBlackList() {
+    @Override
+    public void blackList() {
         Extension.printTableHeader("Ma khach hang","Ho va ten","Ngay sinh","Dia chi","So dien thoai","Email","Trang thai");
-        for (Customer c : byCID.values()) {
+        for (Customer c : customerByID.values()) {
             if(!c.getStatus())
                 Extension.printTableRow(c.getCID(),c.getFullname(),c.getDobdate(),c.getAddress(),c.getPhone(),c.getEmail(),c.getStatusString());
         }
@@ -142,13 +143,13 @@ public final class CustomerManager implements Management<Customer> {
 
     @Override
     public String report() {
-        return "Tong so luong khach hang: " + byCID.size();
+        return "Tong so luong khach hang: " + customerByID.size();
     }
 
     @Override
     public void save() {
         try (BufferedWriter bw = new BufferedWriter(new FileWriter(FILE_PATH))) {
-            for (Customer c : byCID.values()) {
+            for (Customer c : customerByID.values()) {
                 bw.write(c.toStringProfile() + "\n");
             }
         } catch (IOException e) {
@@ -158,6 +159,6 @@ public final class CustomerManager implements Management<Customer> {
 
     // Lấy tất cả customer map để UserManager dùng
     public Map<String, Customer> getCustomerMap() {
-        return byUsername;
+        return customerByUsername;
     }
 }

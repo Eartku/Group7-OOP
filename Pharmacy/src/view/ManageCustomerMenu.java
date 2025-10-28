@@ -1,7 +1,7 @@
 package view;
 
 import data.Data;
-import interfaces.ManageMenu;
+import interfaces.IManageMenu;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -10,7 +10,7 @@ import models.Customer;
 import service.CustomerManager;
 import service.UserManager;
 
-public class ManageCustomerMenu implements ManageMenu{
+public class ManageCustomerMenu implements IManageMenu{
 
     private final CustomerManager cm;
     private final UserManager um;
@@ -55,7 +55,7 @@ public class ManageCustomerMenu implements ManageMenu{
                     int choice2 = Extension.readIntInRange("Nhap lua chon (0-2):", 0, 2, sc);
                     switch (choice2) {
                         case 0 ->{break;}
-                        case 1 ->removeMenu();
+                        case 1 ->blockMenu();
                         case 2 ->activeMenu();
                         default -> System.out.println("Khong hop le!");
                     }
@@ -137,7 +137,7 @@ public class ManageCustomerMenu implements ManageMenu{
     }
 
     @Override
-    public void removeMenu() {
+    public void blockMenu() {
         Extension.clearScreen();
         while (true) {
             System.out.println("==== BLOCK CUSTOMER ====");
@@ -180,12 +180,12 @@ public class ManageCustomerMenu implements ManageMenu{
         }
     }
 
-
+    @Override
     public void activeMenu() {
         Extension.clearScreen();
         while (true) {
             System.out.println("==== ACTIVATE CUSTOMER IN BLACKLIST====");
-            cm.showBlackList();
+            cm.blackList();
             System.out.print("Nhap ID khach hang muon bo chan (hoac nhap 0 de quay lai): ");
             String inputID = sc.nextLine().trim();
 

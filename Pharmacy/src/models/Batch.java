@@ -1,17 +1,18 @@
 package models;
 
+import interfaces.IStatus;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.time.temporal.ChronoUnit;
 
-public class Batch implements Comparable<Batch>{
+public class Batch implements Comparable<Batch>, IStatus{
     private String BID;
     private Product product;
     private long  quantity;
     private LocalDate importDate;
     private final LocalDate expiryDate;
-    private boolean active;
+    private boolean status;
 
     private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 
@@ -21,7 +22,7 @@ public class Batch implements Comparable<Batch>{
         this.quantity = 0;
         this.importDate = null;
         this.expiryDate = null;
-        this.active = false;
+        this.status = false;
     }
 
     public Batch(String BID, Product product, long quantity, LocalDate importDate, boolean isactive) {
@@ -34,7 +35,7 @@ public class Batch implements Comparable<Batch>{
         } else {
             this.expiryDate = null;
         }
-        this.active = isactive;
+        this.status = isactive;
     }
 
     public String getBatchId() { return BID; }
@@ -46,8 +47,9 @@ public class Batch implements Comparable<Batch>{
     public long getQuantity() { return quantity; }
     public void setQuantity(long quantity) { this.quantity = quantity; }
 
-    public boolean getActive() { return active; }
-    public void setActive(boolean active) { this.active = active; }
+    public boolean getStatus() { return status; }
+    public void setStatus(boolean active) { this.status = active; }
+    public String getStatusString() { return this.status?"Active":"Inactive"; }
 
 
     public String getImportDate() { return importDate.format(FORMATTER); }
@@ -81,7 +83,7 @@ public class Batch implements Comparable<Batch>{
         return  BID + "|" + product.getPID() + 
                "|" + quantity + 
                "|" + importDate.format(FORMATTER) + 
-               "|" + active;
+               "|" + status;
     }
 
     @Override

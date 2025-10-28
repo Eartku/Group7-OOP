@@ -1,14 +1,14 @@
 package view;
 
 import data.Data;
-import interfaces.ManageMenu;
+import interfaces.IManageMenu;
 import java.util.Scanner;
 import models.Drug;
 import models.NonDrug;
 import models.Product;
 import service.ProductManager;
 
-public class ManageProductsMenu implements ManageMenu{
+public class ManageProductsMenu implements IManageMenu{
     private final ProductManager pm;
     private final Scanner sc;
 
@@ -50,8 +50,8 @@ public class ManageProductsMenu implements ManageMenu{
                     int choice2 = Extension.readIntInRange("Nhap lua chon (0-2):", 0, 2, sc);
                     switch (choice2) {
                         case 0 ->{break;}
-                        case 1 ->removeMenu();
-                        case 2 ->showMenu();
+                        case 1 ->blockMenu();
+                        case 2 ->activeMenu();
                         default -> System.out.println("Khong hop le!");
                     }
                 }
@@ -161,7 +161,7 @@ public class ManageProductsMenu implements ManageMenu{
     }
 
     @Override
-    public void removeMenu() {
+    public void blockMenu() {
         while (true) {
             Extension.clearScreen();
             System.out.println("==== HIDE PRODUCT ====");
@@ -197,11 +197,12 @@ public class ManageProductsMenu implements ManageMenu{
         }
     }
 
-    public void showMenu() {
+    @Override
+    public void activeMenu() {
         while (true) {
             Extension.clearScreen();
             System.out.println("==== SHOW PRODUCT ====");
-            pm.showUnvaiableList();
+            pm.blackList();
             System.out.print("Nhap ID hoac ten san pham muon HIEN (hoac nhap 0 de quay lai): ");
             String inputID = sc.nextLine().trim();
 

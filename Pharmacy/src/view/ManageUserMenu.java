@@ -1,8 +1,8 @@
 package view;
 
 import data.Data;
-import interfaces.Authenticable;
-import interfaces.ManageMenu;
+import interfaces.IAuthenticable;
+import interfaces.IManageMenu;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Scanner;
@@ -12,7 +12,7 @@ import models.Guest;
 import service.CustomerManager;
 import service.UserManager;
 
-public class ManageUserMenu implements ManageMenu {
+public class ManageUserMenu implements IManageMenu {
     
     private final CustomerManager cm;
     private final UserManager um;
@@ -61,7 +61,7 @@ public class ManageUserMenu implements ManageMenu {
                     int choice2 = Extension.readIntInRange("Nhap lua chon (0-2):", 0, 2, sc);
                     switch (choice2) {
                         case 0 ->{break;}
-                        case 1 ->removeMenu();
+                        case 1 ->blockMenu();
                         case 2 ->activeMenu();
                         default -> System.out.println("Khong hop le!");
                     }
@@ -127,7 +127,7 @@ public class ManageUserMenu implements ManageMenu {
             }
         }
 
-        Authenticable newUser = switch (role) {
+        IAuthenticable newUser = switch (role) {
             case 0 -> new Guest(username, password, true);
             case 2 -> new Admin(username, password, true);
             case 1 -> {
@@ -173,7 +173,7 @@ public class ManageUserMenu implements ManageMenu {
     }
 
     @Override
-    public void removeMenu() {
+    public void blockMenu() {
         while(true){
             Extension.clearScreen();
             System.out.println("==== BLOCK USER ====");
@@ -184,7 +184,7 @@ public class ManageUserMenu implements ManageMenu {
                 System.out.println("Huy thao tac chan, quay lai menu chinh.");
                 return;
             }
-            Authenticable user = um.get(username);
+            IAuthenticable user = um.get(username);
             if (user == null || user.getStatus()== false) {
                 System.out.println("Khong tim thay user: " + username);
                 return;
@@ -218,6 +218,7 @@ public class ManageUserMenu implements ManageMenu {
         }
     }
     
+    @Override
     public void activeMenu() {
         while(true){
             Extension.clearScreen();
@@ -229,7 +230,7 @@ public class ManageUserMenu implements ManageMenu {
                 System.out.println("Huy thao tac chan, quay lai menu chinh.");
                 return;
             }
-            Authenticable user = um.get(username);
+            IAuthenticable user = um.get(username);
             if (user == null || user.getStatus()== true) {
                 System.out.println("Khong tim thay user: " + username);
                 return;
@@ -264,7 +265,7 @@ public class ManageUserMenu implements ManageMenu {
             System.out.println("Huy thao tac xoa, quay lai menu chinh.");
             return;
         }
-        Authenticable user = um.get(username);
+        IAuthenticable user = um.get(username);
         if (user == null) {
             System.out.println("Khong tim thay user: " + username);
             return;
@@ -305,7 +306,7 @@ public class ManageUserMenu implements ManageMenu {
         }
 
         // Lấy user cũ, kiểm tra null
-        Authenticable oldUser = um.get(oldUsername);
+        IAuthenticable oldUser = um.get(oldUsername);
         if (oldUser == null) {
             System.out.println("Khong ton tai user voi username: " + oldUsername);
             return;
@@ -382,7 +383,7 @@ public class ManageUserMenu implements ManageMenu {
         }
 
         // Tạo user mới theo role
-        Authenticable newUser = switch (newRole) {
+        IAuthenticable newUser = switch (newRole) {
             case 0 -> new Guest(newUsername, newPassword, oldStatus);
             case 2 -> new Admin(newUsername, newPassword, oldStatus);
             case 1 -> {
@@ -419,7 +420,7 @@ public class ManageUserMenu implements ManageMenu {
         um.save();
     }
 
-    public void UserInfo(Authenticable user){
+    public void UserInfo(IAuthenticable user){
         Extension.printInBox(() -> {
             System.out.println("----- USER [" + user.getUsername() +"] -----");
             System.out.println("Username: " + user.getUsername());
@@ -452,7 +453,7 @@ public class ManageUserMenu implements ManageMenu {
                 return;
             }
 
-            Authenticable user = um.get(username);
+            IAuthenticable user = um.get(username);
             if (user == null) {
                 System.out.println("Khong tim thay user voi username: " + username);
                 return;
@@ -482,7 +483,7 @@ public class ManageUserMenu implements ManageMenu {
                 return;
             }
 
-            Authenticable user = um.get(username);
+            IAuthenticable user = um.get(username);
             if (user == null || user.getStatus()== true) {
                 System.out.println("Khong tim thay user voi username: " + username);
                 return;
