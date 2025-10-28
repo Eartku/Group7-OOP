@@ -40,23 +40,31 @@ public class ManageUserMenu implements ManageMenu {
             System.out.println("==== USER MANAGER ====");
             System.out.println(um.report());
             if(active) um.showList(); else um.hidePassList();
-            System.out.println("1. Them User");
-            System.out.println("2. Xoa User theo username");
-            System.out.println("3. Cap nhat User theo username");
-            System.out.println("4. Xem thong tin user theo username");
-            System.out.println("5. Xem danh sach chan (Blocked)");
-            System.out.println("6. Che do AN mat khau");
-            System.out.println("7. che do HIEN mat khau");
-            System.out.println("0. Thoat");
+            System.out.println("1. Them User - Add new user");
+            System.out.println("2. Kich hoat/Khoa User theo username - Activate/Block user");
+            System.out.println("3. Cap nhat User theo username - Edit user");
+            System.out.println("4. Xem thong tin user theo username -View user");
+            System.out.println("5. Che do AN mat khau - Hide password mode");
+            System.out.println("6. che do HIEN mat khau - Show Password mode");
+            System.out.println("0. Thoat - Exit");
             System.out.print("Chon: ");
-            int choice = Extension.readIntInRange("Nhap lua chon (0-4):", 0, 7, sc);
+            int choice = Extension.readIntInRange("Nhap lua chon (0-4):", 0, 6, sc);
 
             switch (choice) {
                 case 1 -> {
                     addMenu();
                 }
                 case 2 -> {
-                    removeMenu();
+                    System.out.println("1. Chan User - Block User");
+                    System.out.println("2. Kich hoat User - Activate User");
+                    System.out.println("0. Huy - Cancel");
+                    int choice2 = Extension.readIntInRange("Nhap lua chon (0-2):", 0, 2, sc);
+                    switch (choice2) {
+                        case 0 ->{break;}
+                        case 1 ->removeMenu();
+                        case 2 ->activeMenu();
+                        default -> System.out.println("Khong hop le!");
+                    }
                 }
                 case 3 -> {
                     updateMenu();
@@ -65,12 +73,9 @@ public class ManageUserMenu implements ManageMenu {
                     viewMenu();
                 }
                 case 5 -> {
-                    viewBlackList();
-                }
-                case 6 -> {
                     this.active = false;
                 }
-                case 7 -> {
+                case 6 -> {
                     this.active = true;
                 }
                 case 0 -> {
@@ -160,33 +165,95 @@ public class ManageUserMenu implements ManageMenu {
                 cm.add(c);       // thêm vào danh sách khách hàng trong bộ nhớ
             }
             System.out.println("Da them user thanh cong!");
+            UserInfo(newUser);
             um.save();
             cm.save();
+            Extension.pause(sc);
         }
     }
 
     @Override
     public void removeMenu() {
-        System.out.print("Nhap username (hoac nhap 0 de quay lai): ");
-        String username = sc.nextLine().trim();
-        if (username.equals("0")) {
-            System.out.println("Huy thao tac xoa, quay lai menu chinh.");
-            return;
-        }
-        Authenticable user = um.get(username);
-        if (user == null) {
-            System.out.println("Khong tim thay user: " + username);
-            return;
-        }
+        while(true){
+            Extension.clearScreen();
+            System.out.println("==== BLOCK USER ====");
+            if(active) um.showList(); else um.hidePassList();
+            System.out.print("Nhap username (hoac nhap 0 de quay lai): ");
+            String username = sc.nextLine().trim();
+            if (username.equals("0")) {
+                System.out.println("Huy thao tac chan, quay lai menu chinh.");
+                return;
+            }
+            Authenticable user = um.get(username);
+            if (user == null || user.getStatus()== false) {
+                System.out.println("Khong tim thay user: " + username);
+                return;
+            }
 
-        if (user instanceof Admin) {
-            System.out.println("Khong the block admin dang dang nhap!");
-            return;
-        }
+            if (user instanceof Admin) {
+                System.out.println("Khong the block Admin khac HOAC tu block chinh minh!");
+                System.out.print("Enter de tiep tuc | 0 đe thoat: ");
+                if(sc.nextLine().trim().equals("0")) return;
+                continue;
+            }
 
-        user.setStatus(false); // Block user
-        um.save();
-        System.out.println("User " + username + " da bi block (xoa logic).");
+            UserInfo(user);
+
+            System.out.print("Ban co chac muon chan user " + username + "? (y/n): ");
+            String confirm0 = sc.nextLine().trim();
+            if (!confirm0.equalsIgnoreCase("y")) {
+                System.out.println("Da huy thao tac chan.");
+                return;
+            }
+
+            user.setStatus(false);
+            um.save();
+            System.out.println("User " + username + " da bi block.");
+            System.out.print("Tiep tuc chan? [Nhap 0 de thoat | Enter de tiep tuc]: ");
+            String confirm = sc.nextLine().trim();
+             if (confirm.equals("0")) {
+                System.out.println("Huy thao tac chan, quay lai menu chinh.");
+                return;
+            }
+        }
+    }
+    
+    public void activeMenu() {
+        while(true){
+            Extension.clearScreen();
+            System.out.println("==== ACTIVATE USER ====");
+            um.blackList();
+            System.out.print("Nhap username (hoac nhap 0 de quay lai): ");
+            String username = sc.nextLine().trim();
+            if (username.equals("0")) {
+                System.out.println("Huy thao tac chan, quay lai menu chinh.");
+                return;
+            }
+            Authenticable user = um.get(username);
+            if (user == null || user.getStatus()== true) {
+                System.out.println("Khong tim thay user: " + username);
+                return;
+            }
+
+            UserInfo(user);
+
+            System.out.print("Ban co chac muon kich hoat user " + username + "? (y/n): ");
+            String confirm0 = sc.nextLine().trim();
+            if (!confirm0.equalsIgnoreCase("y")) {
+                System.out.println("Da huy thao tac kich hoat.");
+                return;
+            }
+
+            user.setStatus(false);
+            um.save();
+            System.out.println("User " + username + " da duoc kich hoat.");
+            System.out.print("Tiep tuc chan? [Nhap 0 de thoat | Enter de tiep tuc]: ");
+            String confirm = sc.nextLine().trim();
+             if (confirm.equals("0")) {
+                System.out.println("Huy thao tac kich hoat, quay lai menu chinh.");
+                return;
+            }
+        }
     }
 
     
@@ -347,12 +414,14 @@ public class ManageUserMenu implements ManageMenu {
         }
 
         System.out.println("Cap nhat thanh cong user: " + newUsername);
+        UserInfo(newUser);
+        Extension.pause(sc);
         um.save();
     }
 
     public void UserInfo(Authenticable user){
         Extension.printInBox(() -> {
-            System.out.println("----- THONG TIN USER [" + user.getUsername() +"] -----");
+            System.out.println("----- USER [" + user.getUsername() +"] -----");
             System.out.println("Username: " + user.getUsername());
             System.out.println("Password: " + user.getPassword());
             if (user instanceof Admin) {
@@ -391,7 +460,7 @@ public class ManageUserMenu implements ManageMenu {
 
             UserInfo(user);
             
-            System.out.print("Quay lai? Hay nhap 0: ");
+            System.out.print("Quay lai? Hay nhap 0, Enter de tiep tuc: ");
             String choice = sc.nextLine().trim();
             if (choice.equals("0")) {
                 System.out.println("Da quay lai menu chinh.");
@@ -414,14 +483,32 @@ public class ManageUserMenu implements ManageMenu {
             }
 
             Authenticable user = um.get(username);
-            if (user == null) {
+            if (user == null || user.getStatus()== true) {
                 System.out.println("Khong tim thay user voi username: " + username);
                 return;
             }
 
             UserInfo(user);
 
-            System.out.print("Quay lai? Hay nhap 0: ");
+            System.out.print("Ban co muon mo khoa user " + username + "? (y/n): ");
+            String confirm = sc.nextLine().trim();
+            if (!confirm.equalsIgnoreCase("y")) {
+                System.out.println("Huy thao tac mo khoa.");
+                return;
+            }
+            
+
+            user.setStatus(true);
+            um.save();
+            System.out.println("User " + username + " da duoc mo khoa.");
+            System.out.print("Tiep tuc chan? [Nhap 0 de thoat | Enter de tiep tuc]: ");
+            String cancel = sc.nextLine().trim();
+             if (cancel.equals("0")) {
+                System.out.println("Huy thao tac chan, quay lai menu chinh.");
+                return;
+            }
+
+            System.out.print("Quay lai? Hay nhap 0, Enter de tiep tuc: ");
             String choice = sc.nextLine().trim();
             if (choice.equals("0")) {
                 System.out.println("Da quay lai menu chinh.");

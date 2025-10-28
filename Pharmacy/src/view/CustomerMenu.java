@@ -11,16 +11,17 @@ public class CustomerMenu {
     private static final Scanner sc = new Scanner(System.in);
 
     public static void showMenu(Authenticable user, ProductManager pm, OrderManager om, Inventory inv){
-        Extension.clearScreen();
+        
         ManageProductsMenu mp = new ManageProductsMenu(pm, sc);
         Customer customer = (Customer) user;
         while (true) {
+            Extension.clearScreen();
                 System.out.println("==== MENU CUSTOMER ====");
-                System.out.println("1. Xem san pham");
-                System.out.println("2. Tim kiem san pham");
-                System.out.println("3. Xem thong tin ca nhan");
-                System.out.println("4. Xem lich su mua hang");
-                System.out.println("0. Dang xuat");
+                System.out.println("1. Xem va Tim kiem san pham - View & Search products");
+                System.out.println("2. Dat mua san pham - Buy products");
+                System.out.println("3. Xem thong tin ca nhan - View your profile");
+                System.out.println("4. Xem lich su mua hang - Purchase history");
+                System.out.println("0. Dang xuat - Logout");
                 System.out.print("Nhap lua chon: ");
                 int choice = Extension.readIntInRange("Nhap lua chon (0-4):", 0, 4, sc);
 

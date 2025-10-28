@@ -14,13 +14,13 @@ public class GuestMenu {
     private static final Scanner sc = new Scanner(System.in);
 
     public static void showMenu(Authenticable user, UserManager um, CustomerManager cm, ProductManager pm,  Inventory inv, OrderManager om){
-        Extension.clearScreen();
         Guest guest = (Guest) user;
         while (true) {
+            Extension.clearScreen();
             System.out.println("==== MENU GUEST ====");
-            System.out.println("1. Cap nhat thong tin ca nhan");
-            System.out.println("2. Xem san pham");
-            System.out.println("0. Dang xuat");
+            System.out.println("1. Cap nhat ho so ca nhan - Update Profile");
+            System.out.println("2. Xem va Tim kiem san pham - View & Search");
+            System.out.println("0. Dang xuat - Logout");
             System.out.print("Nhap lua chon: ");
             int choice = Extension.readIntInRange("Nhap lua chon (0-2):", 0, 2, sc);
 
@@ -35,9 +35,9 @@ public class GuestMenu {
                         System.out.println("=== CAP NHAT THONG TIN ===");
                         AuthMenu.updateProfile(guest, sc, um, cm);
                         um.upgradeGuestToCustomer(guest, newCustomer);
-
-                    System.out.println("Ban da duoc nang cap thanh KHACH HANG thanh cong!");
+                    System.out.println("Ban da tro thanh KHACH HANG!");
                     System.out.println("Dang chuyen sang menu khach hang...");
+                    Extension.dotAnimation("Loading", choice, "Successful!");
                     AuthMenu.getMenu(newCustomer, um, cm, pm, inv, om);
                     return;
                     }

@@ -37,28 +37,33 @@ public class ManageCustomerMenu implements ManageMenu{
             System.out.println(cm.report());
             cm.showList();
             System.out.println("1. Them khach hang - Add Customer (Danh cho giao dich tai quay)");
-            System.out.println("2. Chan khach hang - Block Customers");
-            System.out.println("3. Bo chan khach hang - Activate Customers");
-            System.out.println("4. Chinh sua thong tin khach hang - Edit Customers INFO");
-            System.out.println("5. Xem thong tin khach hang - View Customers INFO");
+            System.out.println("2. Kich hoat/Chan khach hang - Activate/Block Customers");
+            System.out.println("3. Chinh sua thong tin khach hang - Edit Customers INFO");
+            System.out.println("4. Xem thong tin khach hang - View Customers INFO");
             System.out.println("0. Thoat");
             System.out.print("Chon: ");
-            int choice = Extension.readIntInRange("Nhap lua chon (0-4):", 0, 5, sc);
+            int choice = Extension.readIntInRange("Nhap lua chon (0-4):", 0, 4, sc);
 
             switch (choice) {
                 case 1 -> {
                     addMenu();
                 }
                 case 2 -> {
-                    removeMenu();
+                    System.out.println("1. An khach hang - Block Customer");
+                    System.out.println("2. Kich hoat khach hang - Activate Customer");
+                    System.out.println("0. Huy - Cancel");
+                    int choice2 = Extension.readIntInRange("Nhap lua chon (0-2):", 0, 2, sc);
+                    switch (choice2) {
+                        case 0 ->{break;}
+                        case 1 ->removeMenu();
+                        case 2 ->activeMenu();
+                        default -> System.out.println("Khong hop le!");
+                    }
                 }
                 case 3 -> {
-                    activeMenu();
-                }
-                case 4 -> {
                     updateMenu();
                 }
-                case 5 -> {
+                case 4 -> {
                     viewMenu();
                 }
                 case 0 -> {
@@ -150,21 +155,23 @@ public class ManageCustomerMenu implements ManageMenu{
                 continue;
             }
 
+            Customer c = cm.get(inputID);
+            printCustomer(c);
+            if(c.getStatus() == false) {
+                System.out.println("Khach hang nay da bi chan tu truoc!");
+                System.out.print("Nhap 0 de thoat | Enter de tiep tuc: ");
+                if(sc.nextLine().trim().equals("0")) return;
+                continue;
+            }
             System.out.print("Ban co chac muon xoa khach hang nay khoi danh sach:  " + inputID + " ? (y/n): ");
             String confirm = sc.nextLine().trim();
-
             if (confirm.equalsIgnoreCase("y")) {
-                cm.get(inputID).setStatus(false);
-                if (!cm.exists(inputID)) {
-                    System.out.println("Da chan khach hang: " + inputID );
-                    cm.save();
-                } else {
-                    System.out.println("Chan khong thanh cong!");
-                }
+                c.setStatus(false);
+                System.out.println("Da chan thanh cong khach hang "+ c.getCID());
             } else {
                 System.out.println("Da huy thao tac CHAN.");
             }
-            System.out.println("Ban co muon tiep tuc Chan? [Nhap 0 de thoat | Nhap !=0 de tiep tuc]");
+            System.out.println("Ban co muon tiep tuc Chan? [Nhap 0 de thoat | Enter de tiep tuc]");
             String confirm0 = sc.nextLine().trim();
             if (confirm0.equals("0")) {
                 System.out.println("Quay lai menu chinh.");
@@ -177,7 +184,7 @@ public class ManageCustomerMenu implements ManageMenu{
     public void activeMenu() {
         Extension.clearScreen();
         while (true) {
-            System.out.println("==== ACTIVE CUSTOMER IN BLACKLIST====");
+            System.out.println("==== ACTIVATE CUSTOMER IN BLACKLIST====");
             cm.showBlackList();
             System.out.print("Nhap ID khach hang muon bo chan (hoac nhap 0 de quay lai): ");
             String inputID = sc.nextLine().trim();
@@ -192,21 +199,24 @@ public class ManageCustomerMenu implements ManageMenu{
                 continue;
             }
 
+            Customer c = cm.get(inputID);
+            printCustomer(c);
+            if(c.getStatus() == true) {
+                System.out.println("Khach hang nay da duoc kich hoat tu truoc!");
+                System.out.print("Nhap 0 de thoat | Enter de tiep tuc: ");
+                if(sc.nextLine().trim().equals("0")) return;
+                continue;
+            }
             System.out.print("Ban co chac muon kich hoat lai khach hang nay?:  " + inputID + " ? (y/n): ");
             String confirm = sc.nextLine().trim();
 
             if (confirm.equalsIgnoreCase("y")) {
                 cm.get(inputID).setStatus(true);
-                if (!cm.exists(inputID)) {
-                    System.out.println("Da kich hoat khach hang: " + inputID );
-                    cm.save();
-                } else {
-                    System.out.println("Kich hoat khong thanh cong!");
-                }
+                System.out.println("Da kich hoat khach hang: " + inputID );
             } else {
                 System.out.println("Da huy thao tac KICH HOAT.");
             }
-            System.out.println("Ban co muon tiep tuc kich hoạt? [Nhap 0 de thoat | Nhap !=0 de tiep tuc]");
+            System.out.println("Ban co muon tiep tuc kich hoạt? [Nhap 0 de thoat | Enter de tiep tuc]");
             String confirm0 = sc.nextLine().trim();
             if (confirm0.equals("0")) {
                 System.out.println("Quay lai menu chinh.");
@@ -260,6 +270,7 @@ public class ManageCustomerMenu implements ManageMenu{
 
         cm.save();
         System.out.println("Cap nhat thong tin khach hang thanh cong!");
+        Extension.printInBox(() -> {printCustomer(oldCus);});
     }
 
     @Override
@@ -295,7 +306,9 @@ public class ManageCustomerMenu implements ManageMenu{
             return;
         }
 
-        printCustomer(user);
+        final Customer c = user;
+        Extension.printInBox(() -> {printCustomer(c);});
+
         System.out.print("Quay lai? Hay nhap 0: ");
         String choice = sc.nextLine().trim();
         if (choice.equals("0")) {
@@ -304,14 +317,14 @@ public class ManageCustomerMenu implements ManageMenu{
     }
 
     public static void printCustomer(Customer user) {
-        System.out.println("----- THONG TIN KHACH HANG [" + user.getFullname() + "] -----");
-        System.out.println("Role: [Customer]");
-        System.out.println("CID: " + user.getCID());
-        System.out.println("Ho ten: " + user.getFullname());
-        System.out.println("Ngay sinh: " + user.getDob());
-        System.out.println("Dia chi: " + user.getAddress());
-        System.out.println("Email: " + user.getEmail());
-        System.out.println("So dien thoai: " + user.getPhone());
+            System.out.println("-----  [" + user.getFullname() + "] -----");
+            System.out.println("Role: [Customer]");
+            System.out.println("CID: " + user.getCID());
+            System.out.println("Ho ten: " + user.getFullname());
+            System.out.println("Ngay sinh: " + user.getDob());
+            System.out.println("Dia chi: " + user.getAddress());
+            System.out.println("Email: " + user.getEmail());
+            System.out.println("So dien thoai: " + user.getPhone());
     }
 
 }

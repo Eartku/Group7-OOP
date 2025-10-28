@@ -37,11 +37,12 @@ public class ProductManager implements Management<Product>{
             while ((line = br.readLine()) != null) {
                 String[] parts = line.split("\\|");
                 if (parts.length < 9){
-                    System.out.println("[WARN] Invalid line in customers.txt: " + line);
+                    System.out.println("[WARN] Invalid line in products.txt: " + line);
                     continue; // bỏ qua dòng lỗi
                 }
 
                 String key = parts[8].trim(); // lấy ký tự D hoặc N để phân biệt trong file txt
+                boolean status = Boolean.parseBoolean(parts[9]);
                 String PID = parts[0].trim(); // PID
                 String name = parts[1].trim();// name
                 String unit = parts[2].trim();
@@ -52,14 +53,17 @@ public class ProductManager implements Management<Product>{
                             PID, name, unit, price, SLM,
                             parts[5], // dosage
                             parts[6], // ingredient
-                            Boolean.parseBoolean(parts[7])//pR
+                            Boolean.parseBoolean(parts[7]),//pR
+                            status
+                            
                     );
 
                     case "N" -> new NonDrug(
                             PID, name, unit, price, SLM,
-                            parts[5], //man
-                            parts[6], // type
-                            parts[7]  // usage
+                            parts[6], //man
+                            parts[7], // type
+                            parts[5],  // usage
+                            status
                     );
 
                     default -> null;
@@ -100,7 +104,7 @@ public class ProductManager implements Management<Product>{
 
         ArrayList<Product> matched = getProductByName(keyword);
         if (matched.isEmpty()) return null;
-        System.out.println("Tìm thấy: " + matched.size());
+        System.out.println("Da tim thay: " + matched.size());
 
         if (matched.size() == 1) return matched.get(0);
 
@@ -125,9 +129,18 @@ public class ProductManager implements Management<Product>{
 
     @Override
     public void showList(){
-        Extension.printTableHeader("Ma san pham","Ten san pham","Don vi","Gia ca","Han dung");
+        Extension.printTableHeader("Ma san pham","Ten san pham","Don vi","Gia ca","Han dung","Trang thai");
         for (Product elem : byPID.values()) {
-            Extension.printTableRow(elem.getPID(),elem.getName(),elem.getUnit(),elem.getPrice()+"VND",elem.getShelfLifeInfo());
+            if(elem.getStatus())
+                Extension.printTableRow(elem.getPID(),elem.getName(),elem.getUnit(),elem.getPrice()+"VND",elem.getShelfLifeInfo(),elem.getStatusString());
+        }
+    }
+
+    public void showUnvaiableList(){
+        Extension.printTableHeader("Ma san pham","Ten san pham","Don vi","Gia ca","Han dung","Trang thai");
+        for (Product elem : byPID.values()) {
+            if(!elem.getStatus())
+            Extension.printTableRow(elem.getPID(),elem.getName(),elem.getUnit(),elem.getPrice()+"VND",elem.getShelfLifeInfo(),elem.getStatusString());
         }
     }
 
@@ -175,7 +188,8 @@ public class ProductManager implements Management<Product>{
                             d.getDosage(),
                             d.getIngredient(),
                             String.valueOf(d.getpR()),
-                            "D"
+                            "D",
+                            String.valueOf(d.getStatus())
                     );
                     case NonDrug n -> line = String.join("|",  
                             n.getPID(),
@@ -186,7 +200,8 @@ public class ProductManager implements Management<Product>{
                             n.getUsage(),
                             n.getManufacturer(),
                             n.getType(),
-                            "N"
+                            "N",
+                            String.valueOf(n.getStatus())
                     );
                     default -> {
                     }

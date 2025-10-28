@@ -10,8 +10,8 @@ public class NonDrug extends Product{
         this.type = "";
         this.usage = "";
     }
-    public NonDrug(String ID, String name, String unit, double price, int shelfLifeMonths, String man, String type, String usage) {
-        super(ID, name, unit, price, shelfLifeMonths);
+    public NonDrug(String ID, String name, String unit, double price, int shelfLifeMonths, String man, String type, String usage, boolean status) {
+        super(ID, name, unit, price, shelfLifeMonths, status);
         this. manufacturer = man;
         this.type = type;
         this.usage = usage;

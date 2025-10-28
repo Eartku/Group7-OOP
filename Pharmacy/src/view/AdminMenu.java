@@ -16,8 +16,9 @@ public class AdminMenu {
         ManageCustomerMenu mc = new ManageCustomerMenu(cm, um, sc);
         ManageProductsMenu mp = new ManageProductsMenu(pm, sc);
         ManageOrderMenu mo = new ManageOrderMenu(sc, pm, cm, um, inv, om);
-        Extension.clearScreen();
+        
         while (true) {
+            Extension.clearScreen();
             System.out.println();
             System.out.println("==== MENU ADMIN ====");
             System.out.println("1. Quan ly tai khoan - Accounts");
@@ -25,9 +26,10 @@ public class AdminMenu {
             System.out.println("3. Quan ly khach hang - Customers");
             System.out.println("4. Quan ly kho/lo hang - Inventory");
             System.out.println("5. Quan ly cac don hang - Orders");
+            System.out.println("6. Blocked Cleaner");
             System.out.println("0. Dang xuat - Logout");
             System.out.print("Nhap lua chon: ");
-            int choice = Extension.readIntInRange("Nhap lua chon (0-5):", 0, 5, sc);
+            int choice = Extension.readIntInRange("Nhap lua chon (0-5):", 0, 6, sc);
 
             switch (choice) {
                 case 0 -> {
@@ -54,6 +56,10 @@ public class AdminMenu {
                 case 5 -> {
                     System.out.println("Quan ly cac don hang");
                     mo.mainMenu();
+                }
+                case 6 -> {
+                    System.out.println("Don dep du lieu bi chan (Blocked)");
+                    //TODO: Blocked Cleaner
                 }
                 default -> System.out.println("Khong hop le!");
             }

@@ -21,13 +21,13 @@ public class MainMenu{
 
         Scanner sc = new Scanner(System.in);
         Authenticable currentUser = null;
-        // clearScreen();
 
         while (true) {
+            Extension.clearScreen();
             System.out.println("\n==== WELCOME ====");
-            System.out.println("1. Dang nhap tai khoan");
-            System.out.println("2. Dang ky tai khoan");
-            System.out.println("0. Thoat");
+            System.out.println("1. Dang nhap tai khoan - Login");
+            System.out.println("2. Dang ky tai khoan - Register");
+            System.out.println("0. Thoat - Exit");
             System.out.print("Chon: ");
             int choice =Extension.readIntInRange("Nhap lua chon (0-2):", 0, 2, sc);
 

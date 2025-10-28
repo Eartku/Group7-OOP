@@ -28,7 +28,7 @@ public class Extension {
                 System.out.flush();
             }
         } catch (IOException | InterruptedException e) {
-            System.out.println("Không thể xóa màn hình: " + e.getMessage());
+            System.out.println("Error cleaning screen: " + e.getMessage());
         }
     }
         
@@ -46,7 +46,7 @@ public class Extension {
             dotCount++;
             
             try {
-                Thread.sleep(300);
+                Thread.sleep(1500);
             } catch (InterruptedException e) {
                 Thread.currentThread().interrupt();
             }
@@ -71,11 +71,11 @@ public class Extension {
 }
 
 public static void printTableRow(Object... values) {
-    int colWidth = 20; // <-- chỉnh ở đây
+    int colWidth = 20; 
     System.out.print("|");
     for (Object v : values) {
         String str = v == null ? "" : v.toString();
-        if (str.length() > 18) str = str.substring(0, 15) + "..."; // cắt nếu quá dài
+        if (str.length() > 18) str = str.substring(0, 15) + "..."; 
         System.out.printf(" %-18s |", str);
     }
     System.out.println();
@@ -91,9 +91,6 @@ private static void printLine(int colCount, int colWidth) {
     System.out.println();
 }
 
-
-
-
     public static String maskPassword(String password, String mode) {
         if (password == null) return null;
         return mode.repeat(password.length());
@@ -106,10 +103,9 @@ private static void printLine(int colCount, int colWidth) {
         PrintStream oldOut = System.out;
         System.setOut(ps);
 
-        // Bước 2: chạy code gốc
+
         r.run();
 
-        // Bước 3: khôi phục output
         System.out.flush();
         System.setOut(oldOut);
 
