@@ -1,14 +1,14 @@
-P00001|Paracetamol|Hop|50000.0|6|4 vien/ngay|Paracetamol 500mg|false|D
-P00002|Amoxicillin|Hop|75000.0|12|3 vien/ngay|Amoxicillin 500mg|true|D
-P00003|Vitamin C|Lo|30000.0|24|1 vien/ngay|Acid Ascorbic 1000mg|false|D
-P00004|Cetirizine|Hop|45000.0|12|1 vien/ngay|Cetirizine Hydrochloride 10mg|false|D
-P00005|Azithromycin|Hop|85000.0|18|1 vien/ngay|Azithromycin 250mg|true|D
-P00006|Metformin|Hop|65000.0|24|2 vien/ngay|Metformin 500mg|true|D
-P00007|Loratadine|Hop|50000.0|18|1 vien/ngay|Loratadine 10mg|false|D
-P00008|Prednisolone|Hop|90000.0|12|1 vien/ngay|Prednisolone 5mg|true|D
-P00009|Dung dich muoi sinh ly|Chai|20000.0|12|Rua mui, ve sinh vet thuong|Bidiphar|Ve sinh|N
-P00010|Gel rua tay|Chai|45000.0|18|Diet khuan tay|Lifebuoy|Ve sinh|N
-P00011|Khau trang y te|Hop|40000.0|6|Loc bui, bao ve ho hap|Nam Anh|Dung cu y te|N
-P00012|Bong y te|Go|25000.0|48|Dung de sat trung vet thuong|Viet Duc|Dung cu y te|N
-P00013|Nuoc sat trung|Chai|60000.0|24|Diet khuan nhanh tren tay|Green Cross|Ve sinh|N
-P00014|Dau goi dau thao duoc|Chai|80000.0|18|Giam rung toc, lam mem toc|Thorakao|My pham|N
+P001|Paracetamol|Hop|50000.0|6|4 vien/ngay|Paracetamol 500mg|false|D|true
+P002|Amoxicillin|Hop|75000.0|12|3 vien/ngay|Amoxicillin 500mg|true|D|true
+P003|Vitamin C|Lo|30000.0|24|1 vien/ngay|Acid Ascorbic 1000mg|false|D|true
+P004|Cetirizine|Hop|45000.0|12|1 vien/ngay|Cetirizine Hydrochloride 10mg|false|D|true
+P005|Azithromycin|Hop|85000.0|18|1 vien/ngay|Azithromycin 250mg|true|D|true
+P006|Metformin|Hop|65000.0|24|2 vien/ngay|Metformin 500mg|true|D|true
+P007|Loratadine|Hop|50000.0|18|1 vien/ngay|Loratadine 10mg|false|D|true
+P008|Prednisolone|Hop|90000.0|12|1 vien/ngay|Prednisolone 5mg|true|D|true
+P009|DD NaCl 0,9%|Chai|20000.0|12|Rua mui, ve sinh vet thuong|Bidiphar|Ve sinh|N|true
+P010|Gel rua tay|Chai|45000.0|18|Diet khuan tay|Lifebuoy|Ve sinh|N|true
+P011|Khau trang|Hop|40000.0|6|Loc bui, bao ve ho hap|Nam Anh|Dung cu y te|N|true
+P012|Bong y te|Go|25000.0|48|Dung de sat trung vet thuong|Viet Duc|Dung cu y te|N|true
+P013|Nuoc sat trung|Chai|60000.0|24|Diet khuan nhanh tren tay|Green Cross|Ve sinh|N|true
+P014|Dau thao duoc|Chai|80000.0|18|Giam rung toc, lam mem toc|Thorakao|My pham|N|true

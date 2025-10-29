@@ -1,7 +1,7 @@
 package service;
 
-import interfaces.Authenticable;
-import interfaces.Management;
+import interfaces.IAuthenticable;
+import interfaces.IManagement;
 import java.io.*;
 import java.util.*;
 import models.Admin;
@@ -9,11 +9,12 @@ import models.Customer;
 import models.Guest;
 import view.Extension;
 
-public class UserManager implements Management<Authenticable> {
+public class UserManager implements IManagement<IAuthenticable> {
 
     private static final String FILE_PATH = System.getProperty("user.dir") + "/resources/users.txt";
 
-    private final Map<String, Authenticable> users = new TreeMap<>(); // key = username
+    private final Map<String, IAuthenticable> users = new TreeMap<>(); // key = username
+    private final CustomerManager cm;
 
     public UserManager(CustomerManager cm) {
         this.cm = cm;
@@ -61,18 +62,18 @@ public class UserManager implements Management<Authenticable> {
     }
 
     @Override
-    public Authenticable get(String username) {
+    public IAuthenticable get(String username) {
         return users.get(username);
     }
 
     @Override
-    public void add(Authenticable user) {
+    public void add(IAuthenticable user) {
         users.put(user.getUsername(), user);
     }
 
     @Override
     public void delete(String username) {
-        Authenticable u = users.remove(username);
+        IAuthenticable u = users.remove(username);
         if (u instanceof Customer customer) {
             cm.delete(customer.getCID()); // xóa đồng bộ profile
         }
@@ -83,7 +84,7 @@ public class UserManager implements Management<Authenticable> {
         users.put(c.getUsername(), c);
     }
 
-    public void replaceUser(Authenticable oldUser, Authenticable newUser) {
+    public void replaceUser(IAuthenticable oldUser, IAuthenticable newUser) {
         if (oldUser == null || newUser == null) return;
         users.remove(oldUser.getUsername());
         users.put(newUser.getUsername(), newUser);
@@ -93,7 +94,7 @@ public class UserManager implements Management<Authenticable> {
     @Override
     public void showList() {
         Extension.printTableHeader("Username", "Password(Show)", "Role", "Status");
-        for (Authenticable u : users.values()) {
+        for (IAuthenticable u : users.values()) {
             if (u.getStatus()) {
                 String role = switch (u.getRole()) {
                     case 1 -> "Customer";
@@ -108,7 +109,7 @@ public class UserManager implements Management<Authenticable> {
 
     public void hidePassList() {
         Extension.printTableHeader("Username", "Password(Hide)", "Role", "Status");
-        for (Authenticable u : users.values()) {
+        for (IAuthenticable u : users.values()) {
             if (u.getStatus()) {
                 String role = switch (u.getRole()) {
                     case 1 -> "Customer";
@@ -121,9 +122,10 @@ public class UserManager implements Management<Authenticable> {
         }
     }
 
+    @Override
     public void blackList() {
         Extension.printTableHeader("Username", "Password", "Role", "Status");
-        for (Authenticable u : users.values()) {
+        for (IAuthenticable u : users.values()) {
             if (!u.getStatus()) {
                 String role = switch (u.getRole()) {
                     case 1 -> "Customer";
@@ -140,7 +142,7 @@ public class UserManager implements Management<Authenticable> {
     @Override
     public void save() {
         try (BufferedWriter bw = new BufferedWriter(new FileWriter(FILE_PATH))) {
-            for (Authenticable u : users.values()) {
+            for (IAuthenticable u : users.values()) {
                 String line = String.join("|",
                 u.getUsername(),
                 u.getPassword(),
@@ -158,7 +160,7 @@ public class UserManager implements Management<Authenticable> {
     @Override
     public String report() {
         int guest = 0, customer = 0, admin = 0, blocked = 0;
-        for (Authenticable u : users.values()) {
+        for (IAuthenticable u : users.values()) {
             if (!u.getStatus()) blocked++;
             if (u instanceof Guest) guest++;
             else if (u instanceof Customer) customer++;

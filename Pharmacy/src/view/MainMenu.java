@@ -1,7 +1,7 @@
 package view;
 
 import data.Data;
-import interfaces.Authenticable;
+import interfaces.IAuthenticable;
 import java.util.Scanner;
 import service.CustomerManager;
 import service.Inventory;
@@ -20,7 +20,7 @@ public class MainMenu{
         OrderManager om = new OrderManager(cm, pm);
 
         Scanner sc = new Scanner(System.in);
-        Authenticable currentUser = null;
+        IAuthenticable currentUser = null;
 
         while (true) {
             Extension.clearScreen();
@@ -34,11 +34,9 @@ public class MainMenu{
             switch (choice) {
                 case 1 -> {
                     currentUser = AuthMenu.Login(sc, um, cm);
-                    Extension.dotAnimation("Dang dang nhap", choice, "Dang nhap thanh cong!");
                 }
                 case 2 -> {
                     currentUser = AuthMenu.Register(sc, um, cm);
-                    Extension.dotAnimation("...", choice, "Dang ky thanh cong!");
                 }
                 case 0 -> {
                     System.out.println("Thoat chuong trinh. Tam biet!");

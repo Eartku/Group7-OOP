@@ -245,7 +245,7 @@ public class ManageUserMenu implements IManageMenu {
                 return;
             }
 
-            user.setStatus(false);
+            user.setStatus(true);
             um.save();
             System.out.println("User " + username + " da duoc kich hoat.");
             System.out.print("Tiep tuc chan? [Nhap 0 de thoat | Enter de tiep tuc]: ");

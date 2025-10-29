@@ -37,25 +37,6 @@ public class Extension {
         sc.nextLine();
     }
 
-    public static void dotAnimation(String message, int durationMillis, String end) {
-        long endTime = System.currentTimeMillis() + durationMillis;
-        int dotCount = 0;
-
-        while (System.currentTimeMillis() < endTime) {
-            System.out.print("\r" + message + " " + ".".repeat(dotCount));
-            dotCount++;
-            
-            try {
-                Thread.sleep(1500);
-            } catch (InterruptedException e) {
-                Thread.currentThread().interrupt();
-            }
-        }
-
-        System.out.print("\r" + " ".repeat(message.length() + 2) + "\r");
-        System.out.println(end);
-    }
-
 
     public static void printTableHeader(String... headers) {
     int colWidth = 20; // <-- chỉnh ở đây

@@ -47,8 +47,11 @@ public class Batch implements Comparable<Batch>, IStatus{
     public long getQuantity() { return quantity; }
     public void setQuantity(long quantity) { this.quantity = quantity; }
 
+    @Override
     public boolean getStatus() { return status; }
+    @Override
     public void setStatus(boolean active) { this.status = active; }
+    @Override
     public String getStatusString() { return this.status?"Active":"Inactive"; }
 
 

@@ -37,7 +37,6 @@ public class GuestMenu {
                         um.upgradeGuestToCustomer(guest, newCustomer);
                     System.out.println("Ban da tro thanh KHACH HANG!");
                     System.out.println("Dang chuyen sang menu khach hang...");
-                    Extension.dotAnimation("Loading", choice, "Successful!");
                     AuthMenu.getMenu(newCustomer, um, cm, pm, inv, om);
                     return;
                     }

@@ -34,7 +34,6 @@ public class AdminMenu {
 
             switch (choice) {
                 case 0 -> {
-                    Extension.dotAnimation("Dang dang xuat", choice, "Dang xuat thanh cong!");
                     return;
                 }
                 case 1 -> {

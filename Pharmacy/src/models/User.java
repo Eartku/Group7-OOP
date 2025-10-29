@@ -50,6 +50,5 @@ abstract class User implements IAuthenticable, IStatus{
     public void setStatus(boolean status) { this.status = status; }
 
     @Override
-    public abstract String toString(); // hàm trừu tượng
-    
+    public abstract String toString(); // hàm trừu tượng  
 }
