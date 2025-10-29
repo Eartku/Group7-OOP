@@ -1,6 +1,7 @@
 package view;
 
 import data.Data;
+import interfaces.IManageMenu;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Scanner;
@@ -11,9 +12,20 @@ import models.Product;
 import service.Inventory;
 import service.ProductManager;
 
-public class InventoryMenu {
-    public static void showMenu(Inventory inv, ProductManager pm){
-        Scanner sc = new Scanner(System.in);
+public class InventoryMenu implements IManageMenu{
+    private final ProductManager pm;
+    private final Inventory inv;
+    private final Scanner sc;
+
+
+    public InventoryMenu(ProductManager pm, Inventory inv, Scanner sc) {
+        this.pm = pm;
+        this.inv = inv;
+        this.sc = sc;
+    }
+
+    @Override
+    public void mainMenu(){
         Extension.clearScreen();
 
         if (inv == null) {
@@ -25,26 +37,35 @@ public class InventoryMenu {
             System.out.println("==== INVENTORY MANAGER ====\n");
             System.out.println(inv.report() + "\n");
             inv.showList();
-            System.out.println("\n1. Nhap lo hang moi");
-            System.out.println("2. Xuat lo hang trong kho");
-            System.out.println("3. Chinh sua lo hang");
-            System.out.println("4. Tim kiem lo hang");
-            System.out.println("0. Thoat");
+            System.out.println("\n1. Nhap lo hang moi - Import Batch");
+            System.out.println("2. Kich hoat/Khoa lo hang trong kho - Activate/Block Batch");
+            System.out.println("3. Chinh sua lo hang - Edit Batch");
+            System.out.println("4. Tim kiem va Xem - Search & View");
+            System.out.println("0. Thoat - Cancel");
             System.out.print("Chon: ");
             int choice = Extension.readIntInRange("Nhap lua chon (0-4):", 0, 4, sc);
 
             switch (choice) {
                 case 1 -> {
-                    AddBatch(sc, inv, pm);
+                    addMenu();
                 }
                 case 2 -> {
-                    RemoveBatch(sc, inv);
+                    System.out.println("1. Khoa lo hang - Block");
+                    System.out.println("2. Kich hoat lo hang - Activate");
+                    System.out.println("0. Huy - Cancel");
+                    int choice2 = Extension.readIntInRange("Nhap lua chon (0-2):", 0, 2, sc);
+                    switch (choice2) {
+                        case 0 ->{break;}
+                        case 1 ->blockMenu();
+                        case 2 ->activeMenu();
+                        default -> System.out.println("Khong hop le!");
+                    }
                 }
                 case 3 -> {
-                    EditBatch(sc, inv);
+                    updateMenu();
                 }
                 case 4 -> {
-                    ViewBatch(sc, inv);
+                    viewMenu();
                 }
                 case 0 -> {
                     System.out.println("Thoat chuong trinh. Tam biet!");
@@ -55,7 +76,8 @@ public class InventoryMenu {
         }
     }
 
-    public static void AddBatch(Scanner sc, Inventory inv, ProductManager pm){
+    @Override
+    public void addMenu(){
         Extension.clearScreen();
         System.out.println("==== ADD NEW BATCH ====");
         
@@ -108,14 +130,14 @@ public class InventoryMenu {
         inv.save();
     }
 
-    //Menu 
-        public static void RemoveBatch(Scanner sc, Inventory inv) {
+    @Override
+    public void blockMenu() {
         Extension.clearScreen();
-        System.out.println("==== REMOVE BATCH ====");
+        System.out.println("==== BLOCK BATCH ====");
 
         while (true) {
             inv.showList();
-            System.out.print("Nhap ID lo hang muon xoa (hoac nhap 0 de quay lai): ");
+            System.out.print("Nhap ID lo hang muon huy (Cancel) (hoac nhap 0 de quay lai): ");
             String inputID = sc.nextLine().trim();
 
             // Quay lại menu
@@ -125,7 +147,7 @@ public class InventoryMenu {
             }
 
             // Kiểm tra tồn tại
-            if (!inv.exists(inputID)) {
+            if (!inv.exists(inputID) || !inv.get(inputID).getStatus()) {
                 System.out.println("Khong ton tai lo hang: " + inputID);
                 continue;
             }
@@ -143,7 +165,7 @@ public class InventoryMenu {
             String confirm = sc.nextLine().trim();
 
             if (confirm.equalsIgnoreCase("y")) {
-                inv.delete(b.getBatchId());
+                inv.get(inputID).setStatus(false);
                 inv.save();
                 System.out.println("Da xoa lo hang: " + b.getBatchId());
             } else {
@@ -157,8 +179,57 @@ public class InventoryMenu {
         }
     }
 
+    @Override
+    public void activeMenu() {
+        Extension.clearScreen();
+        System.out.println("==== ACTIVATE BATCH ====");
 
-    public static void EditBatch(Scanner sc, Inventory inv) {
+        while (true) {
+            inv.showList();
+            System.out.print("Nhap ID lo hang muon kich hoat (hoac nhap 0 de quay lai): ");
+            String inputID = sc.nextLine().trim();
+
+            // Quay lại menu
+            if (inputID.equals("0")) {
+                System.out.println("Huy thao tac.");
+                return;
+            }
+
+            // Kiểm tra tồn tại
+            if (!inv.exists(inputID) || inv.get(inputID).getStatus()) {
+                System.out.println("Khong ton tai lo hang: " + inputID);
+                continue;
+            }
+
+            // Lấy thông tin lô hàng
+            Batch b = inv.get(inputID);
+            System.out.println("\nThong tin lo hang:");
+            System.out.println(" - Ma lo hang: " + b.getBatchId());
+            System.out.println(" - San pham: " + b.getProduct().getName());
+            System.out.println(" - So luong: " + b.getQuantity());
+            System.out.println(" - Ngay nhap: " + b.getImportDate());
+
+            // Xác nhận xóa
+            System.out.print("\nBan co chac xoa lo hang nay? (y/n): ");
+            String confirm = sc.nextLine().trim();
+
+            if (confirm.equalsIgnoreCase("y")) {
+                inv.get(inputID).setStatus(false);
+                inv.save();
+                System.out.println("Da xoa lo hang: " + b.getBatchId());
+            } else {
+                System.out.println("Da huy thao tac kich hoat.");
+            }
+
+            // Hỏi có muốn tiếp tục xóa nữa không
+            System.out.print("\nXoa them lo hang khac? (y/n): ");
+            String again = sc.nextLine().trim();
+            if (!again.equalsIgnoreCase("y")) break;
+        }
+    }
+
+    @Override
+    public void updateMenu() {
         Extension.clearScreen();
         System.out.println("==== EDIT BATCH ====");
 
@@ -256,7 +327,8 @@ public class InventoryMenu {
     }
 
 
-    public static void ViewBatch(Scanner sc, Inventory inv) {
+    @Override
+    public void viewMenu() {
         Extension.clearScreen();
         System.out.println("==== VIEW BATCH ====");
         inv.showList(); // hiển thị danh sách các lô hiện có

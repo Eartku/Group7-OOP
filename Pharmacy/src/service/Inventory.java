@@ -111,26 +111,30 @@ public class Inventory implements IManagement<Batch>{
      public void showList(){
         Extension.printTableHeader("Ma lo hang","Ma san pham","Ten san pham","So luong","Ngay nhap lo hang","Trang thai","Canh bao");
         for (Batch elem : inv.values()) {
-            String status = switch(elem.getExpiryStatus(30)){
+            if(elem.getStatus()){
+                String status = switch(elem.getExpiryStatus(30)){
                 case 1 -> "Sap het han";
                 case 0 -> "Con han";
                 case -1 ->"Qua han";
                 default -> "Nothing";
-            };
-            Extension.printTableRow(elem.getBatchId(),elem.getProduct().getPID(),elem.getProduct().getName(),elem.getQuantity(),elem.getImportDate(), elem.getStatusString(), status);
+                };
+                Extension.printTableRow(elem.getBatchId(),elem.getProduct().getPID(),elem.getProduct().getName(),elem.getQuantity(),elem.getImportDate(), elem.getStatusString(), status);
+            }
         }
     }
     @Override
     public void blackList(){
         Extension.printTableHeader("Ma lo hang","Ma san pham","Ten san pham","So luong","Ngay nhap lo hang","Trang thai","Canh bao");
         for (Batch elem : inv.values()) {
-            String status = switch(elem.getExpiryStatus(30)){
+            if(!elem.getStatus()){
+                String status = switch(elem.getExpiryStatus(30)){
                 case 1 -> "Sap het han";
                 case 0 -> "Con han";
                 case -1 ->"Qua han";
                 default -> "Nothing";
-            };
-            Extension.printTableRow(elem.getBatchId(),elem.getProduct().getPID(),elem.getProduct().getName(),elem.getQuantity(),elem.getImportDate(), elem.getStatusString(), status);
+                };
+                Extension.printTableRow(elem.getBatchId(),elem.getProduct().getPID(),elem.getProduct().getName(),elem.getQuantity(),elem.getImportDate(), elem.getStatusString(), status);
+            }
         }
     }
     

@@ -16,6 +16,7 @@ public class AdminMenu {
         ManageCustomerMenu mc = new ManageCustomerMenu(cm, um, sc);
         ManageProductsMenu mp = new ManageProductsMenu(pm, sc);
         ManageOrderMenu mo = new ManageOrderMenu(sc, pm, cm, um, inv, om);
+        InventoryMenu minv = new InventoryMenu(pm, inv, sc);
         
         while (true) {
             Extension.clearScreen();
@@ -51,7 +52,7 @@ public class AdminMenu {
                 }
                 case 4 -> {
                     System.out.println("Quan ly kho/ lo hang...");
-                    InventoryMenu.showMenu(inv, pm);
+                    minv.mainMenu();
                 }
                 case 5 -> {
                     System.out.println("Quan ly cac don hang");

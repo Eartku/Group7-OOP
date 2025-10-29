@@ -63,8 +63,11 @@ public abstract class Product implements Comparable<Product>,IStatus {
     public double getPrice(){return this.price;}
     public Integer getSLM(){return this.shelfLifeMonths;}
 
+    @Override
     public String getStatusString() { return this.status?"Avaiable ":"Unavaiable"; }
+    @Override
     public boolean getStatus() { return this.status;}
+    @Override
     public void setStatus(boolean status) { this.status = status; }
 
 
