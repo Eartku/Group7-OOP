@@ -1,6 +1,6 @@
 <mxfile host="app.diagrams.net" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:144.0) Gecko/20100101 Firefox/144.0" version="28.2.8">
   <diagram name="Trang-1" id="QcBJqrxH_IE6oO6Vi0jk">
-    <mxGraphModel dx="5747" dy="4596" grid="1" gridSize="15" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+    <mxGraphModel dx="9022" dy="6402" grid="1" gridSize="15" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
@@ -8,7 +8,7 @@
           <mxGeometry x="-600" y="1020" width="240" height="165" as="geometry" />
         </mxCell>
         <mxCell id="m590TaEcWfAOfF5zcKe_-13" value="&lt;p style=&quot;margin:0px;margin-top:4px;text-align:center;&quot;&gt;&amp;lt;&amp;lt;Interface&amp;gt;&amp;gt;&lt;br&gt;&lt;b&gt;IManagement&amp;lt;T&amp;gt;&lt;/b&gt;&lt;/p&gt;&lt;br&gt;&lt;hr size=&quot;1&quot; style=&quot;border-style:solid;&quot;&gt;&lt;div&gt;+exists(key: String): boolean&lt;/div&gt;&lt;div&gt;+get(key: String): T&lt;/div&gt;&lt;div&gt;+add(obj: T): void&amp;nbsp; &amp;nbsp; &amp;nbsp;&amp;nbsp;&lt;/div&gt;&lt;div&gt;+delete(key: String): void&amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp;&amp;nbsp;&lt;/div&gt;&lt;div&gt;+showList(): void&amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp;&amp;nbsp;&lt;/div&gt;&lt;div&gt;+report(): String&amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp;&amp;nbsp;&lt;/div&gt;&lt;div&gt;+save(): void&amp;nbsp;&lt;/div&gt;" style="verticalAlign=top;align=left;overflow=fill;html=1;whiteSpace=wrap;shadow=1;strokeWidth=2;spacing=1;fillOpacity=100;" parent="1" vertex="1">
-          <mxGeometry x="105" y="-105" width="240" height="180" as="geometry" />
+          <mxGeometry x="675" y="150" width="240" height="180" as="geometry" />
         </mxCell>
         <mxCell id="m590TaEcWfAOfF5zcKe_-14" value="&lt;i&gt;User&lt;/i&gt;" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=30;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;whiteSpace=wrap;html=1;shadow=1;strokeWidth=2;spacing=1;fillOpacity=100;" parent="1" vertex="1">
           <mxGeometry x="-630" y="1305" width="300" height="255" as="geometry">
@@ -330,7 +330,7 @@
         <mxCell id="TWqrn_NYjl8O4pKf8QjY-44" value="&lt;div&gt;+ OrderManager()&lt;/div&gt;&lt;div&gt;- loadOrders(): void&lt;/div&gt;&lt;div&gt;- loadItems(OID: String): List&amp;lt;OrderItem&amp;gt;&lt;/div&gt;&lt;div&gt;+ exists(ID: String): boolean&lt;/div&gt;&lt;div&gt;+ get(ID: String): Order&lt;/div&gt;&lt;div&gt;+ buyProducts(sc: Scanner, pm ProductManager): ArrayList&amp;lt;OrderItem&amp;gt;&lt;/div&gt;&lt;div&gt;+ add(order: Order): void&lt;/div&gt;&lt;div&gt;+ delete(ID: String): void&lt;/div&gt;&lt;div&gt;+ showList(): void&lt;/div&gt;&lt;div&gt;+ report(): String&lt;/div&gt;&lt;div&gt;+ save(): void&lt;/div&gt;&lt;div&gt;+ history(c: Customer): void&lt;/div&gt;" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;" parent="TWqrn_NYjl8O4pKf8QjY-41" vertex="1">
           <mxGeometry y="138" width="405" height="195" as="geometry" />
         </mxCell>
-        <mxCell id="TWqrn_NYjl8O4pKf8QjY-45" value="" style="endArrow=block;endSize=16;endFill=0;html=1;rounded=0;exitX=0.5;exitY=0;exitDx=0;exitDy=0;strokeWidth=2;dashed=1;" parent="1" source="TWqrn_NYjl8O4pKf8QjY-41" target="m590TaEcWfAOfF5zcKe_-13" edge="1">
+        <mxCell id="TWqrn_NYjl8O4pKf8QjY-45" value="" style="endArrow=block;endSize=16;endFill=0;html=1;rounded=0;strokeWidth=2;dashed=1;" parent="1" source="TWqrn_NYjl8O4pKf8QjY-41" target="m590TaEcWfAOfF5zcKe_-13" edge="1">
           <mxGeometry width="160" relative="1" as="geometry">
             <mxPoint x="1110" y="645" as="sourcePoint" />
             <mxPoint x="1330" y="615" as="targetPoint" />
@@ -380,19 +380,19 @@
           <mxGeometry x="-195" y="915" width="60" height="30" as="geometry" />
         </mxCell>
         <mxCell id="TWqrn_NYjl8O4pKf8QjY-58" value="T = Authenticable" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;rotation=0;" parent="1" vertex="1">
-          <mxGeometry x="-75" y="210" width="105" height="30" as="geometry" />
+          <mxGeometry x="240" y="346.5" width="105" height="30" as="geometry" />
         </mxCell>
         <mxCell id="TWqrn_NYjl8O4pKf8QjY-59" value="T = Customer" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;rotation=0;" parent="1" vertex="1">
-          <mxGeometry x="225" y="285" width="90" height="30" as="geometry" />
+          <mxGeometry x="495" y="450" width="90" height="30" as="geometry" />
         </mxCell>
         <mxCell id="TWqrn_NYjl8O4pKf8QjY-60" value="T = Product" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;rotation=0;" parent="1" vertex="1">
-          <mxGeometry x="720" y="210" width="75" height="30" as="geometry" />
+          <mxGeometry x="1102.5" y="390" width="75" height="30" as="geometry" />
         </mxCell>
         <mxCell id="TWqrn_NYjl8O4pKf8QjY-61" value="T = Batch" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;rotation=0;" parent="1" vertex="1">
-          <mxGeometry x="495" y="277.5" width="60" height="30" as="geometry" />
+          <mxGeometry x="900" y="435" width="60" height="30" as="geometry" />
         </mxCell>
         <mxCell id="TWqrn_NYjl8O4pKf8QjY-62" value="T = Order" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;rotation=0;" parent="1" vertex="1">
-          <mxGeometry x="840" y="30" width="60" height="30" as="geometry" />
+          <mxGeometry x="1211" y="240" width="60" height="30" as="geometry" />
         </mxCell>
         <mxCell id="_eb7gd2vntpU-ItNvV0j-1" value="" style="endArrow=diamondThin;endFill=0;endSize=24;html=1;rounded=0;strokeWidth=2;startArrow=open;startFill=0;" parent="1" source="m590TaEcWfAOfF5zcKe_-12" target="TWqrn_NYjl8O4pKf8QjY-54" edge="1">
           <mxGeometry width="160" relative="1" as="geometry">
