@@ -80,7 +80,12 @@ public class Order implements  Comparable<Order>,IStatus{
     @Override
     public void setStatus(boolean status) { this.status = status; }
     @Override
-    public String getStatusString() {return status?"Active":"Inactive"; }
+    public String getStatusString() {
+        if (customer == null) return "Unknown"; 
+        if (!customer.getStatus()) return "Customer blocked";
+        return status ? "Order active" : "Order inactive";
+    }
+
 
     @Override
     public String toString() {

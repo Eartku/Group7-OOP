@@ -7,6 +7,7 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.Scanner;
 import java.util.TreeMap;
@@ -151,8 +152,15 @@ public class ProductManager implements IManagement<Product>{
     }  
 
     @Override
-    public void delete(String ID){
-        products.remove(ID);
+    public void delete() {
+        Iterator<Product> it = products.values().iterator();
+        while (it.hasNext()) {
+            Product c = it.next();
+            if (!c.getStatus()) {
+                it.remove();
+                products.remove(c.getPID()); 
+            }
+        }
     }
 
     @Override

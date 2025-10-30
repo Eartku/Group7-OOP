@@ -9,7 +9,7 @@ public interface IManagement<T> { // quản lý đối tượng T
 
     void add(T obj);   // them doi tương vào danh sách
 
-    void delete(String key);  // xoa doi tuong trong danh sach
+    void delete();  // xoa doi tuong trong danh sach
 
     void showList(); // in ra các  obj hoạt động trong list
 

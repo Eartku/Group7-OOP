@@ -3,7 +3,8 @@ Phunganhvu|yandee|2|true
 admin|admindev|2|true
 aurora01|P@ssw0rd!23|1|false
 beta_tester|B3taTest#1|1|true
-guest101|guest_pass101|1|false
+guest101|guest_pass101|1|true
+hoangphuc|123phucdz|1|true
 lan_anh92|lanA!992021|1|true
 minhtrang|MtR@ng2025|1|true
 shadowx|sh4d0wX777|1|true

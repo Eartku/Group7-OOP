@@ -3,16 +3,19 @@ package view;
 import interfaces.IAuthenticable;
 import java.util.Scanner;
 import models.Customer;
+import service.CustomerManager;
 import service.Inventory;
 import service.OrderManager;
 import service.ProductManager;
+import service.UserManager;
 
 public class CustomerMenu {
     private static final Scanner sc = new Scanner(System.in);
 
-    public static void showMenu(IAuthenticable user, ProductManager pm, OrderManager om, Inventory inv){
+    public static void showMenu(IAuthenticable user,  ProductManager pm, OrderManager om, Inventory inv, CustomerManager cm, UserManager um){
         
         ManageProductsMenu mp = new ManageProductsMenu(pm, sc);
+        ManageOrderMenu mo = new ManageOrderMenu(sc, pm, cm, um, inv, om);
         Customer customer = (Customer) user;
         while (true) {
             Extension.clearScreen();
@@ -31,20 +34,32 @@ public class CustomerMenu {
                         return;
                     }
                     case 1 -> {
+                        if(!customer.getStatus()) {
+                            System.out.println("Tai khoan cua ban da bi khoa. Nen khong the thuc hien chuc nang nay.");
+                            Extension.pause(sc);
+                            break;
+                        }
                         System.out.println("Xem danh sach san pham...");
                         mp.viewMenu();
                     }
                     case 2 -> {
+                        if(!customer.getStatus()) {
+                            System.out.println("Tai khoan cua ban da bi khoa. Nen khong the thuc hien chuc nang nay.");
+                            Extension.pause(sc);
+                            break;
+                        }
                         System.out.println("Dang ky mua san pham...");
-                        //TODO: 
+                        mo.OrderforCustomer(customer);
                     }
                     case 3 -> {
                         System.out.println("Xem thong tin ca nhan...");
-                        ManageCustomerMenu.printCustomer(customer);
+                        Extension.printInBox(() -> {ManageCustomerMenu.printCustomer(customer);});
+                        Extension.pause(sc);
                     }
                     case 4 -> {
                         System.out.println("Xem lich su mua hang...");
                         om.history(customer);
+                        Extension.pause(sc);
                     }
                     default -> System.out.println("Khong hop le!");
                 }

@@ -39,7 +39,10 @@ public class ManageUserMenu implements IManageMenu {
             Extension.clearScreen();
             System.out.println("==== USER MANAGER ====");
             System.out.println(um.report());
+            System.out.println("==== DANH SACH USER HOAT DONG ====");
             if(active) um.showList(); else um.hidePassList();
+            System.out.println("==== DANH SACH USER BI BLOCK ====");
+            if(active) um.blackList(); else um.hideblackList();
             System.out.println("1. Them User - Add new user");
             System.out.println("2. Kich hoat/Khoa User theo username - Activate/Block user");
             System.out.println("3. Cap nhat User theo username - Edit user");
@@ -255,36 +258,6 @@ public class ManageUserMenu implements IManageMenu {
                 return;
             }
         }
-    }
-
-    
-    public void removeMenuPhysical() {
-        System.out.print("Nhap username (hoac nhap 0 de quay lai): ");
-        String username = sc.nextLine().trim();
-        if (username.equals("0")) {
-            System.out.println("Huy thao tac xoa, quay lai menu chinh.");
-            return;
-        }
-        IAuthenticable user = um.get(username);
-        if (user == null) {
-            System.out.println("Khong tim thay user: " + username);
-            return;
-        }
-
-        System.out.print("Ban co chac muon xoa vat ly user " + username + "? (y/n): ");
-        String confirm = sc.nextLine().trim();
-        if (!confirm.equalsIgnoreCase("y")) {
-            System.out.println("Da huy thao tac xoa vat ly.");
-            return;
-        }
-
-        um.delete(username); // xoa khoi UserManager
-        if (user instanceof Customer c) {
-            cm.delete(c.getCID()); 
-            cm.save();
-        }
-        um.save();
-        System.out.println("Da xoa vat ly user: " + username);
     }
 
 

@@ -7,6 +7,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.TreeMap;
 import models.Batch;
@@ -145,8 +146,15 @@ public class Inventory implements IManagement<Batch>{
     }    
 
     @Override
-    public void delete(String ID){
-        inv.remove(ID);
+    public void delete() {
+        Iterator<Batch> it = inv.values().iterator();
+        while (it.hasNext()) {
+            Batch c = it.next();
+            if (!c.getStatus()) {
+                it.remove();
+                inv.remove(c.getBatchId()); 
+            }
+        }
     } 
 
 

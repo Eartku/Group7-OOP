@@ -42,6 +42,11 @@ public class GuestMenu {
                     }
                 }
                 case 2 ->{
+                    if(!guest.getStatus()) {
+                        System.out.println("Tai khoan cua ban da bi khoa. Nen khong the thuc hien chuc nang nay.");
+                        Extension.pause(sc);
+                        break;
+                    }
                     ManageProductsMenu mp = new ManageProductsMenu(pm, sc);
                     mp.viewMenu();
                 }

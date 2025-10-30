@@ -105,21 +105,24 @@ public class ManageProductsMenu implements IManageMenu{
 
             System.out.print("Thoi han su dung (thang), bo trong neu khong co: ");
             String input = sc.nextLine().trim();
-            Integer SLM = null;
+            Integer SLM;
+
+            System.out.print("Thoi han su dung (thang), bo trong neu khong co: ");
 
             if (!input.isEmpty()) {
                 try {
                     SLM = Integer.valueOf(input);
                     if (SLM < 0) {
-                        System.out.println("Thoi han khong the am! Mac dinh de trong neu khong co.");
-                        SLM = null;
+                        System.out.println("Thoi han khong the am! Mac dinh la 0 neu khong co.");
+                        SLM = 0;
                     }
                 } catch (NumberFormatException e) {
-                    System.out.println("Gia tri khong hop le! Bo qua truong nay.");
-                    SLM = null;
+                    System.out.println("Gia tri khong hop le! Mac dinh la 0.");
+                    SLM = 0;
                 }
+            } else {
+                SLM = 0;
             }
-
 
             String confirm;
             while (true) {
@@ -186,7 +189,7 @@ public class ManageProductsMenu implements IManageMenu{
             String confirm = sc.nextLine().trim();
 
             if (confirm.equalsIgnoreCase("y")) {
-                pm.get(inputID).setStatus(false);
+                target.setStatus(false);
                 System.out.println("Da an san pham: " + target.getName());
                 pm.save();
             } else {
@@ -222,7 +225,7 @@ public class ManageProductsMenu implements IManageMenu{
             String confirm = sc.nextLine().trim();
 
             if (confirm.equalsIgnoreCase("y")) {
-                pm.get(inputID).setStatus(true);
+                target.setStatus(true);
                 System.out.println("Da HIEN san pham: " + target.getName());
                 pm.save();
             } else {

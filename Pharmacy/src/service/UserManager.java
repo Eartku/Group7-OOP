@@ -72,10 +72,14 @@ public class UserManager implements IManagement<IAuthenticable> {
     }
 
     @Override
-    public void delete(String username) {
-        IAuthenticable u = users.remove(username);
-        if (u instanceof Customer customer) {
-            cm.delete(customer.getCID()); // xóa đồng bộ profile
+    public void delete() {
+        Iterator<IAuthenticable> it = users.values().iterator();
+        while (it.hasNext()) {
+            IAuthenticable c = it.next();
+            if (!c.getStatus()) {
+                it.remove();
+                users.remove(c.getUsername()); 
+            }
         }
     }
 
@@ -117,7 +121,7 @@ public class UserManager implements IManagement<IAuthenticable> {
                     case 0 -> "Guest";
                     default -> "Nothing";
                 };
-                Extension.printTableRow(u.getUsername(), Extension.maskPassword(u.getPassword(), "-"), role, u.getStatusString());
+                Extension.printTableRow(u.getUsername(), Extension.maskPassword(u.getPassword(), "#"), role, u.getStatusString());
             }
         }
     }
@@ -134,6 +138,21 @@ public class UserManager implements IManagement<IAuthenticable> {
                     default -> "Nothing";
                 };
                 Extension.printTableRow(u.getUsername(), u.getPassword(), role, u.getStatusString());
+            }
+        }
+    }
+
+    public void hideblackList() {
+        Extension.printTableHeader("Username", "Password", "Role", "Status");
+        for (IAuthenticable u : users.values()) {
+            if (!u.getStatus()) {
+                String role = switch (u.getRole()) {
+                    case 1 -> "Customer";
+                    case 2 -> "Admin";
+                    case 0 -> "Guest";
+                    default -> "Nothing";
+                };
+                Extension.printTableRow(u.getUsername(), Extension.maskPassword(u.getPassword(),""), role, u.getStatusString());
             }
         }
     }

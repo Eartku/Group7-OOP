@@ -110,7 +110,7 @@ public class ManageOrderMenu implements IManageMenu{
 
                 if (c instanceof Customer customer) {
                     System.out.println("Dang nhap thanh cong, xin chao " + customer.getFullname() + "!");
-                    ArrayList<OrderItem> ordered = om.buyProducts(sc, pm);
+                    ArrayList<OrderItem> ordered = OrderManager.buyProducts(sc, pm);
 
                     if (!ordered.isEmpty()) {
                         // kiểm tra tồn kho
@@ -177,7 +177,7 @@ public class ManageOrderMenu implements IManageMenu{
                     cm.save();
 
                     System.out.println("Dang ky thanh cong, chao mung " + customer.getFullname() + "!");
-                    ArrayList<OrderItem> ordered = om.buyProducts(sc, pm);
+                    ArrayList<OrderItem> ordered = OrderManager.buyProducts(sc, pm);
 
                     if (!ordered.isEmpty()) {
                         for (OrderItem o : ordered) {
@@ -220,6 +220,11 @@ public class ManageOrderMenu implements IManageMenu{
 
     public void OrderforCustomer(Customer customer) {
         Extension.clearScreen();
+        if(!customer.getStatus()){
+            System.out.println("Ban da bi khoa! Khong the mua hang!");
+            Extension.pause(sc);
+            return;
+        }
         System.out.println("==== MUA HANG ====");
         System.out.println(" Hello, " + customer.getFullname() + "!");
         System.out.println("Vui long chon san pham trong danh sach:");
@@ -227,7 +232,7 @@ public class ManageOrderMenu implements IManageMenu{
         String OID = Data.generateNewID(OrderManager.FILE_PATH, 'O');
 
         // Chọn sản phẩm
-        List<OrderItem> ordered = om.buyProducts(sc, pm);
+        List<OrderItem> ordered = OrderManager.buyProducts(sc, pm);
 
         // Kiểm tra nếu danh sách trống
         if (ordered.isEmpty()) {

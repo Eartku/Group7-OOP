@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
@@ -135,7 +136,7 @@ public class OrderManager implements IManagement<Order> {
         Extension.printTableHeader("Ma don hang","Ma khach hang","So san pham","Trang thai","Ngay dat mua");
         for (Order elem : orders.values()) {
             if(elem.getStatus())
-                Extension.printTableRow(elem.getOID(),elem.getCustomer().getCID(),elem.getItems().size(),elem.getStatus(),elem.getpurchaseDate());
+                Extension.printTableRow(elem.getOID(),elem.getCustomer().getCID(),elem.getItems().size(),elem.getStatusString(),elem.getpurchaseDate());
         }
     }
 
@@ -144,11 +145,11 @@ public class OrderManager implements IManagement<Order> {
         Extension.printTableHeader("Ma don hang","Ma khach hang","So san pham","Trang thai","Ngay dat mua");
         for (Order elem : orders.values()) {
             if(!elem.getStatus())
-                Extension.printTableRow(elem.getOID(),elem.getCustomer().getCID(),elem.getItems().size(),elem.getStatus(),elem.getpurchaseDate());
+                Extension.printTableRow(elem.getOID(),elem.getCustomer().getCID(),elem.getItems().size(),elem.getStatusString(),elem.getpurchaseDate());
         }
     }
 
-    public ArrayList<OrderItem> buyProducts(Scanner sc, ProductManager pm) {
+    public static ArrayList<OrderItem> buyProducts(Scanner sc, ProductManager pm) {
         ArrayList<OrderItem> list = new ArrayList<>();
         while(true){
             pm.showList();
@@ -196,8 +197,15 @@ public class OrderManager implements IManagement<Order> {
     }  
 
     @Override
-    public void delete(String ID){
-        orders.remove(ID);
+    public void delete() {
+        Iterator<Order> it = orders.values().iterator();
+        while (it.hasNext()) {
+            Order c = it.next();
+            if (!c.getStatus()) {
+                it.remove();
+                orders.remove(c.getOID()); 
+            }
+        }
     } 
 
     @Override
@@ -205,12 +213,22 @@ public class OrderManager implements IManagement<Order> {
         return "Tong so don hang trong he thong: " + orders.size() + "\n";
     } 
 
-    public void history(Customer cs){
-        for (Order o: orders.values()){
-            if(o.getCustomer().equals(cs)){
-                System.out.println(o.getOID() + "|\t" + o.getTotal() + "VND");
+    public void history(Customer cs) {
+        Extension.printTableHeader("Ma hoa don", "Ten cac san pham", "So luong", "Trang thai");
+        for (Order o : orders.values()) {
+            if (o.getCustomer().equals(cs)) {
+                StringBuilder item = new StringBuilder();
+                for (OrderItem it : o.getItems()) {
+                    if (item.length() > 0) item.append(", ");
+                    item.append(it.getProductsName());
+                }
+                Extension.printTableRow(
+                    o.getOID(),
+                    item.toString(),
+                    String.valueOf(o.getItems().size()),
+                    o.getStatusString()
+                );
             }
         }
-    }
-    
+    }    
 }

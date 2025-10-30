@@ -19,7 +19,7 @@ public abstract class Product implements Comparable<Product>,IStatus {
         this.status = false;
     }
 
-    public Product(String PID, String Name, String unit, double price, int shelfLifeMonths, boolean status) {
+    public Product(String PID, String Name, String unit, double price, Integer shelfLifeMonths, boolean status) {
         this.PID = PID;
         this.unit = unit;
         this.Name = Name;
@@ -44,16 +44,16 @@ public abstract class Product implements Comparable<Product>,IStatus {
     
 
     public void setShelfLifeMonths(Integer shelfLifeMonths) {
-        if (shelfLifeMonths == null) {
+        if (shelfLifeMonths == null || shelfLifeMonths == 0) {
             this.shelfLifeMonths = null;
         } else if (shelfLifeMonths > 0) {
             this.shelfLifeMonths = shelfLifeMonths;
         } else {
-            throw new IllegalArgumentException("Thời hạn sử dụng phải > 0 hoặc null (vô thời hạn).");
+            throw new IllegalArgumentException("han dung phai > 0.");
         }
     }
     public String getShelfLifeInfo() {
-        return (shelfLifeMonths == null) ? "Vô thời hạn" : shelfLifeMonths + " tháng";
+        return (shelfLifeMonths == null || shelfLifeMonths == 0) ? "Khong co" : shelfLifeMonths + " thang";
     }
 
 

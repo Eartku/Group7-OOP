@@ -107,10 +107,14 @@ public final class CustomerManager implements IManagement<Customer> {
     }
 
     @Override
-    public void delete(String ID) {
-        Customer c = customerByID.remove(ID);
-        if (c != null) {
-            customerByUsername.remove(c.getUsername());
+    public void delete() {
+        Iterator<Customer> it = customerByID.values().iterator();
+        while (it.hasNext()) {
+            Customer c = it.next();
+            if (!c.getStatus()) {
+                it.remove();
+                customerByUsername.remove(c.getUsername()); 
+            }
         }
     }
 

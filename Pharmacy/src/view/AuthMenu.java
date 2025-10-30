@@ -73,7 +73,7 @@ public class AuthMenu {
 
                 if (username.equals("0")) {
                     System.out.println("Huy thao tac xoa, quay lai menu chinh.");
-                    break;
+                    return null;
                 }
                 if(um.exists(username)){
                     IAuthenticable user = um.get(username);
@@ -117,7 +117,7 @@ public class AuthMenu {
         if (user instanceof Admin) {
             AdminMenu.showMenu(user,um, cm, pm, inv, om);
         } else if (user instanceof Customer) {
-            CustomerMenu.showMenu(user, pm, om, inv);
+            CustomerMenu.showMenu(user, pm, om, inv,cm, um);
         } else if (user instanceof Guest) {
             GuestMenu.showMenu(user, um, cm, pm, inv, om);
         } else throw new IllegalArgumentException("Unknown user type!");
