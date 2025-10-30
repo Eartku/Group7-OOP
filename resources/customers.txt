@@ -5,3 +5,4 @@ C004|Minh Trang|12/12/1998|Hanoi|minhtrang@example.com|0900000004|minhtrang|true
 C005|Beta Tester|03/03/1990|Hue|beta_tester@example.com|0900000005|beta_tester|true
 C006|Nguyen Rey|07/07/1993|Can Tho|vietnam_rey@example.com|0900000006|vietnam_rey|false
 C007|Guest One|15/08/2001|Hanoi|guest101@example.com|0900000007|guest101|false
+C008|phucdepzai|13/07/2006|Bac Lieu|phuc@gmail.com|0839444302|Phuc|true

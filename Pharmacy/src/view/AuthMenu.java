@@ -26,7 +26,8 @@ public class AuthMenu {
 
             if (username.equals("0")) {
                 System.out.println("Huy thao tac xoa, quay lai menu chinh.");
-                break;
+                // break;
+                return null;
             }
 
             if(um.exists(username)){
