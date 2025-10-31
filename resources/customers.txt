@@ -1,8 +1,7 @@
-C001|Nguyen Hoang Phuc|13/07/2006|BL|phucdv@gmail.com|0xxxxxxxxx|hoangphuc|true
+C001|Aurora Le|01/01/2000|Hanoi|aurora01@example.com|0900000001|aurora01|false
 C002|Lan Anh|10/10/1992|Ho Chi Minh City|lan_anh92@example.com|0900000002|lan_anh92|true
 C003|Shadow X|05/05/1995|Da Nang|shadowx@example.com|0900000003|shadowx|true
 C004|Minh Trang|12/12/1998|Hanoi|minhtrang@example.com|0900000004|minhtrang|true
 C005|Beta Tester|03/03/1990|Hue|beta_tester@example.com|0900000005|beta_tester|true
-C006|Nguyen Rey|07/07/1993|Can Tho|vietnam_rey@example.com|0900000006|vietnam_rey|false
-C007|Guest One|15/08/2001|Hanoi|guest101@example.com|0900000007|guest101|true
-C008|phucdepzai|13/07/2006|Bac Lieu|phuc@gmail.com|0839444302|Phuc|true
+C006|Nguyen Rey|07/07/1993|Can Tho|vietnam_rey@example.com|0900000006|vietnam_rey|true
+C007|Guest One|15/08/2001|Hanoi|guest101@example.com|0900000007|guest101|false

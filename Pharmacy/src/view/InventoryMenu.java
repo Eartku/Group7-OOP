@@ -185,7 +185,7 @@ public class InventoryMenu implements IManageMenu{
         System.out.println("==== ACTIVATE BATCH ====");
 
         while (true) {
-            inv.showList();
+            inv.blackList();
             System.out.print("Nhap ID lo hang muon kich hoat (hoac nhap 0 de quay lai): ");
             String inputID = sc.nextLine().trim();
 
@@ -214,7 +214,7 @@ public class InventoryMenu implements IManageMenu{
             String confirm = sc.nextLine().trim();
 
             if (confirm.equalsIgnoreCase("y")) {
-                inv.get(inputID).setStatus(false);
+                inv.get(inputID).setStatus(true);
                 inv.save();
                 System.out.println("Da xoa lo hang: " + b.getBatchId());
             } else {

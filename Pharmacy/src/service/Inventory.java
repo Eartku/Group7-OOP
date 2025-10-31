@@ -21,6 +21,7 @@ public class Inventory implements IManagement<Batch>{
     public static final String FILE_PATH = System.getProperty("user.dir") + "/resources/inventory.txt";
     private final ProductManager pm;
     private final Map<String, Batch> inv = new TreeMap<>();
+    private final Map<String, Batch> inv_byPID = new TreeMap<>();
 
     public Inventory(ProductManager pm) {
         this.pm = pm;
@@ -32,11 +33,13 @@ public class Inventory implements IManagement<Batch>{
         java.io.File file = new File(FILE_PATH);
         if(!file.exists()) return;
         inv.clear();
+        inv_byPID.clear();
         try(BufferedReader br = new BufferedReader(new FileReader(file))){
             String line;
             while ((line = br.readLine())!= null){
                 String parts[] = line.split("\\|");
                 String BID = parts[0];
+                
                 Product p = pm.get(parts[1]);
                 if(p==null) continue;
                 int quantity = Integer.parseInt(parts[2]);
@@ -47,7 +50,10 @@ public class Inventory implements IManagement<Batch>{
                     importDate = null;
                 }
                 boolean active = Boolean.parseBoolean(parts[4]);
-                inv.put(BID,(new Batch(BID, p, quantity, importDate, active)));
+                Batch b = (new Batch(BID, p, quantity, importDate, active));
+                inv.put(BID, b);
+                inv_byPID.put(b.getProduct().getPID(), b);
+                System.err.println("[Debug] Lo hang " + BID + "SL: " + quantity);
             }
         }
         catch(Exception e){
@@ -139,6 +145,17 @@ public class Inventory implements IManagement<Batch>{
         }
     }
     
+    public void showStockList(){
+        Extension.printTableHeader("Ma san pham","Ten san pham","Gia ca");
+        for (Batch elem : inv_byPID.values()) {
+            if(elem.getStatus()){
+                Product p = elem.getProduct();
+                if(p.getStatus()){
+                    Extension.printTableRow(p.getPID(),p.getName(),p.getPrice());
+                }
+            }
+        }
+    }
 
     @Override
     public void add(Batch batch){

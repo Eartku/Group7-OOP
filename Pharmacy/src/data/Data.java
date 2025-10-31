@@ -111,26 +111,26 @@ public class Data {
         """;
 
         String orders = """
-        H001|C001|05/10/2025|Pending
-        H002|C001|12/10/2025|Confirmed
-        H003|C001|20/10/2025|Confirmed
-        H004|C002|06/10/2025|Pending
-        H005|C002|14/10/2025|Confirmed
-        H006|C002|21/10/2025|Confirmed
-        H007|C003|08/10/2025|Confirmed
-        H008|C003|15/10/2025|Canceled
-        H009|C003|22/10/2025|Confirmed
-        H010|C004|09/10/2025|Confirmed
-        H011|C004|18/10/2025|Confirmed
-        H012|C005|10/10/2025|Confirmed
-        H013|C005|19/10/2025|Confirmed
-        H014|C006|11/10/2025|Canceled
-        H015|C006|20/10/2025|Confirmed
-        H016|C007|12/10/2025|Confirmed
-        H017|C007|21/10/2025|Confirmed
-        H018|C007|22/10/2025|Confirmed
-        H019|C005|25/10/2025|Confirmed
-        H020|C002|28/10/2025|Confirmed
+        H001|C001|05/10/2025|true
+        H002|C001|12/10/2025|true
+        H003|C001|20/10/2025|true
+        H004|C002|06/10/2025|true
+        H005|C002|14/10/2025|true
+        H006|C002|21/10/2025|true
+        H007|C003|08/10/2025|true
+        H008|C003|15/10/2025|false
+        H009|C003|22/10/2025|true
+        H010|C004|09/10/2025|true
+        H011|C004|18/10/2025|true
+        H012|C005|10/10/2025|true
+        H013|C005|19/10/2025|true
+        H014|C006|11/10/2025|false
+        H015|C006|20/10/2025|true
+        H016|C007|12/10/2025|true
+        H017|C007|21/10/2025|true
+        H018|C007|22/10/2025|true
+        H019|C005|25/10/2025|true
+        H020|C002|28/10/2025|true
         """;
 
         String orderItems = """

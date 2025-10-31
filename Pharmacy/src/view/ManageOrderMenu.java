@@ -90,7 +90,7 @@ public class ManageOrderMenu implements IManageMenu{
     public void addMenu() {
         Extension.clearScreen();
         System.out.println("==== ADD NEW ORDER ====");
-        String OID = Data.generateNewID(OrderManager.FILE_PATH, 'O');
+        String OID = Data.generateNewID(OrderManager.FILE_PATH, 'H');
         IAuthenticable c;
 
         while (true) {
@@ -110,7 +110,7 @@ public class ManageOrderMenu implements IManageMenu{
 
                 if (c instanceof Customer customer) {
                     System.out.println("Dang nhap thanh cong, xin chao " + customer.getFullname() + "!");
-                    ArrayList<OrderItem> ordered = OrderManager.buyProducts(sc, pm);
+                    ArrayList<OrderItem> ordered = OrderManager.buyProducts(sc, pm, inv);
 
                     if (!ordered.isEmpty()) {
                         // kiểm tra tồn kho
@@ -124,10 +124,11 @@ public class ManageOrderMenu implements IManageMenu{
                                 sc.nextLine();
                                 return;
                             }
+                            else{
+                                inv.deductStock(o);
+                                inv.save();
+                            }
                         }
-
-                        for (OrderItem o : ordered) inv.deductStock(o);
-                        inv.save();
 
                         om.add(new Order(OID, ordered, customer, true));
                         om.save();
@@ -177,7 +178,7 @@ public class ManageOrderMenu implements IManageMenu{
                     cm.save();
 
                     System.out.println("Dang ky thanh cong, chao mung " + customer.getFullname() + "!");
-                    ArrayList<OrderItem> ordered = OrderManager.buyProducts(sc, pm);
+                    ArrayList<OrderItem> ordered = OrderManager.buyProducts(sc, pm, inv);
 
                     if (!ordered.isEmpty()) {
                         for (OrderItem o : ordered) {
@@ -190,10 +191,11 @@ public class ManageOrderMenu implements IManageMenu{
                                 sc.nextLine();
                                 return;
                             }
+                            else{
+                                inv.deductStock(o);
+                                inv.save();
+                            }
                         }
-
-                        for (OrderItem o : ordered) inv.deductStock(o);
-                        inv.save();
 
                         om.add(new Order(OID, ordered, customer, true));
                         om.save();
@@ -229,10 +231,10 @@ public class ManageOrderMenu implements IManageMenu{
         System.out.println(" Hello, " + customer.getFullname() + "!");
         System.out.println("Vui long chon san pham trong danh sach:");
 
-        String OID = Data.generateNewID(OrderManager.FILE_PATH, 'O');
+        String OID = Data.generateNewID(OrderManager.FILE_PATH, 'H');
 
         // Chọn sản phẩm
-        List<OrderItem> ordered = OrderManager.buyProducts(sc, pm);
+        List<OrderItem> ordered = OrderManager.buyProducts(sc, pm, inv);
 
         // Kiểm tra nếu danh sách trống
         if (ordered.isEmpty()) {

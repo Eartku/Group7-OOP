@@ -52,7 +52,8 @@ public class OrderManager implements IManagement<Order> {
                     for (int i = 1; i < parts.length; i+= 2){
                         String pid = parts[i];
                         int qty = Integer.parseInt(parts[i+1]);
-                        items.add(new OrderItem(pm.get(pid), qty));
+                        OrderItem it = new OrderItem(pm.get(pid), qty);
+                        items.add(it);
                     }
                 }
             }
@@ -74,13 +75,15 @@ public class OrderManager implements IManagement<Order> {
                 String cid = parts[1];
                 boolean status = Boolean.parseBoolean(parts[3]);
                 LocalDate purchaseDate;
+                System.err.println("[Debug] don hang " + oid);
+                List<OrderItem> items = loadItems(oid);
                 try {
                     purchaseDate = LocalDate.parse(parts[2], DateTimeFormatter.ofPattern("dd/MM/yyyy"));
                 } catch (Exception e) {
                     purchaseDate = null;
                 }
-                orders.put(oid, new Order(oid, loadItems(oid), cm.get(cid), purchaseDate, status));
-
+                
+                orders.put(oid, new Order(oid, items , cm.get(cid), purchaseDate, status));
             }
         } catch(Exception e){
             System.out.println("Error: "+ e.getMessage());
@@ -133,7 +136,7 @@ public class OrderManager implements IManagement<Order> {
 
     @Override
     public void showList(){
-        Extension.printTableHeader("Ma don hang","Ma khach hang","So san pham","Trang thai","Ngay dat mua");
+        Extension.printTableHeader("Ma don hang","Ma khach hang","So san pham","Trang thai","Ngay dat");
         for (Order elem : orders.values()) {
             if(elem.getStatus())
                 Extension.printTableRow(elem.getOID(),elem.getCustomer().getCID(),elem.getItems().size(),elem.getStatusString(),elem.getpurchaseDate());
@@ -149,10 +152,10 @@ public class OrderManager implements IManagement<Order> {
         }
     }
 
-    public static ArrayList<OrderItem> buyProducts(Scanner sc, ProductManager pm) {
+    public static ArrayList<OrderItem> buyProducts(Scanner sc, ProductManager pm, Inventory inv) {
         ArrayList<OrderItem> list = new ArrayList<>();
         while(true){
-            pm.showList();
+            inv.showStockList();
             System.out.println("Nhap ten hay ID pham muon mua (Nhap 0 de thoat): ");
             String choice = sc.nextLine().trim();
             if(choice.equals("0")) break;

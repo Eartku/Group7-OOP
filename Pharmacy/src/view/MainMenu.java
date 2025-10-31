@@ -23,7 +23,6 @@ public class MainMenu{
         IAuthenticable currentUser = null;
 
         while (true) {
-            Extension.clearScreen();
             System.out.println("\n==== WELCOME ====");
             System.out.println("1. Dang nhap tai khoan - Login");
             System.out.println("2. Dang ky tai khoan - Register");
