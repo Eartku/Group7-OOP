@@ -37,22 +37,34 @@ public class UserManager implements IManagement<IAuthenticable> {
                 boolean status = Boolean.parseBoolean(parts[3]);
 
                 switch (role) {
-                    case 0 -> users.put(username, new Guest(username, password, status));
+                    case 0 -> {
+                        Guest g = new Guest(username, password, status);
+                        users.put(username, g);
+                        System.err.println("[Debug] Load guest ["+ g.getUsername() +"] successfully!");
+                    }
                     case 1 -> {
                         Customer profile = customerMap.get(username);
                         if (profile != null) {
                             profile.setPassword(password);
                             profile.setStatus(status);
                             users.put(username, profile);
+                            System.err.println("[Debug] Load customer ["+ profile.getUsername() +"] successfully!");
                         } else {
-                            users.put(username, new Customer(username, password, status));
+                            Customer c = new Customer(username, password, status);
+                            users.put(username, c);
+                            System.err.println("[Debug] Load customer ["+ c.getUsername() +"] successfully!");
                         }
                     }
-                    case 2 -> users.put(username, new Admin(username, password, status));
+                    case 2 -> {
+                        Admin a = new Admin(username, password, status);
+                        users.put(username, a);
+                        System.err.println("[Debug] Load admin ["+ a.getUsername() +"] successfully!");
+                    }
                 }
             }
+            System.err.println("[Debug] Users data has been loaded successfully!\n");
         } catch (Exception e) {
-            System.out.println("Error reading users: " + e.getMessage());
+            System.out.println("Error in user manager: " + e.getMessage());
         }
     }
 
@@ -121,7 +133,7 @@ public class UserManager implements IManagement<IAuthenticable> {
                     case 0 -> "Guest";
                     default -> "Nothing";
                 };
-                Extension.printTableRow(u.getUsername(), Extension.maskPassword(u.getPassword(), "#"), role, u.getStatusString());
+                Extension.printTableRow(u.getUsername(), Extension.maskPassword(u.getPassword(), " "), role, u.getStatusString());
             }
         }
     }
@@ -152,7 +164,7 @@ public class UserManager implements IManagement<IAuthenticable> {
                     case 0 -> "Guest";
                     default -> "Nothing";
                 };
-                Extension.printTableRow(u.getUsername(), Extension.maskPassword(u.getPassword(),""), role, u.getStatusString());
+                Extension.printTableRow(u.getUsername(), Extension.maskPassword(u.getPassword()," "), role, u.getStatusString());
             }
         }
     }

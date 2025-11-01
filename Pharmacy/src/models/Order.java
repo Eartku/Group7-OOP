@@ -89,7 +89,7 @@ public class Order implements  Comparable<Order>,IStatus{
 
     @Override
     public String toString() {
-        return OID + "|" +  customer.getCID() + "|" + purchaseDate.format(FORMATTER);
+        return OID + "|" +  customer.getCID() + "|" + purchaseDate.format(FORMATTER) + "|" + status;
     }
 
     @Override

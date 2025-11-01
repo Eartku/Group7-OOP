@@ -5,3 +5,6 @@ C004|Minh Trang|12/12/1998|Hanoi|minhtrang@example.com|0900000004|minhtrang|true
 C005|Beta Tester|03/03/1990|Hue|beta_tester@example.com|0900000005|beta_tester|true
 C006|Nguyen Rey|07/07/1993|Can Tho|vietnam_rey@example.com|0900000006|vietnam_rey|true
 C007|Guest One|15/08/2001|Hanoi|guest101@example.com|0900000007|guest101|false
+C008|TranNhutHuy|18/09/2006|TranBinhTrong,HCM|huy@gmail.com|0962713941|Huy|true
+C009|Huylore|19/08/2007|higsdjgdsxg|dgdfgdfg|dgdfgfdgd|admin2|true
+C010|�ertyukjhgfds|18/08/2005|12345yfdsdfg|�ertyjhgfdsd|sdfghds|u|true

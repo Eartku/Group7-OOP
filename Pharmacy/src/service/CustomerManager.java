@@ -60,10 +60,12 @@ public final class CustomerManager implements IManagement<Customer> {
                 Customer c = new Customer(username, "", CID, fullName, dob, address, email, phone, status);
                 customerByID.put(CID, c);
                 customerByUsername.put(username, c);
+                System.err.println("[Debug] Load customer ["+ c.getFullname() +"] successfully!");
             }
+            System.err.println("[Debug] Customers data has been loaded successfully!\n");
 
         } catch (Exception e) {
-            System.out.println("[ERROR] Error reading customers: " + e.getMessage());
+            System.out.println("[ERROR] Error in customer manager: " + e.getMessage());
         }
     }
 

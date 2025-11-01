@@ -20,13 +20,15 @@ import service.OrderManager;
 import service.ProductManager;
 import service.UserManager;
 
-public class ManageOrderMenu implements IManageMenu{
+public class ManageOrderMenu implements IManageMenu {
     private final ProductManager pm;
     private final CustomerManager cm;
     private final UserManager um;
     private final Inventory inv;
     private final OrderManager om;
     private final Scanner sc;
+
+    private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 
     public ManageOrderMenu(Scanner sc, ProductManager pm, CustomerManager cm, UserManager um, Inventory inv, OrderManager om) {
         this.pm = pm;
@@ -36,14 +38,13 @@ public class ManageOrderMenu implements IManageMenu{
         this.om = om;
         this.sc = sc;
     }
-    
-    private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+
     @Override
-    public void mainMenu(){
+    public void mainMenu() {
         Extension.clearScreen();
 
         if (pm == null) {
-            System.out.println("Khong the quan ly cac HOA DON!");
+            Log.error("Khong the quan ly cac HOA DON!");
             return;
         }
 
@@ -53,35 +54,42 @@ public class ManageOrderMenu implements IManageMenu{
             System.out.println(om.report());
             om.showList();
             System.out.println("1. Them HOA DON moi (neu giao dich tai quay)");
-            System.out.println("2. Xoa HOA DON");
+            System.out.println("2. Kich hoat/Khoa HOA DON");
             System.out.println("3. Cap nhat thong tin HOA DON (Khong co)");
             System.out.println("4. Truy xuat HOA DON");
-            System.out.println("5. Xem cac HOA DON bi huy");
-            System.out.println("0. Thoat");
-            System.out.print("Chon: ");
-            int choice = Extension.readIntInRange("Nhap lua chon (0-4):", 0, 4, sc);
+            Log.exit("0. Thoat");
+            int choice = Extension.readIntInRange("Nhap lua chon (0-5):", 0, 5, sc);
 
             switch (choice) {
                 case 1 -> {
                     addMenu();
+                    Extension.pause(sc);
                 }
                 case 2 -> {
-                    blockMenu();
+                    System.out.println("1. Khoa HOA DON - Block Order");
+                    System.out.println("2. Kich hoat HOA DON - Activate Order");
+                    Log.exit("0. Huy - Cancel");
+                    int choice2 = Extension.readIntInRange("Nhap lua chon (0-2):", 0, 2, sc);
+                    switch (choice2) {
+                        case 1 -> blockMenu();
+                        case 2 -> activeMenu();
+                        default -> Log.info("Huy thao tac.");
+                    }
+                    Extension.pause(sc);
                 }
                 case 3 -> {
                     updateMenu();
+                    Extension.pause(sc);
                 }
-                case 4 -> {
+                case 4 ->{
                     viewMenu();
-                }
-                case 5 -> {
-                    viewMenu();
+                    Extension.pause(sc);
                 }
                 case 0 -> {
-                    System.out.println("Thoat chuong trinh. Tam biet!");
+                    Log.exit("Thoat chuong trinh. Tam biet!");
                     return;
                 }
-                default -> System.out.println("Lua chon khong hop le!");
+                default -> Log.warning("Lua chon khong hop le!");
             }
         }
     }
@@ -94,77 +102,63 @@ public class ManageOrderMenu implements IManageMenu{
         IAuthenticable c;
 
         while (true) {
-            System.out.print("Khach hang da co tai khoan chua (y/n): ");
+            Log.request("Khach hang da co tai khoan chua (y/n) - (Nhap 0 de quay lai): ");
             String hasAccount = sc.nextLine().trim();
 
-            // ===== TRƯỜNG HỢP 1: KHÁCH ĐÃ CÓ TÀI KHOẢN =====
+            if (hasAccount.equals("0")) {
+                Log.info("Huy thao tac.");
+                return;
+            }
+
             if (hasAccount.equalsIgnoreCase("y")) {
                 c = AuthMenu.Login(sc, um, cm);
-
                 if (c == null) {
-                    System.out.println("Dang nhap that bai hoac huy thao tac. Thu lai!");
-                    System.out.println("Nhan Enter de tiep tuc...");
-                    sc.nextLine();
+                    Log.warning("Dang nhap that bai hoac huy thao tac. Thu lai!");
                     continue;
                 }
 
                 if (c instanceof Customer customer) {
-                    System.out.println("Dang nhap thanh cong, xin chao " + customer.getFullname() + "!");
+                    Log.success("Dang nhap thanh cong, xin chao " + customer.getFullname() + "!");
                     ArrayList<OrderItem> ordered = OrderManager.buyProducts(sc, pm, inv);
-
                     if (!ordered.isEmpty()) {
-                        // kiểm tra tồn kho
                         for (OrderItem o : ordered) {
                             long available = inv.getStockbyProduct(o.getProduct());
                             if (available < o.getQuantity()) {
-                                System.out.println("Khong du hang cho san pham " + o.getProductsName() +
+                                Log.error("Khong du hang cho san pham " + o.getProductsName() +
                                         ". Con: " + available + ", Can ban: " + o.getQuantity());
-                                System.out.println("Huy HOA DON do khong du hang!");
-                                System.out.println("Nhan Enter de tiep tuc...");
-                                sc.nextLine();
+                                Log.warning("Huy HOA DON do khong du hang!");
                                 return;
-                            }
-                            else{
+                            } else {
                                 inv.deductStock(o);
                                 inv.save();
                             }
                         }
-
                         om.add(new Order(OID, ordered, customer, true));
                         om.save();
-
-                        System.out.println("Tao HOA DON thanh cong! Ma don: " + OID);
+                        Log.success("Tao HOA DON thanh cong! Ma don: " + OID);
                     } else {
-                        System.out.println("Khong co san pham nao duoc chon. Huy HOA DON!");
+                        Log.warning("Khong co san pham nao duoc chon. Huy HOA DON!");
                     }
-                    System.out.println("Nhan Enter de quay lai menu...");
-                    sc.nextLine();
                     break;
                 } else {
-                    System.out.println("Tai khoan nay khong phai khach hang! Nhan Enter de quay lai.");
-                    sc.nextLine();
+                    Log.warning("Tai khoan nay khong phai khach hang! Nhan Enter de quay lai.");
                 }
-            }
-
-            // ===== TRƯỜNG HỢP: KHÁCH CHƯA CÓ TÀI KHOẢN =====
-            else if (hasAccount.equalsIgnoreCase("n")) {
+            } else if (hasAccount.equalsIgnoreCase("n")) {
                 System.out.println("=== DANG KY TAI KHOAN MOI ===");
-
                 String username;
                 while (true) {
-                    System.out.print("Nhap username: ");
+                    Log.request("Nhap username: ");
                     username = sc.nextLine().trim();
                     if (um.exists(username)) {
-                        System.out.println("Username da ton tai, vui long nhap lai!");
+                        Log.warning("Username da ton tai, vui long nhap lai!");
                     } else break;
                 }
-
                 String password;
                 while (true) {
-                    System.out.print("Nhap password: ");
+                    Log.request("Nhap password: ");
                     password = sc.nextLine().trim();
                     if (password.length() < 6) {
-                        System.err.println("Mat khau phai co it nhat 6 ky tu!");
+                        Log.error("Mat khau phai co it nhat 6 ky tu!");
                     } else break;
                 }
 
@@ -177,95 +171,81 @@ public class ManageOrderMenu implements IManageMenu{
                     cm.add(customer);
                     cm.save();
 
-                    System.out.println("Dang ky thanh cong, chao mung " + customer.getFullname() + "!");
+                    Log.success("Dang ky thanh cong, chao mung " + customer.getFullname() + "!");
                     ArrayList<OrderItem> ordered = OrderManager.buyProducts(sc, pm, inv);
 
                     if (!ordered.isEmpty()) {
                         for (OrderItem o : ordered) {
                             long available = inv.getStockbyProduct(o.getProduct());
                             if (available < o.getQuantity()) {
-                                System.out.println("Khong du hang cho san pham " + o.getProductsName() +
+                                Log.error("Khong du hang cho san pham " + o.getProductsName() +
                                         ". Con: " + available + ", Can ban: " + o.getQuantity());
-                                System.out.println("Huy HOA DON do khong du hang!");
-                                System.out.println("Nhan Enter de tiep tuc...");
+                                Log.warning("Huy HOA DON do khong du hang!");
                                 sc.nextLine();
                                 return;
-                            }
-                            else{
+                            } else {
                                 inv.deductStock(o);
                                 inv.save();
                             }
                         }
-
                         om.add(new Order(OID, ordered, customer, true));
                         om.save();
-
-                        System.out.println("Tao HOA DON thanh cong! Ma don: " + OID);
+                        Log.success("Tao HOA DON thanh cong! Ma don: " + OID);
                     } else {
-                        System.out.println("Khong co san pham nao duoc chon. Huy HOA DON!");
+                        Log.warning("Khong co san pham nao duoc chon. Huy HOA DON!");
                     }
-                    System.out.println("Nhan Enter de quay lai menu...");
+                    Log.info("Nhan Enter de quay lai menu...");
                     sc.nextLine();
                     break;
                 } else {
-                    System.out.println("Dang ky that bai! Nhan Enter de quay lai...");
+                    Log.error("Dang ky that bai! Nhan Enter de quay lai...");
                     sc.nextLine();
                     return;
                 }
-            }
-            else {
-                System.out.println("Lua chon khong hop le! Vui long nhap lai (y/n).");
+            } else {
+                Log.warning("Lua chon khong hop le! Vui long nhap lai (y/n).");
             }
         }
     }
 
-
     public void OrderforCustomer(Customer customer) {
         Extension.clearScreen();
-        if(!customer.getStatus()){
-            System.out.println("Ban da bi khoa! Khong the mua hang!");
-            Extension.pause(sc);
+        if (!customer.getStatus()) {
+            Log.error("Ban da bi khoa! Khong the mua hang!");
             return;
         }
         System.out.println("==== MUA HANG ====");
-        System.out.println(" Hello, " + customer.getFullname() + "!");
+        Log.info(" Hello, " + customer.getFullname() + "!");
         System.out.println("Vui long chon san pham trong danh sach:");
 
         String OID = Data.generateNewID(OrderManager.FILE_PATH, 'H');
-
-        // Chọn sản phẩm
         List<OrderItem> ordered = OrderManager.buyProducts(sc, pm, inv);
 
-        // Kiểm tra nếu danh sách trống
         if (ordered.isEmpty()) {
-            System.out.println("Chua chon san pham nao. Quay lai menu!");
-            System.out.println("Enter de tiep tuc...");
-            sc.nextLine();
+            Log.warning("Chua chon san pham nao. Quay lai menu!");
             return;
         }
 
-        //kiểm tra tồn kho
-        for(OrderItem item : ordered){
-            long avaiable = inv.getStockbyProduct(item.getProduct());
-            if(avaiable < item.getQuantity()){
-                System.out.println("Khong du hang cho san pham " + item.getProductsName() + "Con: " + avaiable + ", Can ban: "+ item.getQuantity());
-                System.out.println("Huy HOA DON do khong du hang");
-                sc.nextLine();
+        for (OrderItem item : ordered) {
+            long available = inv.getStockbyProduct(item.getProduct());
+            if (available < item.getQuantity()) {
+                Log.error("Khong du hang cho san pham " + item.getProductsName() +
+                        ". Con: " + available + ", Can ban: " + item.getQuantity());
+                Log.warning("Huy HOA DON do khong du hang");
                 return;
             }
         }
-        for (OrderItem c: ordered) {
+        for (OrderItem c : ordered) {
             inv.deductStock(c);
         }
 
-        // Tính tổng tiền
         double total = 0;
         for (OrderItem item : ordered) {
-            total += item.getProduct().getPrice()* item.getQuantity(); // thực tế là giá bán ra của inventory với sản phẩm đó
+            total += item.getProduct().getPrice() * item.getQuantity();
         }
 
-        System.out.printf("Tong so tien can thanh toan: %.2f VND%n", total);
-        System.out.print("Xac nhan thanh toan (y/n): ");
+        Log.info(String.format("Tong so tien can thanh toan: %.2f VND", total));
+        Log.request("Xac nhan thanh toan (y/n): ");
         String confirm = sc.nextLine().trim();
 
         if (confirm.equalsIgnoreCase("y")) {
@@ -273,136 +253,100 @@ public class ManageOrderMenu implements IManageMenu{
             om.add(order);
             om.save();
             inv.save();
-            System.out.println("Thanh toán thành công!");
-            System.out.println("Ma HOA DON: " + OID);
+            Log.success("Thanh toan thanh cong!");
+            Log.success("Ma HOA DON: " + OID);
         } else {
-            System.out.println("Huy HOA DON.");
+            Order order = new Order(OID, ordered, customer, false);
+            om.add(order);
+            om.save();
+            inv.save();
+            Log.info("Da huy HOA DON.");
         }
-
-        System.out.println("Enter --> back ...");
-        sc.nextLine();
     }
 
-
-    //Menu 
     @Override
-    public void blockMenu() { 
+    public void blockMenu() {
         Extension.clearScreen();
         while (true) {
             System.out.println("==== INACTIVE ORDER ====");
             System.out.println("DANH SACH DON HANG ACTIVE ");
             om.showList();
-            System.out.print("Nhap ID HOA DON muon xoa (hoac nhap 0 de quay lai): ");
+            Log.request("Nhap ID HOA DON muon xoa (hoac nhap 0 de quay lai): ");
             String inputID = sc.nextLine().trim();
 
-            // 0 → quay lại menu chính
             if (inputID.equals("0")) {
-                System.out.println("Huy thao tac xoa, quay lai menu chinh.");
+                Log.info("Huy thao tac.");
                 return;
             }
 
-            // Xác nhận xóa
-            System.out.print("Ban co chac muon xoa san pham " + inputID + "? (y/n): ");
+            Log.request("Ban co chac muon xoa san pham " + inputID + "? (y/n): ");
             String confirm = sc.nextLine().trim();
 
             if (confirm.equalsIgnoreCase("y")) {
                 om.get(inputID).setStatus(false);
-                System.out.println("Da xoa san pham: " + inputID);
+                Log.success("Da xoa san pham: " + inputID);
                 om.save();
             } else {
-                System.out.println("Da huy thao tac xoa.");
+                Log.info("Da huy thao tac khoa.");
             }
-            break; // ra khỏi vòng while sau khi thao tác xong
+            break;
         }
     }
 
     @Override
-    public void activeMenu() { 
+    public void activeMenu() {
         Extension.clearScreen();
         while (true) {
             System.out.println("==== ACTIVE ORDER ====");
             System.out.println("DANH SACH DON HANG INACTIVE ");
             om.blackList();
-            System.out.print("Nhap ID HOA DON muon xoa (hoac nhap 0 de quay lai): ");
+            Log.request("Nhap ID HOA DON muon xoa (hoac nhap 0 de quay lai): ");
             String inputID = sc.nextLine().trim();
 
-            // 0 → quay lại menu chính
             if (inputID.equals("0")) {
-                System.out.println("Huy thao tac xoa, quay lai menu chinh.");
+                Log.info("Huy thao tac.");
                 return;
             }
 
-            // Xác nhận xóa
-            System.out.print("Ban co chac muon xoa san pham " + inputID + "? (y/n): ");
+            Log.request("Ban co chac muon xoa san pham " + inputID + "? (y/n): ");
             String confirm = sc.nextLine().trim();
 
             if (confirm.equalsIgnoreCase("y")) {
                 om.get(inputID).setStatus(false);
-                System.out.println("Da xoa san pham: " + inputID);
+                Log.success("Da xoa san pham: " + inputID);
                 om.save();
             } else {
-                System.out.println("Da huy thao tac xoa.");
+                Log.info("Da huy thao tac xoa.");
             }
-            break; // ra khỏi vòng while sau khi thao tác xong
+            break;
         }
     }
 
     @Override
     public void viewMenu() {
-        Extension.clearScreen();
         while (true) {
+            Extension.clearScreen();
             System.out.println("==== DANH SACH HOA DON ====");
             om.showList();
-            System.out.print("Nhap ID HOA DON muon xem (Nhap 0 de quay lai): ");
+            Log.request("Nhap ID HOA DON muon xem (Nhap 0 de quay lai): ");
             String input = sc.nextLine().trim();
 
             if (input.equals("0")) {
-                System.out.println("Quay lai menu chinh...");
+                Log.info("Quay lai menu chinh...");
                 return;
             }
 
             Order order = om.get(input);
             if (order == null) {
-                System.out.println("Khong tim thay HOA DON co ma " + input);
+                Log.warning("Khong tim thay HOA DON co ma " + input);
                 continue;
             }
 
-            //chi tiet HOA DON
             Extension.printInBox(() -> printOrderDetails(order));
-            
-            System.out.println("\nNhan Enter de xem don khac, hoac nhap 0 de quay lai.");
+
+            Log.info("\nNhan Enter de xem don khac, hoac nhap 0 de quay lai.");
             String choice = sc.nextLine().trim();
             if (choice.equals("0")) break;
-            Extension.clearScreen();
-        }
-    }
-
-    public void ViewOrderforCustomer() {
-        Extension.clearScreen();
-        while (true) {
-            System.out.println("==== DANH SACH HOA DON ====");
-            om.showList();
-            System.out.print("Nhap ID HOA DON muon xem (Nhap 0 de quay lai): ");
-            String input = sc.nextLine().trim();
-
-            if (input.equals("0")) {
-                System.out.println("Quay lai menu chinh...");
-                return;
-            }
-
-            Order order = om.get(input);
-            if (order == null) {
-                System.out.println("Khong tim thay HOA DON co ID " + input);
-                continue;
-            }
-
-            // chi tiet HOA DON
-            Extension.printInBox(() -> printOrderDetails(order));
-            
-            System.out.println("\nNhan Enter de xem don khac, hoac nhap 0 de quay lai.");
-            String choice = sc.nextLine().trim();
-            if (choice.equals("0")) break;
-            Extension.clearScreen();
         }
     }
 
@@ -428,14 +372,13 @@ public class ManageOrderMenu implements IManageMenu{
                     System.out.println("[PHI THUOC] " + nd.getName() + " (" + quantity + " " + nd.getUnit() + ")");
                     System.out.println(" - Gia: " + nd.getPrice() + " VND");
                 }
-                default -> System.out.println("[?] San pham khong xac dinh");
+                default -> Log.error("[?] San pham khong xac dinh");
             }
             System.out.println(" → Thanh tien: " + subtotal + " VND");
             System.out.println("------------------------------------");
         }
-        System.out.printf("Tong thanh toan: %.2f VND%n", total);
+        Log.info(String.format("Tong thanh toan: %.2f VND", total));
     }
-
 
     @Override
     public void updateMenu() {
@@ -443,48 +386,31 @@ public class ManageOrderMenu implements IManageMenu{
         System.out.println("==== CAP NHAT TRANG THAI HOA DON ====");
         om.showList();
 
-        System.out.print("Nhap ID HOA DON muon cap nhat (hoac 0 de quay lai): ");
+        Log.request("Nhap ID HOA DON muon cap nhat (hoac 0 de quay lai): ");
         String id = sc.nextLine().trim();
-
         if (id.equals("0")) return;
 
         Order order = om.get(id);
         if (order == null) {
-            System.out.println("Khong tim thay HOA DON!");
-            System.out.println("Nhan Enter de quay lai...");
-            sc.nextLine();
+            Log.warning("Khong tim thay HOA DON!");
             return;
         }
         Extension.printInBox(() -> printOrderDetails(order));
 
-        System.out.println("Trang thai hien tai: " + order.getStatus());
-        System.out.println("Chon trang thai moi:");
+        Log.info("Trang thai hien tai: " + order.getStatus());
+        System.out.println("Chon trang thai moi (khong duoc bo trong):");
         System.out.println("1. Active");
         System.out.println("2. Inactive");
-        System.out.print("Nhap lua chon: ");
+        Log.request("Nhap lua chon: ");
+        int choice = Extension.readIntInRange("Nhap lua chon (1-2):", 1, 2, sc);
+        boolean newStatus = choice == 1;
 
-        int choice = Extension.readIntInRange("Nhap lua chon (1-3):", 1, 2, sc);
-        boolean newStatus;
-
-        switch (choice) {
-            case 1 -> newStatus = true;
-            case 2 -> newStatus = false;
-            default -> {
-                System.out.println("Lua chon khong hop le!");
-                return;
-            }
-        }
-
-        if (order.getStatus() == (newStatus)){
-            System.out.println("Trang thai khong thay doi.");
+        if (order.getStatus() == newStatus) {
+            Log.info("Trang thai khong thay doi.");
         } else {
             order.setStatus(newStatus);
             om.save();
-            System.out.println("Cap nhat thanh cong trang thai hoa don!");
+            Log.success("Cap nhat thanh cong trang thai hoa don!");
         }
-
-        System.out.println("Nhan Enter de quay lai...");
-        sc.nextLine();
     }
-
 }

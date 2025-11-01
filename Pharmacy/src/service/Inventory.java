@@ -7,8 +7,11 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
+import java.util.Scanner;
 import java.util.TreeMap;
 import models.Batch;
 import models.OrderItem;
@@ -19,20 +22,21 @@ import view.Extension;
 // Inventory hay Batch_Management
 public class Inventory implements IManagement<Batch>{
     public static final String FILE_PATH = System.getProperty("user.dir") + "/resources/inventory.txt";
-    private final ProductManager pm;
-    private final Map<String, Batch> inv = new TreeMap<>();
-    private final Map<String, Batch> inv_byPID = new TreeMap<>();
 
-    public Inventory(ProductManager pm) {
+    private final ProductManager pm;                                    // Quản lý sản phẩm
+    private final Map<String, Batch> inv = new TreeMap<>();             // Map tìm lô theo mã
+    private final Map<String, List<Batch>> inv_byPID = new TreeMap<>(); // Map tìm lô theo sản phẩm (sp tồn kho)
+
+    public Inventory(ProductManager pm) {   //Constructor
         this.pm = pm;
         loadInventory();
     }
 
     // lấy lo hang từ file
-    private void loadInventory(){
-        java.io.File file = new File(FILE_PATH);
+    private void loadInventory(){ 
+        java.io.File file = new File(FILE_PATH);    // load dữ liệu từ file inventory.txt vào
         if(!file.exists()) return;
-        inv.clear();
+        inv.clear();                                // clear Map, tránh lỗi
         inv_byPID.clear();
         try(BufferedReader br = new BufferedReader(new FileReader(file))){
             String line;
@@ -52,12 +56,15 @@ public class Inventory implements IManagement<Batch>{
                 boolean active = Boolean.parseBoolean(parts[4]);
                 Batch b = (new Batch(BID, p, quantity, importDate, active));
                 inv.put(BID, b);
-                inv_byPID.put(b.getProduct().getPID(), b);
-                System.err.println("[Debug] Lo hang " + BID + "SL: " + quantity);
+                List<Batch> list = inv_byPID.getOrDefault(p.getPID(), new ArrayList<>());   // nếu PID mới --> tạo ngay mảng mới lưu trữ lô hàng cùng sản phẩm
+                list.add(b);                                                                // nếu PID trùng thì thêm Batch (lô) vào mảng
+                inv_byPID.put(b.getProduct().getPID(), list);                               // đưa (key, value) vào TreeMap
+                System.err.println("[Debug] Load Batch [" + BID + ";" + quantity + "] successfully.");
             }
+            System.err.println("[Debug] Inventory data has been loaded successfully!\n");
         }
         catch(Exception e){
-            System.out.println("Error: "+ e.getMessage());
+            System.out.println("Error in inventory: "+ e.getMessage());
         }
     }
 
@@ -68,11 +75,13 @@ public class Inventory implements IManagement<Batch>{
         return found;
     }
 
+    // lấy lô hàng từ Batch ID
     @Override
     public Batch get(String ID){
         return inv.get(ID);
     }
 
+    // Tổng số lượng tồn kho
     public long getStockbyProduct(Product product){
         long total = 0;
         for (Batch b : inv.values()) {
@@ -83,26 +92,42 @@ public class Inventory implements IManagement<Batch>{
         return total;
     }
 
+    // Hàm trừ số lượng trong kho khi có đơn đặt hàng
     public void deductStock(OrderItem ordered) {
-        long needed = ordered.getQuantity(); 
-        for (Batch b : inv.values()) {
-            if (b.getProduct().equals(ordered.getProduct()) && b.getStatus() && !b.isExpired()) {
-                long available = b.getQuantity();
-                if (needed <= 0) break;
+        Product p = ordered.getProduct();
 
-                if (available >= needed) {
-                    b.setQuantity(available - needed); 
-                    needed = 0; 
-                } else {
-                    b.setQuantity(0);                  
-                    needed -= available;               
-                }
+        if(!p.getStatus()){ // neu sản phẩm bị khóa hay xóa
+            System.out.println("San pham nay khong con kha dung!");
+            return;
+        }
+
+        long needed = ordered.getQuantity(); 
+
+        List<Batch> batches = inv_byPID.get(p.getPID());
+        if (batches == null || batches.isEmpty()) {
+            System.out.println("San pham nay khong co lo hang nao!");
+            return;
+        }
+
+        for (Batch b : batches) {
+            if (!b.getStatus() || b.isExpired()) continue;
+            long available = b.getQuantity();
+            if (available >= needed) {
+                b.setQuantity(available - needed);
+                needed = 0;
+            } else {
+                b.setQuantity(0);
+                needed -= available;
             }
         }
+
+        if (needed > 0) {
+        System.out.println("⚠ Không đủ hàng! Thiếu " + needed + " đơn vị.");
+    }
         save();
     }
 
-    //lưu file cả list user
+    //lưu file 
     @Override
     public void save() {
         try (FileWriter fw = new FileWriter(FILE_PATH, false)) {
@@ -114,6 +139,7 @@ public class Inventory implements IManagement<Batch>{
         }
     }
 
+    // Hiển thị dạng bảng các lô hàng vẫn còn hoạt động
     @Override
      public void showList(){
         Extension.printTableHeader("Ma lo hang","Ma san pham","Ten san pham","So luong","Ngay nhap lo hang","Trang thai","Canh bao");
@@ -129,6 +155,8 @@ public class Inventory implements IManagement<Batch>{
             }
         }
     }
+
+    // Hiển thị dạng bảng các lô hàng không còn hoạt động hay bị hủy
     @Override
     public void blackList(){
         Extension.printTableHeader("Ma lo hang","Ma san pham","Ten san pham","So luong","Ngay nhap lo hang","Trang thai","Canh bao");
@@ -145,34 +173,89 @@ public class Inventory implements IManagement<Batch>{
         }
     }
     
-    public void showStockList(){
-        Extension.printTableHeader("Ma san pham","Ten san pham","Gia ca");
-        for (Batch elem : inv_byPID.values()) {
-            if(elem.getStatus()){
-                Product p = elem.getProduct();
-                if(p.getStatus()){
-                    Extension.printTableRow(p.getPID(),p.getName(),p.getPrice());
-                }
+    // Hiển thị danh sách sản phẩm tồn kho
+    public void showStockList() { 
+        Extension.printTableHeader("Ma san pham", "Ten san pham", "Don vi", "Gia ca");
+
+        for (List<Batch> batches : inv_byPID.values()) {
+            if (batches.isEmpty()) continue;
+
+            Batch firstBatch = batches.get(0);
+            Product p = firstBatch.getProduct();
+
+            // Kiểm tra trạng thái sản phẩm
+            if (p.getStatus()) {
+                Extension.printTableRow(p.getPID(), p.getName(), p.getUnit(), p.getPrice() + " VND");
             }
         }
     }
 
+
+    // Chọn sản phẩm chỉ khi tồn tại trong kho
+    public Product selectProduct(String keyword, Scanner sc) {
+        //Tìm theo mã sản phẩm (PID)
+        List<Batch> list = inv_byPID.get(keyword);
+        if (list != null && !list.isEmpty()) {
+            return list.get(0).getProduct(); // cùng 1 Product cho mọi batch nên chỉ lấy Batch đầu là đủ
+        }
+
+        //Tìm theo tên sản phẩm (search by keyword)
+        ArrayList<Product> matched = new ArrayList<>();
+        for (List<Batch> batches : inv_byPID.values()) {
+            if (batches.isEmpty()) continue;
+            Product p = batches.get(0).getProduct();
+            if (p.getName().toLowerCase().contains(keyword.toLowerCase())) {
+                matched.add(p);
+            }
+        }
+
+        if (matched.isEmpty()) return null;
+
+        System.out.println("Da tim thay: " + matched.size() + " san pham.");
+
+        //Nếu chỉ có 1 sản phẩm khớp → trả về luôn
+        if (matched.size() == 1) return matched.get(0);
+
+        //Nếu có nhiều sản phẩm cùng tên → để user chọn
+        System.out.println("Co nhieu san pham trung ky tu, chon theo STT cua danh sach sau:");
+        for (int i = 0; i < matched.size(); i++) {
+            Product p = matched.get(i);
+            System.out.println((i + 1) + "\t|\t" + p.getPID() + "\t|\t" + p.getName() + "\t|\t" + p.getPrice() + " VND");
+        }
+
+        System.out.print("Nhap STT: ");
+        try {
+            int choice = Integer.parseInt(sc.nextLine().trim());
+            if (choice >= 1 && choice <= matched.size()) {
+                return matched.get(choice - 1);
+            }
+        } catch (NumberFormatException e) {
+            System.out.println("Lua chon khong hop le!");
+        }
+        return null; // không có trả về null
+    }
+
+
     @Override
-    public void add(Batch batch){
+    public void add(Batch batch) {
         inv.put(batch.getBatchId(), batch);
-    }    
+        List<Batch> list = inv_byPID.getOrDefault(batch.getProduct().getPID(), new ArrayList<>());
+        list.add(batch);
+        inv_byPID.put(batch.getProduct().getPID(), list);
+    }
+        
 
     @Override
     public void delete() {
-        Iterator<Batch> it = inv.values().iterator();
+        Iterator<Map.Entry<String, Batch>> it = inv.entrySet().iterator();
         while (it.hasNext()) {
-            Batch c = it.next();
-            if (!c.getStatus()) {
-                it.remove();
-                inv.remove(c.getBatchId()); 
+            Map.Entry<String, Batch> entry = it.next();
+            if (!entry.getValue().getStatus()) {
+                it.remove(); // xóa an toàn
             }
         }
-    } 
+    }
+ 
 
 
     @Override

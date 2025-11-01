@@ -20,7 +20,7 @@ public class GuestMenu {
             System.out.println("==== MENU GUEST ====");
             System.out.println("1. Cap nhat ho so ca nhan - Update Profile");
             System.out.println("2. Xem va Tim kiem san pham - View & Search");
-            System.out.println("0. Dang xuat - Logout");
+            Log.exit("0. Dang xuat - Logout");
             System.out.print("Nhap lua chon: ");
             int choice = Extension.readIntInRange("Nhap lua chon (0-2):", 0, 2, sc);
 
@@ -35,8 +35,9 @@ public class GuestMenu {
                         System.out.println("=== CAP NHAT THONG TIN ===");
                         AuthMenu.updateProfile(guest, sc, um, cm);
                         um.upgradeGuestToCustomer(guest, newCustomer);
-                    System.out.println("Ban da tro thanh KHACH HANG!");
-                    System.out.println("Dang chuyen sang menu khach hang...");
+                    Log.success("Ban da tro thanh KHACH HANG!");
+                    Log.info("Dang chuyen sang menu khach hang...");
+                    
                     AuthMenu.getMenu(newCustomer, um, cm, pm, inv, om);
                     return;
                     }
@@ -47,10 +48,9 @@ public class GuestMenu {
                         Extension.pause(sc);
                         break;
                     }
-                    ManageProductsMenu mp = new ManageProductsMenu(pm, sc);
-                    mp.viewMenu();
+                    ManageProductsMenu.viewMenuforCustomer(inv, sc);
                 }
-                default -> System.out.println("Khong hop le!");
+                default -> Log.warning("Khong hop le!");
             }
         }
     }

@@ -6,6 +6,7 @@ import java.util.Scanner;
 import models.Drug;
 import models.NonDrug;
 import models.Product;
+import service.Inventory;
 import service.ProductManager;
 
 public class ManageProductsMenu implements IManageMenu{
@@ -35,8 +36,7 @@ public class ManageProductsMenu implements IManageMenu{
             System.out.println("2. An/Hien san pham - Hide/Show Product");
             System.out.println("3. Chinh sua thong tin san pham - Edit product INFO");
             System.out.println("4. Tim kiem va Xem - Search & View");
-            System.out.println("0. Huy - Cancel");
-            System.out.print("Chon: ");
+            Log.exit("0. Huy - Cancel");
             int choice = Extension.readIntInRange("Nhap lua chon (0-4):", 0, 4, sc);
 
             switch (choice) {
@@ -46,7 +46,7 @@ public class ManageProductsMenu implements IManageMenu{
                 case 2 -> {
                     System.out.println("1. An san pham - Hide Product");
                     System.out.println("2. Hien san pham - Show Product");
-                    System.out.println("0. Huy - Cancel");
+                    Log.exit("0. Huy - Cancel");
                     int choice2 = Extension.readIntInRange("Nhap lua chon (0-2):", 0, 2, sc);
                     switch (choice2) {
                         case 0 ->{break;}
@@ -338,7 +338,60 @@ public class ManageProductsMenu implements IManageMenu{
             }
         }
     }
-    public void printProduct(Product product){
+
+    public static void viewMenuforCustomer(Inventory inv, Scanner sc) {
+        while(true){
+            Extension.clearScreen();
+            System.out.println("==== VIEW PRODUCTS ====");
+            inv.showStockList();
+            System.out.print("Nhap ID hoac ten san pham muon xem (Nhap 0 de quay lai): ");
+            String input = sc.nextLine().trim();
+
+            if (input.equals("0")) {
+                System.out.println("Huy thao tac, quay lai menu chinh.");
+                return;
+            }
+            
+            Product p = inv.selectProduct(input, sc);
+            Extension.printInBox(() ->{
+                switch (p) {
+                    case Drug d ->{
+                        System.out.println("----- THONG TIN SAN PHAM - THUOC [" + d.getPID() +"] -----");
+                        System.out.println("Ma san pham: " + d.getPID());
+                        System.out.println("Ten san pham: " + d.getName());
+                        System.out.println("Don vi san pham: " + d.getUnit());
+                        System.out.println("Gia thi truong: " + d.getPrice());
+                        System.out.println("Han dung: " + d.getShelfLifeInfo());
+                        System.out.println("Thanh phan chinh: " + d.getIngredient());
+                        System.out.println("Lieu luong dung: " + d.getDosage());
+                        System.out.println("Thuoc " + (d.getpR() ? "co" : "khong co") + " ke don cua bac si");
+                        System.out.println("Tinh trang: " + (d.getStatusString()));
+                    }
+                    case NonDrug d ->{
+                        System.out.println("----- THONG TIN SAN PHAM - + [" + d.getPID() +"] -----");
+                        System.out.println("Ma san pham: " + d.getPID());
+                        System.out.println("Ten san pham: " + d.getName());
+                        System.out.println("Don vi san pham: " + d.getUnit());
+                        System.out.println("Gia thi truong: " + d.getPrice());
+                        System.out.println("Nha san xuat: " + d.getManufacturer());
+                        System.out.println("Loai san pham: " + d.getType());
+                        System.out.println("Mo ta cong dung: " + d.getUsage());
+                        System.out.println("Tinh trang: " + (d.getStatusString()));
+                    }
+                    case null ->{System.out.println("Khong tim thay san pham nao!");}
+                    default -> throw new AssertionError();
+                }
+            }); 
+            System.out.print("Quay lai? Hay nhap 0: ");
+            String choice = sc.nextLine().trim();
+            if (choice.equals("0")) {
+                System.out.println("Huy thao tac xoa, quay lai menu chinh.");
+                return;
+            }
+        }
+    }
+
+    public static void printProduct(Product product){
         Extension.printInBox(() ->{
             switch (product) {
                 case Drug d ->{
@@ -351,6 +404,7 @@ public class ManageProductsMenu implements IManageMenu{
                     System.out.println("Thanh phan chinh: " + d.getIngredient());
                     System.out.println("Lieu luong dung: " + d.getDosage());
                     System.out.println("Thuoc " + (d.getpR() ? "co" : "khong co") + " ke don cua bac si");
+                    System.out.println("Tinh trang: " + (d.getStatusString()));
                 }
                 case NonDrug d ->{
                     System.out.println("----- THONG TIN SAN PHAM - + [" + d.getPID() +"] -----");
@@ -361,6 +415,7 @@ public class ManageProductsMenu implements IManageMenu{
                     System.out.println("Nha san xuat: " + d.getManufacturer());
                     System.out.println("Loai san pham: " + d.getType());
                     System.out.println("Mo ta cong dung: " + d.getUsage());
+                    System.out.println("Tinh trang: " + (d.getStatusString()));
                 }
                 case null ->{System.out.println("Khong tim thay san pham nao!");}
                 default -> throw new AssertionError();

@@ -66,13 +66,14 @@ public class ProductManager implements IManagement<Product>{
                             parts[5],  // usage
                             status
                     );
-
-                    default -> null;
+                    default -> new Drug();
                 };
                 products.put(PID, p);
+                System.err.println("[Debug] Load Order [" + (!p.getPID().isEmpty()?p.getPID():"Unknown product") + "] successfully.");
             }
+            System.err.println("[Debug] Products data has been loaded successfully!\n");
         } catch (Exception e) {
-            System.out.println("[WARN] Error loading products: " + e.getMessage());
+            System.out.println("[WARN] Error in product manager: " + e.getMessage());
         }
     }
 

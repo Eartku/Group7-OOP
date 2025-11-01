@@ -28,7 +28,7 @@ public class AdminMenu {
             System.out.println("4. Quan ly kho/lo hang - Inventory");
             System.out.println("5. Quan ly cac don hang - Orders");
             System.out.println("6. Blocked Cleaner");
-            System.out.println("0. Dang xuat - Logout");
+            Log.exit("0. Dang xuat - Logout");
             System.out.print("Nhap lua chon: ");
             int choice = Extension.readIntInRange("Nhap lua chon (0-5):", 0, 6, sc);
 
@@ -39,7 +39,6 @@ public class AdminMenu {
                 case 1 -> {
                     System.out.println("Quan ly nguoi dung...");
                     mu.mainMenu();
-                    break;
                 }
                 case 2 -> {
                     System.out.println("Quan ly san pham kha dung...");
@@ -61,7 +60,7 @@ public class AdminMenu {
                     System.out.println("Don dep du lieu bi chan (Blocked)");
                     //TODO: Blocked Cleaner
                 }
-                default -> System.out.println("Khong hop le!");
+                default -> Log.warning("Khong hop le!");
             }
         }
     }

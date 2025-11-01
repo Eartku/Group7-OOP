@@ -13,8 +13,6 @@ public class CustomerMenu {
     private static final Scanner sc = new Scanner(System.in);
 
     public static void showMenu(IAuthenticable user,  ProductManager pm, OrderManager om, Inventory inv, CustomerManager cm, UserManager um){
-        
-        ManageProductsMenu mp = new ManageProductsMenu(pm, sc);
         ManageOrderMenu mo = new ManageOrderMenu(sc, pm, cm, um, inv, om);
         Customer customer = (Customer) user;
         while (true) {
@@ -24,13 +22,13 @@ public class CustomerMenu {
                 System.out.println("2. Dat mua san pham - Buy products");
                 System.out.println("3. Xem thong tin ca nhan - View your profile");
                 System.out.println("4. Xem lich su mua hang - Purchase history");
-                System.out.println("0. Dang xuat - Logout");
+                Log.exit("0. Dang xuat - Logout");
                 System.out.print("Nhap lua chon: ");
                 int choice = Extension.readIntInRange("Nhap lua chon (0-4):", 0, 4, sc);
 
                 switch (choice) {
                     case 0 -> {
-                        System.out.println("Dang xuat thanh cong!\n");
+                        Log.info("Dang xuat thanh cong!\n");
                         return;
                     }
                     case 1 -> {
@@ -40,7 +38,7 @@ public class CustomerMenu {
                             break;
                         }
                         System.out.println("Xem danh sach san pham...");
-                        mp.viewMenu();
+                        ManageProductsMenu.viewMenuforCustomer(inv, sc);
                     }
                     case 2 -> {
                         if(!customer.getStatus()) {
@@ -61,7 +59,7 @@ public class CustomerMenu {
                         om.history(customer);
                         Extension.pause(sc);
                     }
-                    default -> System.out.println("Khong hop le!");
+                    default -> Log.warning("Khong hop le!");
                 }
             }
     }

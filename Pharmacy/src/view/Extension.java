@@ -9,12 +9,12 @@ public class Extension {
     public static int readIntInRange(String msg, int min, int max, Scanner sc) {
         if (sc == null) throw new IllegalArgumentException("Scanner cannot be null");
         while (true) {
-            System.out.print(msg);
+            Log.request(msg);
             try {
                 int n = Integer.parseInt(sc.nextLine());
                 if (n >= min && n <= max) return n;
             } catch (NumberFormatException ignored) {}
-            System.out.println("Nhap so tu " + min + " den " + max + "!");
+            Log.warning("Nhap so tu " + min + " den " + max + "!");
         }
     }
      public static void clearScreen() {
@@ -33,7 +33,7 @@ public class Extension {
     }
         
     public static void pause(Scanner sc) {
-        System.out.println("Nhan Enter de tiep tuc...");
+        Log.info("Nhan Enter de tiep tuc...");
         sc.nextLine();
     }
 

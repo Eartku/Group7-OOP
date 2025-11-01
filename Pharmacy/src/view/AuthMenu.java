@@ -21,17 +21,17 @@ public class AuthMenu {
         System.out.println("______DANG KY_____");
         String username;
         while(true){
-            System.out.println("Nhap Username (hoac nhap 0 de quay lai): ");
+            Log.request("Nhap Username (hoac nhap 0 de quay lai): ");
             username = sc.nextLine().trim();
 
             if (username.equals("0")) {
-                System.out.println("Huy thao tac xoa, quay lai menu chinh.");
+                Log.info("Huy thao tac xoa, quay lai menu chinh.");
                 // break;
                 return null;
             }
 
             if(um.exists(username)){
-                System.out.println("Username da ton tai!");
+                Log.warning("Username da ton tai!");
                 System.out.println("Dang nhap? (y/n): ");
                 char choice = sc.nextLine().charAt(0);
                 if(choice == 'Y' || choice == 'y'){
@@ -39,26 +39,26 @@ public class AuthMenu {
                 }
             }
             else{
-                System.out.println("Username hop le!");
+                Log.success("Username hop le!");
                 break;
             }
         }
         String password;
         while(true){
-            System.out.println("Nhap Password: ");
+            Log.request("Nhap Password: ");
             password = sc.nextLine();
             if(password.length() < 6){
-                System.out.println("Password it nhat 6 ky tu!");
+                Log.warning("Password it nhat 6 ky tu!");
             }
             else{
-                System.out.println("Password hop le!");
+                Log.success("Password hop le!");
                 break;
             }
         }
         IAuthenticable newUser = new Guest(username, password, true);
         um.add(newUser);
         um.save();
-        System.out.println("Dang ky thanh cong!");
+        Log.success("Dang ky thanh cong!");
         return newUser;
     }
 
@@ -68,20 +68,21 @@ public class AuthMenu {
         try {
             System.out.println("______DANG NHAP_____");
             while(true){
-                System.out.println("Nhap Username (hoac nhap 0 de quay lai): ");
+                Log.request("Nhap Username (hoac nhap 0 de quay lai): ");
                 username = sc.nextLine().trim();
 
                 if (username.equals("0")) {
-                    System.out.println("Huy thao tac xoa, quay lai menu chinh.");
+                    Log.info("Huy thao tac xoa, quay lai menu chinh.");
                     return null;
                 }
                 if(um.exists(username)){
+                    Log.success("Username hop le!");
                     IAuthenticable user = um.get(username);
                     while (true){
-                        System.out.println("Nhap mat khau: ");
+                        Log.request("Nhap mat khau: ");
                         password = sc.nextLine();
                         if(user.checkPassword(password)){
-                            System.out.println("Password hop le!");
+                            Log.success("Password hop le!");
                             if (user instanceof Customer) {
                                 Customer c = cm.getByUsername(username);
                                 if (c != null) return c; // trả về Customer đầy đủ
@@ -89,12 +90,12 @@ public class AuthMenu {
                                 return user;
                         }
                         else{
-                            System.out.println("Sai mat khau!");
+                            Log.error("Sai mat khau!");
                         }
                     }
                 }
                 else{
-                    System.out.println("Khong tim thay username!");
+                    Log.warning("Khong tim thay username!");
                     System.out.println("Dang ky tai khoan? (y/n): ");
                     char choice = sc.nextLine().charAt(0);
                     if(choice == 'Y' || choice == 'y'){
@@ -105,7 +106,7 @@ public class AuthMenu {
                 }
             }
         } catch (Exception e) {
-            System.out.println("Error login: "+ e.getMessage());
+            Log.error("Error login: "+ e.getMessage());
             return null;
         }
         
@@ -120,7 +121,7 @@ public class AuthMenu {
             CustomerMenu.showMenu(user, pm, om, inv,cm, um);
         } else if (user instanceof Guest) {
             GuestMenu.showMenu(user, um, cm, pm, inv, om);
-        } else throw new IllegalArgumentException("Unknown user type!");
+        } else Log.error("Unknown user type!");
     }
 
     public static Customer updateProfile(Guest g, Scanner sc, UserManager um, CustomerManager cm){
@@ -128,28 +129,28 @@ public class AuthMenu {
         System.out.println("=== CAP NHAT THONG TIN CA NHAN ===");
         String CID = Data.generateNewID("resources/customers.txt", 'C');
 
-        System.out.print("Ho va ten: ");
+        Log.request("Nhap Ho va ten: ");
         String fullname = sc.nextLine();
 
         LocalDate dobDate = null;
         while (true) {
-            System.out.print("Ngay sinh (dd/MM/yyyy): ");
+            Log.request(" Nhap Ngay sinh (dd/MM/yyyy): ");
             String dob = sc.nextLine();
             try {
                 dobDate = LocalDate.parse(dob, DateTimeFormatter.ofPattern("dd/MM/yyyy"));
                 break; 
             } catch (Exception e) {
-                System.out.println("Ngay sinh khong hop le! Nhap lai theo dd/MM/yyyy");
+                Log.warning("Ngay sinh khong hop le! Nhap lai theo dd/MM/yyyy");
             }
         }
 
-        System.out.print("Dia chi: ");
+        Log.request("Nhap Dia chi: ");
         String address = sc.nextLine();
 
-        System.out.print("Email: ");
+        Log.request("Nhap dia chi Email: ");
         String email = sc.nextLine();
 
-        System.out.print("So dien thoai: ");
+        Log.request("Nhap So dien thoai: ");
         String phone = sc.nextLine();
 
         Customer customer = new Customer(
@@ -170,7 +171,7 @@ public class AuthMenu {
         um.replaceUser(g, customer);
         um.save();
 
-        System.out.println("Đã cập nhật hồ sơ thành công! Bạn đã trở thành khách hàng chính thức.");
+        Log.success("Đã cập nhật hồ sơ thành công! Bạn đã trở thành khách hàng chính thức.");
         return customer;
     }
 

@@ -19,6 +19,7 @@ import models.Order;
 import models.OrderItem;
 import models.Product;
 import view.Extension;
+import view.ManageProductsMenu;
 
 
 public class OrderManager implements IManagement<Order> {
@@ -58,7 +59,7 @@ public class OrderManager implements IManagement<Order> {
                 }
             }
         } catch (Exception e) {
-            System.out.println("Error: " + e.getMessage());
+            System.out.println("[WARNING] Error in order items loader: " + e.getMessage());
         }
         return items;
     }
@@ -75,18 +76,19 @@ public class OrderManager implements IManagement<Order> {
                 String cid = parts[1];
                 boolean status = Boolean.parseBoolean(parts[3]);
                 LocalDate purchaseDate;
-                System.err.println("[Debug] don hang " + oid);
                 List<OrderItem> items = loadItems(oid);
                 try {
                     purchaseDate = LocalDate.parse(parts[2], DateTimeFormatter.ofPattern("dd/MM/yyyy"));
                 } catch (Exception e) {
                     purchaseDate = null;
                 }
-                
-                orders.put(oid, new Order(oid, items , cm.get(cid), purchaseDate, status));
+                Order o = new Order(oid, items , cm.get(cid), purchaseDate, status);
+                orders.put(oid, o);
+                System.err.println("[Debug] Load Order [" + o.getOID()+";"+ o.getCustomer().getCID()+"] successfully.");
             }
+            System.err.println("[Debug] Orders data has been loaded successfully!\n");
         } catch(Exception e){
-            System.out.println("Error: "+ e.getMessage());
+            System.out.println(" [WARNING] Error in order manager: "+ e.getMessage());
         }
     }
 
@@ -112,7 +114,7 @@ public class OrderManager implements IManagement<Order> {
                 fw.append(u.toString()).append("\n");
             }
         } catch (IOException e) {
-            System.out.println("Error saving orders: " + e.getMessage());
+            System.out.println("[WARNING] Error saving orders: " + e.getMessage());
         }
 
         try (FileWriter fl = new FileWriter(FILE_PATH_2, false)) {
@@ -120,7 +122,7 @@ public class OrderManager implements IManagement<Order> {
                 fl.append(u.getOID()); 
                 for (OrderItem item : u.getItems()) {
                     if (item.getProduct() == null) {
-                        System.err.println("Bỏ qua item NULL trong hóa đơn " + u.getOID());
+                        System.err.println("[WARNING] Bo qua item NULL " + u.getOID());
                         continue; // bỏ qua sản phẩm lỗi
                     }
                     fl.append("|").append(item.getProduct().getPID());
@@ -129,7 +131,7 @@ public class OrderManager implements IManagement<Order> {
                 fl.append("\n"); 
             }
         } catch (IOException e) {
-            System.out.println("Error saving order items: " + e.getMessage());
+            System.out.println("[WARNING] Error in order manager: " + e.getMessage());
         }
     }
 
@@ -160,31 +162,61 @@ public class OrderManager implements IManagement<Order> {
             String choice = sc.nextLine().trim();
             if(choice.equals("0")) break;
 
+            if(choice.isEmpty()){
+                System.out.println("[WARNING] Vui long nhap lai!");
+                sc.nextLine();
+                continue;
+            } 
+
             Product selected = pm.selectProduct(choice, sc);
 
             if(selected == null){
-                System.out.println("San pham khong ton tai!");
+                System.out.println("[WARNING] San pham khong ton tai!");
                 continue;
             }
 
-            System.out.println("Nhap so luong san pham: ");
-            int quantity = Integer.parseInt(sc.nextLine().trim());
-            if(quantity <= 0){
-                System.out.println("So luong toi thieu phai la 1!");
-                continue;
+            ManageProductsMenu.printProduct(selected);
+
+            String quantity = "";
+            long quantityValue = 0;
+            while (true) {
+                System.out.print("Nhap so luong san pham: ");
+                quantity = sc.nextLine().trim();
+                // Kểm tra rỗng
+                if (quantity.isEmpty()) {
+                    System.out.println("[WARNING] Vui long nhap lai! Khong duoc de trong.");
+                    continue;
+                }
+                // Kiểm tra phải là số nguyên dương
+                if (!quantity.matches("\\d+")) {
+                    System.out.println("[WARNING] So luong chi duoc phep la so nguyen duong!");
+                    continue;
+                }
+                // Chuển sang số
+                quantityValue = Long.parseLong(quantity);
+                // Kiểm tra giá trị
+                if (quantityValue <= 0) {
+                    System.out.println("[WARNING] So luong toi thieu phai la 1!");
+                    continue;
+                }
+                // Nếu hợp lệ thì thoát vòng lặp
+                break;
             }
+
+            // Khi thoát ra thì quantityValue là số lượng hợp lệ
+
              // Kiểm tra trùng sản phẩm thì chỉ cần cộng dồn số lượng
             boolean found = false;
             for (OrderItem oi : list) {
                 if (oi.getProduct().equals(selected)) {
-                    oi.setQuantity(oi.getQuantity() + quantity);
+                    oi.setQuantity(oi.getQuantity() + quantityValue);
                     found = true;
                     break;
                 }
             }
 
             System.out.println("Da chon " + quantity + " x " + selected.getName());
-            if(!found) list.add(new OrderItem(selected, quantity));
+            if(!found) list.add(new OrderItem(selected, quantityValue));
 
             System.out.println("Chon them san pham khac? (0 to Stop)");
             String more = sc.nextLine().trim();
