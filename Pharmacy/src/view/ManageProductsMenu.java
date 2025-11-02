@@ -23,15 +23,18 @@ public class ManageProductsMenu implements IManageMenu{
         Extension.clearScreen();
 
         if (pm == null) {
-            System.out.println("Khong the quan ly san pham!");
+            Log.error("Khong the quan ly san pham!");
             return;
         }
 
         while (true) {
             Extension.clearScreen();
             System.out.println("==== PRODUCT MANAGER ====");
+            
             System.out.println(pm.report());
+            System.out.println("==== DANH SACH CAC SAN PHAM TRONG DANH MUC ====");
             pm.showList();
+            pm.blackList();
             System.out.println("1. Them san pham - Add Product");
             System.out.println("2. An/Hien san pham - Hide/Show Product");
             System.out.println("3. Chinh sua thong tin san pham - Edit product INFO");
@@ -42,6 +45,7 @@ public class ManageProductsMenu implements IManageMenu{
             switch (choice) {
                 case 1 -> {
                     addMenu();
+                    Extension.pause(sc);
                 }
                 case 2 -> {
                     System.out.println("1. An san pham - Hide Product");
@@ -54,18 +58,21 @@ public class ManageProductsMenu implements IManageMenu{
                         case 2 ->activeMenu();
                         default -> System.out.println("Khong hop le!");
                     }
+                    Extension.pause(sc);
                 }
                 case 3 -> {
                     updateMenu();
+                    Extension.pause(sc);
                 }
                 case 4 -> {
                     viewMenu();
+                    Extension.pause(sc);
                 }
                 case 0 -> {
-                    System.out.println("Thoat chuong trinh. Tam biet!");
+                    Log.info("Thoat chuong trinh. Tam biet!");
                     return;
                 }
-                default -> System.out.println("Lua chon khong hop le!");
+                default -> Log.warning("Lua chon khong hop le!");
             }
         }
     }
@@ -76,48 +83,57 @@ public class ManageProductsMenu implements IManageMenu{
             Extension.clearScreen();
             System.out.println("==== ADD NEW PRODUCT ====");
             String PID = Data.generateNewID(ProductManager.FILE_PATH, 'P');
-            System.out.print("Ten san pham (Nhap 0 de quay lai): ");
-            String name = sc.nextLine().trim();
-
-            if (name.equals("0")) {
-                    System.out.println("Huy thao tac xoa, quay lai menu chinh.");
+            Log.request("Ten san pham (Nhap 0 de quay lai): ");
+            String name;
+            while(true){
+                Log.request("Ten san pham (Nhap 0 de quay lai): ");
+                name = sc.nextLine().trim();
+                if (name.equals("0")) {
+                    Log.info("Huy thao tac.");
                     return;
                 }
+                if(!name.isEmpty()) break;
+                else Log.warning("Khong duoc bo trong mien nay!");
+            }
 
-            System.out.print("Don vi san pham (Vien/Vi/Hop/Cai/vv): ");
-            String unit = sc.nextLine().trim();
+            
+            String unit;
+            while(true){
+                Log.request("Don vi san pham (Vien/Vi/Hop/Cai/vv): ");
+                unit = sc.nextLine().trim();
+                if(!unit.isEmpty()) break;
+                else Log.warning("Khong duoc bo trong mien nay!");
+            }
 
             double price;
             while (true) {
-                System.out.print("Gia thi truong: ");
+                Log.request("Gia thi truong: ");
                 String inputPrice = sc.nextLine().trim();
                 try {
                     price = Double.parseDouble(inputPrice);
                     if (price <= 0) {
-                        System.out.println("Gia phai lon hon 0!");
+                        Log.warning("Gia phai lon hon 0!");
                         continue;
                     }
                     break;
                 } catch (NumberFormatException e) {
-                    System.out.println("Gia khong hop le! Vui long nhap so.");
+                    Log.warning("Gia tien khong hop le! Vui long nhap so.");
                 }
             }
 
-            System.out.print("Thoi han su dung (thang), bo trong neu khong co: ");
+            Log.request("Thoi han su dung (theo thang), bo trong neu khong co: ");
             String input = sc.nextLine().trim();
             Integer SLM;
-
-            System.out.print("Thoi han su dung (thang), bo trong neu khong co: ");
 
             if (!input.isEmpty()) {
                 try {
                     SLM = Integer.valueOf(input);
                     if (SLM < 0) {
-                        System.out.println("Thoi han khong the am! Mac dinh la 0 neu khong co.");
+                        Log.warning("Thoi han khong the am! Mac dinh la 0 neu khong co.");
                         SLM = 0;
                     }
                 } catch (NumberFormatException e) {
-                    System.out.println("Gia tri khong hop le! Mac dinh la 0.");
+                    Log.error("Gia tri khong hop le! Mac dinh la 0.");
                     SLM = 0;
                 }
             } else {
@@ -126,39 +142,78 @@ public class ManageProductsMenu implements IManageMenu{
 
             String confirm;
             while (true) {
-                System.out.print("San pham co phai la thuoc? (y/n): ");
+                Log.request("San pham co phai la thuoc? (y/n): ");
                 confirm = sc.nextLine().trim().toLowerCase();
                 if (confirm.equals("y") || confirm.equals("n")) break;
-                System.out.println("Chi nhap y hoac n!");
+                Log.warning("Chi nhap y hoac n!");
             }
 
             Product product;
 
             if (confirm.equalsIgnoreCase("y")) {
-                System.out.println("Nhap thanh phan chinh cua thuoc: ");
-                String ingredient = sc.nextLine().trim();
-                System.out.println("Nhap lieu luong dung:");
-                String dosage = sc.nextLine().trim();
-                System.out.println("Thuoc co ke don cua bac si khong? (y/n):");
-                String pr = sc.nextLine().trim(); boolean pR = false;
-                if (pr.equalsIgnoreCase("y")) pR = true;
+                String ingredient;
+                while(true){
+                    Log.request("Nhap thanh phan chinh cua thuoc: ");
+                    ingredient = sc.nextLine().trim();
+                    if(!ingredient.isEmpty()) break;
+                    else Log.warning("Khong duoc bo trong mien nay!");
+                }
+                Log.success("Successful!");
+                String dosage;
+                while(true){
+                    dosage = sc.nextLine().trim();
+                    if(!dosage.isEmpty()) break;
+                    else Log.warning("Khong duoc bo trong mien nay!");
+                }           
+                Log.success("Successful!");
+                
+                boolean pr = false;
+                while (true) {
+                    Log.request("Thuoc co ke don cua bac si khong? (y/n):");
+                    String pR = sc.nextLine().trim().toLowerCase();
+                    if (pR.equals("y") || pR.equals("n")) break;
+                    Log.warning("Chi nhap y hoac n!");
+                    pr = pR.equalsIgnoreCase("y");
+                }
+                Log.success("Successful!");
 
-                product = new Drug(PID, name, unit, price, SLM, dosage, ingredient, pR, true);
+                product = new Drug(PID, name, unit, price, SLM, dosage, ingredient, pr, true);
             } else {
-                System.out.println("Don vi/Cong ty san xuat: ");
-                String manufacturer= sc.nextLine().trim();
-                System.out.println("Nhap cong dung:");
-                String usage = sc.nextLine().trim();
-                System.out.println("Loai san pham (VD: Ho tro suc khoe, Lam dep, Y te,...)");
-                String type = sc.nextLine().trim();
+                
+                String manufacturer;
+                while(true){
+                    Log.request("Don vi/Cong ty san xuat: ");
+                    manufacturer= sc.nextLine().trim();
+                    if(!manufacturer.isEmpty()) break;
+                    else Log.warning("Khong duoc bo trong mien nay!");
+                }
+                Log.success("Successful!");
+                String usage;
+                while(true){
+                    Log.request("Nhap cong dung san pham");
+                    usage = sc.nextLine().trim();
+                    if(!usage.isEmpty()) break;
+                    else Log.warning("Khong duoc bo trong mien nay!");
+                }           
+                Log.success("Successful!");
+                
+                String type;
+                while(true){
+                    Log.request("Nhap loai san pham");
+                    type = sc.nextLine().trim();
+                    if(!type.isEmpty()) break;
+                    else Log.warning("Khong duoc bo trong mien nay!");
+                } 
+                Log.success("Successful!");
 
                 product = new NonDrug(PID, name, unit, price, SLM, manufacturer, type, usage, true);
             }
 
             pm.add(product);
-            System.out.println("Da them san pham thanh cong!");
+            Log.success("Da them san pham thanh cong!");
             pm.save();
-            System.out.print("Tiep tuc them? [0 de thoat | Enter de tiep tuc]: ");
+            Log.request("Tiep tuc them? [0 de thoat]: ");
+            Extension.pause(sc);
             if(sc.nextLine().trim().equals("0")) return;
         }
     }
@@ -169,34 +224,36 @@ public class ManageProductsMenu implements IManageMenu{
             Extension.clearScreen();
             System.out.println("==== HIDE PRODUCT ====");
             pm.showList();
-            System.out.print("Nhap ID hoac ten san pham muon AN (hoac nhap 0 de quay lai): ");
+            Log.request("Nhap ID hoac ten san pham muon AN (HIDE) (hoac nhap 0 de quay lai): ");
             String inputID = sc.nextLine().trim();
 
             if (inputID.equals("0")) {
-                System.out.println("Huy thao tac xoa, quay lai menu chinh.");
+                Log.info("Huy thao tac.");
                 return;
             }
 
             Product target = pm.selectProduct(inputID, sc);
 
             if (target == null || target.getStatus() == false) {
-                System.out.println("Khong tim thay san pham voi tu khoa: " + inputID);
+                Log.error("Khong tim thay san pham voi tu khoa: " + inputID);
+                Extension.pause(sc);
                 continue;
             }
 
             // Xác nhận xóa
-            System.out.print("Ban co chac muon AN san pham " + target.getName() + "? (y/n): ");
+            Log.request("Ban co chac muon AN san pham " + target.getName() + "? (y/n): ");
             String confirm = sc.nextLine().trim();
 
             if (confirm.equalsIgnoreCase("y")) {
                 target.setStatus(false);
-                System.out.println("Da an san pham: " + target.getName());
+                Log.success("Da an san pham: " + target.getName());
                 pm.save();
             } else {
-                System.out.println("Da huy thao tac AN.");
+                Log.info("Da huy thao tac AN. Qual lai menu chinh");
             }
-            System.out.print("Tiep tuc? [0 de thoat | Enter de tiep tuc]: ");
+            Log.request("Tiep tuc? [0 de thoat]: ");
             if(sc.nextLine().trim().equals("0")) return;
+            Extension.pause(sc);
         }
     }
 
@@ -204,35 +261,37 @@ public class ManageProductsMenu implements IManageMenu{
     public void activeMenu() {
         while (true) {
             Extension.clearScreen();
-            System.out.println("==== SHOW PRODUCT ====");
+            System.out.println("==== SHOW(ACTIVATE) PRODUCT ====");
             pm.blackList();
-            System.out.print("Nhap ID hoac ten san pham muon HIEN (hoac nhap 0 de quay lai): ");
+            Log.request("Nhap ID hoac ten san pham muon HIEN (hoac nhap 0 de quay lai): ");
             String inputID = sc.nextLine().trim();
 
             if (inputID.equals("0")) {
-                System.out.println("Huy thao tac HIEN, quay lai menu chinh.");
+                Log.info("Huy thao tac.");
                 return;
             }
 
             Product target = pm.selectProduct(inputID, sc);
 
             if (target == null || target.getStatus() == true) {
-                System.out.println("Khong tim thay san pham voi tu khoa: " + inputID);
+                Log.error("Khong tim thay san pham voi tu khoa: " + inputID);
+                Extension.pause(sc);
                 continue;
             }
 
-            System.out.print("Ban co chac muon HIEN THI san pham " + target.getName() + "? (y/n): ");
+            Log.request("Ban co chac muon HIEN THI san pham " + target.getName() + "? (y/n): ");
             String confirm = sc.nextLine().trim();
 
             if (confirm.equalsIgnoreCase("y")) {
                 target.setStatus(true);
-                System.out.println("Da HIEN san pham: " + target.getName());
+                Log.success("Da HIEN san pham: " + target.getName());
                 pm.save();
             } else {
-                System.out.println("Da huy thao tac HIEN.");
+                Log.info("Da huy thao tac HIEN. Quay lai menu chinh");
             }
-            System.out.print("Tiep tuc? [0 de thoat | Enter de tiep tuc]: ");
+            Log.request("Tiep tuc? [0 de thoat]: ");
             if(sc.nextLine().trim().equals("0")) return;
+            Extension.pause(sc);
         }
     }
 
@@ -242,31 +301,35 @@ public class ManageProductsMenu implements IManageMenu{
             Extension.clearScreen();
             System.out.println("==== EDIT PRODUCT ====");
             pm.showList();
-            System.out.print("Nhap ID hoac ten san pham muon chinh sua (hoac nhap 0 de quay lai): ");
+            Log.request("Nhap ID hoac ten san pham muon chinh sua (hoac nhap 0 de quay lai): ");
             String ID = sc.nextLine().trim();
             
             if (ID.equals("0")) {
-                    System.out.println("Huy thao tac xoa, quay lai menu chinh.");
+                    Log.info("Huy thao tac xoa.");
                     return;
                 }
 
             if (!pm.exists(ID)) {
-                System.out.println("Khong ton san pham voi ID: " + ID);
+                Log.error("Khong tim thay san pham voi tu khoa: " + ID);
+                Extension.pause(sc);
                 continue;
             }
             
             Product oldProduct = pm.selectProduct(ID, sc);
 
-            System.out.print("Ten san pham moi (bo trong neu giu nguyen): ");
+            Log.request("Ten san pham moi (bo trong neu giu nguyen): ");
             String name = sc.nextLine();
+            Log.success("Successful!");
 
-            System.out.print("Gia moi (bo trong neu giu nguyen): ");
+            Log.request("Gia moi (bo trong neu giu nguyen): ");
             String p = sc.nextLine().trim();
             Double price = (p.isEmpty()? oldProduct.getPrice() : Double.valueOf(p));
+            Log.success("Successful!");
 
-            System.out.print("Thoi han su dung moi (bo trong neu giu nguyen): ");
+            Log.request("Thoi han su dung moi (bo trong neu giu nguyen): ");
             String SLM = sc.nextLine().trim();
             Integer slm = SLM.isEmpty() ? oldProduct.getSLM() : Integer.valueOf(SLM);
+            Log.success("Successful!");
 
             switch (oldProduct) {
                 case Drug d -> {
@@ -274,42 +337,49 @@ public class ManageProductsMenu implements IManageMenu{
                     d.setPrice(p.isEmpty() ? d.getPrice() : price);
                     d.setShelfLifeMonths(SLM.isEmpty() ? d.getSLM() : slm);
                     
-                    System.out.print("Nhap thanh phan chinh cua thuoc (bo trong neu giu nguyen): ");
+                    Log.request("Nhap thanh phan chinh cua thuoc (bo trong neu giu nguyen): ");
                     String ingredient = sc.nextLine();
                     d.setIngredient(ingredient.isEmpty() ? d.getIngredient() : ingredient);
+                    Log.success("Successful!");
                     
-                    System.out.print("Nhap lieu luong dung (bo trong neu giu nguyen): ");
+                    Log.request("Nhap lieu luong dung (bo trong neu giu nguyen): ");
                     String dosage = sc.nextLine();
                     d.setDosage(dosage.isEmpty() ? d.getDosage() : dosage);
+                    Log.success("Successful!");
                     
-                    System.out.print("Thuoc co ke don cua bac si khong (y/n, bo trong neu giu nguyen): ");
+                    Log.request("Thuoc co ke don cua bac si khong (y/n, bo trong neu giu nguyen): ");
                     String pr = sc.nextLine().trim();
                     if(!pr.isEmpty()) d.setpR(pr.equalsIgnoreCase("y"));
+                    Log.success("Successful!");
                 }
                 case NonDrug d -> {
                     d.setName(name.isEmpty() ? d.getName() : name);
                     d.setPrice(p.isEmpty() ? d.getPrice() : price);
                     d.setShelfLifeMonths(SLM.isEmpty() ? d.getSLM() : slm);
                     
-                    System.out.print("Nhap nha san xuat moi (bo trong neu giu nguyen): ");
+                    Log.request("Nhap nha san xuat moi (bo trong neu giu nguyen): ");
                     String manufacturer = sc.nextLine();
                     d.setManufacturer(manufacturer.isEmpty() ? d.getManufacturer() : manufacturer);
+                    Log.success("Successful!");
                     
-                    System.out.print("Nhap cong dung san pham (bo trong neu giu nguyen): ");
+                    Log.request("Nhap cong dung san pham (bo trong neu giu nguyen): ");
                     String usage = sc.nextLine();
                     d.setUsage(usage.isEmpty() ? d.getUsage() : usage);
+                    Log.success("Successful!");
                     
-                    System.out.print("Loai san pham (bo trong neu giu nguyen): ");
+                    Log.request("Loai san pham (bo trong neu giu nguyen): ");
                     String type = sc.nextLine();
                     d.setType(type.isEmpty() ? d.getType() : type);
+                    Log.success("Successful!");
                 }
-                default -> {System.out.println("Khong phai san pham cua nha thuoc");}
+                default -> {Log.error("Khong phai san pham cua nha thuoc");}
             }
             pm.save();
-            System.out.println("Cap nhat thong tin san pham thanh cong!");
+            Log.success("Cap nhat thong tin san pham thanh cong!");
             printProduct(oldProduct);
-            System.out.print("Tiep tuc chinh sua? [0 de thoat | Enter de tiep tuc]: ");
+            Log.request("Tiep tuc chinh sua? [0 de thoat]: ");
             if(sc.nextLine().trim().equals("0")) return;
+            Extension.pause(sc);
         }  
     }
 
@@ -319,21 +389,28 @@ public class ManageProductsMenu implements IManageMenu{
             Extension.clearScreen();
             System.out.println("==== VIEW PRODUCTS ====");
             pm.showList();
-            System.out.print("Nhap ID hoac ten san pham muon xem (Nhap 0 de quay lai): ");
+            Log.request("Nhap ID hoac ten san pham muon xem (Nhap 0 de quay lai): ");
             String input = sc.nextLine().trim();
 
             if (input.equals("0")) {
-                System.out.println("Huy thao tac, quay lai menu chinh.");
+                Log.info("Huy thao tac.");
                 return;
             }
+
+            if (!pm.exists(input)) {
+                Log.error("Khong tim thay san pham voi tu khoa: " + input);
+                Extension.pause(sc);
+                continue;
+            }
+
             Product product = pm.selectProduct(input, sc);
 
             printProduct(product);
             
-            System.out.print("Quay lai? Hay nhap 0: ");
+            Log.request("Quay lai? Hay nhap 0: ");
             String choice = sc.nextLine().trim();
             if (choice.equals("0")) {
-                System.out.println("Huy thao tac xoa, quay lai menu chinh.");
+                Log.info("Huy thao tac, quay lai menu chinh.");
                 return;
             }
         }
@@ -344,11 +421,11 @@ public class ManageProductsMenu implements IManageMenu{
             Extension.clearScreen();
             System.out.println("==== VIEW PRODUCTS ====");
             inv.showStockList();
-            System.out.print("Nhap ID hoac ten san pham muon xem (Nhap 0 de quay lai): ");
+            Log.request("Nhap ID hoac ten san pham muon xem (Nhap 0 de quay lai): ");
             String input = sc.nextLine().trim();
 
             if (input.equals("0")) {
-                System.out.println("Huy thao tac, quay lai menu chinh.");
+                Log.info("Huy thao tac, quay lai menu chinh.");
                 return;
             }
             
@@ -378,16 +455,17 @@ public class ManageProductsMenu implements IManageMenu{
                         System.out.println("Mo ta cong dung: " + d.getUsage());
                         System.out.println("Tinh trang: " + (d.getStatusString()));
                     }
-                    case null ->{System.out.println("Khong tim thay san pham nao!");}
+                    case null ->{Log.error("Khong tim thay san pham nao!");}
                     default -> throw new AssertionError();
                 }
             }); 
-            System.out.print("Quay lai? Hay nhap 0: ");
+            Log.request("Quay lai? Hay nhap 0: ");
             String choice = sc.nextLine().trim();
             if (choice.equals("0")) {
-                System.out.println("Huy thao tac xoa, quay lai menu chinh.");
+                Log.info("Huy thao tac, quay lai menu chinh.");
                 return;
             }
+            Extension.pause(sc);
         }
     }
 
@@ -417,7 +495,7 @@ public class ManageProductsMenu implements IManageMenu{
                     System.out.println("Mo ta cong dung: " + d.getUsage());
                     System.out.println("Tinh trang: " + (d.getStatusString()));
                 }
-                case null ->{System.out.println("Khong tim thay san pham nao!");}
+                case null ->{Log.error("Khong tim thay san pham nao!");}
                 default -> throw new AssertionError();
             }
         });

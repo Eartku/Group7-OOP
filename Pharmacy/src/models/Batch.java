@@ -70,6 +70,11 @@ public class Batch implements Comparable<Batch>, IStatus{
     public boolean isExpired() {
         return expiryDate != null && LocalDate.now().isAfter(expiryDate);
     }
+
+    public String isExString(){
+        return (isExpired()?"Da qua han": quantity<=30?"Con han[Sap het]":"Con han");
+
+    }
     public int getExpiryStatus(int warningDays) {
         if (expiryDate == null) return 0;
         LocalDate today = LocalDate.now();

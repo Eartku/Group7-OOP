@@ -15,6 +15,7 @@ import models.Drug;
 import models.NonDrug;
 import models.Product;
 import view.Extension;
+import view.Log;
 
 
 public class ProductManager implements IManagement<Product>{
@@ -38,7 +39,7 @@ public class ProductManager implements IManagement<Product>{
             while ((line = br.readLine()) != null) {
                 String[] parts = line.split("\\|");
                 if (parts.length < 9){
-                    System.out.println("[WARN] Invalid line in products.txt: " + line);
+                    Log.warning("[WARN] Invalid line in products.txt: " + line);
                     continue; // bỏ qua dòng lỗi
                 }
 
@@ -69,11 +70,11 @@ public class ProductManager implements IManagement<Product>{
                     default -> new Drug();
                 };
                 products.put(PID, p);
-                System.err.println("[Debug] Load Order [" + (!p.getPID().isEmpty()?p.getPID():"Unknown product") + "] successfully.");
+                Log.success("[Debug] Load Order [" + (!p.getPID().isEmpty()?p.getPID():"Unknown product") + "] successfully.");
             }
-            System.err.println("[Debug] Products data has been loaded successfully!\n");
+            Log.success("[Debug] Products data has been loaded successfully!\n");
         } catch (Exception e) {
-            System.out.println("[WARN] Error in product manager: " + e.getMessage());
+            Log.warning("[WARN] Error in product manager: " + e.getMessage());
         }
     }
 
@@ -92,7 +93,7 @@ public class ProductManager implements IManagement<Product>{
     public ArrayList<Product> getProductByName(String keyword) {
         ArrayList<Product> matched = new ArrayList<>();
         for (Product p : products.values()) {
-            if (p.getName().toLowerCase().contains(keyword.toLowerCase().trim())) {
+            if (p.getName().toLowerCase().trim().contains(keyword.toLowerCase().trim())) {
                 matched.add(p);
             }
         }
@@ -106,24 +107,28 @@ public class ProductManager implements IManagement<Product>{
 
         ArrayList<Product> matched = getProductByName(keyword);
         if (matched.isEmpty()) return null;
-        System.out.println("Da tim thay: " + matched.size());
+        Log.success("Da tim thay: " + matched.size() + "san pham");
 
-        if (matched.size() == 1) return matched.get(0);
+        if (matched.size() == 1) {
+            Product p = matched.get(0);
+            System.err.println("San pham: |" + p.getName() + "|");
+            return p;
+        }
 
-        System.out.println("Co nhieu san pham trung ten, hay chon STT:");
+        Log.request("Co nhieu san pham trung ten, hay chon STT:");
         for (int i = 0; i < matched.size(); i++) {
             Product p = matched.get(i);
             System.out.println((i + 1) + "\t|\t" + p.getPID() + "\t|\t " + p.getName() + "\t|\t " + p.getPrice() + " VND");
         }
 
-        System.out.print("Nhap STT: ");
+        Log.request("Nhap STT: ");
         try {
             int choice = Integer.parseInt(sc.nextLine().trim());
             if (choice >= 1 && choice <= matched.size()) {
                 return matched.get(choice - 1);
             }
         } catch (NumberFormatException e) {
-            System.out.println("Lua chon khong hop le!");
+            Log.warning("Lua chon khong hop le!");
         }
 
         return null;
@@ -131,11 +136,14 @@ public class ProductManager implements IManagement<Product>{
 
     @Override
     public void showList(){
+        int k =0;
         Extension.printTableHeader("Ma san pham","Ten san pham","Don vi","Gia ca","Han dung","Trang thai");
         for (Product elem : products.values()) {
             if(elem.getStatus())
                 Extension.printTableRow(elem.getPID(),elem.getName(),elem.getUnit(),elem.getPrice()+"VND",elem.getShelfLifeInfo(),elem.getStatusString());
+            k++;
         }
+        if(k == 0){Extension.printTableRow("Danh sach rong");}
     }
 
     @Override
@@ -220,7 +228,7 @@ public class ProductManager implements IManagement<Product>{
                     bw.newLine();
             }
         } catch (IOException e) {
-            System.out.println("Loi khi luu san pham: " + e.getMessage());
+            Log.error("Loi khi luu san pham: " + e.getMessage());
         }
     }
 

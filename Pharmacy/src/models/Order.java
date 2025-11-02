@@ -83,7 +83,7 @@ public class Order implements  Comparable<Order>,IStatus{
     public String getStatusString() {
         if (customer == null) return "Unknown"; 
         if (!customer.getStatus()) return "Customer blocked";
-        return status ? "Order active" : "Order inactive";
+        return status ? "Active" : "Inactive";
     }
 
 

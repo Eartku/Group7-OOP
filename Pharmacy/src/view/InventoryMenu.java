@@ -35,7 +35,9 @@ public class InventoryMenu implements IManageMenu {
             Extension.clearScreen();
             System.out.println("==== INVENTORY MANAGER ====\n");
             System.out.println(inv.report() + "\n");
+            System.out.println("==== DANH SACH CAC LO HANG TRONG KHO ====");
             inv.showList();
+            inv.blackList();
             System.out.println("\n1. Nhap lo hang moi - Import Batch");
             System.out.println("2. Kich hoat/Khoa lo hang trong kho - Activate/Block Batch");
             System.out.println("3. Chinh sua lo hang - Edit Batch");
@@ -89,7 +91,7 @@ public class InventoryMenu implements IManageMenu {
         String BID = Data.generateNewID(Inventory.FILE_PATH, 'B');
         Product p = null;
         while (true) {
-            Log.request("Chi duoc nhap cac san pham co trong danh muc sau:");
+            Log.exit("Chi duoc nhap cac san pham co trong danh muc sau:");
             pm.showList();
             Log.request("Nhap ID san pham (0 de quay lai): ");
             String input = sc.nextLine().trim();

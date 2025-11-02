@@ -8,6 +8,8 @@ import models.Admin;
 import models.Customer;
 import models.Guest;
 import view.Extension;
+import view.Log;
+
 
 public class UserManager implements IManagement<IAuthenticable> {
 
@@ -40,7 +42,7 @@ public class UserManager implements IManagement<IAuthenticable> {
                     case 0 -> {
                         Guest g = new Guest(username, password, status);
                         users.put(username, g);
-                        System.err.println("[Debug] Load guest ["+ g.getUsername() +"] successfully!");
+                        Log.warning("[Debug] Load guest ["+ g.getUsername() +"] successfully!");
                     }
                     case 1 -> {
                         Customer profile = customerMap.get(username);
@@ -48,21 +50,21 @@ public class UserManager implements IManagement<IAuthenticable> {
                             profile.setPassword(password);
                             profile.setStatus(status);
                             users.put(username, profile);
-                            System.err.println("[Debug] Load customer ["+ profile.getUsername() +"] successfully!");
+                            Log.warning("[Debug] Load customer ["+ profile.getUsername() +"] successfully!");
                         } else {
                             Customer c = new Customer(username, password, status);
                             users.put(username, c);
-                            System.err.println("[Debug] Load customer ["+ c.getUsername() +"] successfully!");
+                            Log.warning("[Debug] Load customer ["+ c.getUsername() +"] successfully!");
                         }
                     }
                     case 2 -> {
                         Admin a = new Admin(username, password, status);
                         users.put(username, a);
-                        System.err.println("[Debug] Load admin ["+ a.getUsername() +"] successfully!");
+                        Log.warning("[Debug] Load admin ["+ a.getUsername() +"] successfully!");
                     }
                 }
             }
-            System.err.println("[Debug] Users data has been loaded successfully!\n");
+            Log.warning("[Debug] Users data has been loaded successfully!\n");
         } catch (Exception e) {
             System.out.println("Error in user manager: " + e.getMessage());
         }

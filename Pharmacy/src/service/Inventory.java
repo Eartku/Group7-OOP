@@ -17,6 +17,7 @@ import models.Batch;
 import models.OrderItem;
 import models.Product;
 import view.Extension;
+import view.Log;
 
 
 // Inventory hay Batch_Management
@@ -59,12 +60,12 @@ public class Inventory implements IManagement<Batch>{
                 List<Batch> list = inv_byPID.getOrDefault(p.getPID(), new ArrayList<>());   // nếu PID mới --> tạo ngay mảng mới lưu trữ lô hàng cùng sản phẩm
                 list.add(b);                                                                // nếu PID trùng thì thêm Batch (lô) vào mảng
                 inv_byPID.put(b.getProduct().getPID(), list);                               // đưa (key, value) vào TreeMap
-                System.err.println("[Debug] Load Batch [" + BID + ";" + quantity + "] successfully.");
+                Log.exit("[Debug] Load Batch [" + BID + ";" + quantity + "] successfully.");
             }
-            System.err.println("[Debug] Inventory data has been loaded successfully!\n");
+            Log.exit("[Debug] Inventory data has been loaded successfully!\n");
         }
         catch(Exception e){
-            System.out.println("Error in inventory: "+ e.getMessage());
+            Log.error("Error in inventory: "+ e.getMessage());
         }
     }
 
@@ -97,7 +98,7 @@ public class Inventory implements IManagement<Batch>{
         Product p = ordered.getProduct();
 
         if(!p.getStatus()){ // neu sản phẩm bị khóa hay xóa
-            System.out.println("San pham nay khong con kha dung!");
+            Log.error("San pham nay khong con kha dung!");
             return;
         }
 
@@ -105,7 +106,7 @@ public class Inventory implements IManagement<Batch>{
 
         List<Batch> batches = inv_byPID.get(p.getPID());
         if (batches == null || batches.isEmpty()) {
-            System.out.println("San pham nay khong co lo hang nao!");
+            Log.error("San pham nay khong co lo hang nao!");
             return;
         }
 
@@ -122,7 +123,7 @@ public class Inventory implements IManagement<Batch>{
         }
 
         if (needed > 0) {
-        System.out.println("⚠ Không đủ hàng! Thiếu " + needed + " đơn vị.");
+        Log.warning("⚠ Không đủ hàng! Thiếu " + Log.toError(String.valueOf(needed)) + " đơn vị.");
     }
         save();
     }
@@ -142,39 +143,34 @@ public class Inventory implements IManagement<Batch>{
     // Hiển thị dạng bảng các lô hàng vẫn còn hoạt động
     @Override
      public void showList(){
+        int k =0;
         Extension.printTableHeader("Ma lo hang","Ma san pham","Ten san pham","So luong","Ngay nhap lo hang","Trang thai","Canh bao");
         for (Batch elem : inv.values()) {
             if(elem.getStatus()){
-                String status = switch(elem.getExpiryStatus(30)){
-                case 1 -> "Sap het han";
-                case 0 -> "Con han";
-                case -1 ->"Qua han";
-                default -> "Nothing";
-                };
-                Extension.printTableRow(elem.getBatchId(),elem.getProduct().getPID(),elem.getProduct().getName(),elem.getQuantity(),elem.getImportDate(), elem.getStatusString(), status);
+                Extension.printTableRow(elem.getBatchId(),elem.getProduct().getPID(),elem.getProduct().getName(),elem.getQuantity(),elem.getImportDate(), elem.getStatusString(), elem.isExString());
             }
+            k++;
         }
+        if(k == 0){Extension.printTableRow("Danh sach rong");}
     }
 
     // Hiển thị dạng bảng các lô hàng không còn hoạt động hay bị hủy
     @Override
     public void blackList(){
+        int k = 0;
         Extension.printTableHeader("Ma lo hang","Ma san pham","Ten san pham","So luong","Ngay nhap lo hang","Trang thai","Canh bao");
         for (Batch elem : inv.values()) {
             if(!elem.getStatus()){
-                String status = switch(elem.getExpiryStatus(30)){
-                case 1 -> "Sap het han";
-                case 0 -> "Con han";
-                case -1 ->"Qua han";
-                default -> "Nothing";
-                };
-                Extension.printTableRow(elem.getBatchId(),elem.getProduct().getPID(),elem.getProduct().getName(),elem.getQuantity(),elem.getImportDate(), elem.getStatusString(), status);
+                Extension.printTableRow(elem.getBatchId(),elem.getProduct().getPID(),elem.getProduct().getName(),elem.getQuantity(),elem.getImportDate(), elem.getStatusString(), elem.isExString());
             }
+            k++;
         }
+        if(k == 0){Extension.printTableRow("Danh sach rong");}
     }
     
     // Hiển thị danh sách sản phẩm tồn kho
     public void showStockList() { 
+        int k = 0;
         Extension.printTableHeader("Ma san pham", "Ten san pham", "Don vi", "Gia ca");
 
         for (List<Batch> batches : inv_byPID.values()) {
@@ -187,7 +183,9 @@ public class Inventory implements IManagement<Batch>{
             if (p.getStatus()) {
                 Extension.printTableRow(p.getPID(), p.getName(), p.getUnit(), p.getPrice() + " VND");
             }
+            k++;
         }
+        if(k == 0){Extension.printTableRow("Danh sach rong");}
     }
 
 
@@ -211,26 +209,26 @@ public class Inventory implements IManagement<Batch>{
 
         if (matched.isEmpty()) return null;
 
-        System.out.println("Da tim thay: " + matched.size() + " san pham.");
+        Log.success("Da tim thay: " + matched.size() + " san pham.");
 
         //Nếu chỉ có 1 sản phẩm khớp → trả về luôn
         if (matched.size() == 1) return matched.get(0);
 
         //Nếu có nhiều sản phẩm cùng tên → để user chọn
-        System.out.println("Co nhieu san pham trung ky tu, chon theo STT cua danh sach sau:");
+        Log.request("Co nhieu san pham trung ky tu, chon theo STT cua danh sach sau:");
         for (int i = 0; i < matched.size(); i++) {
             Product p = matched.get(i);
-            System.out.println((i + 1) + "\t|\t" + p.getPID() + "\t|\t" + p.getName() + "\t|\t" + p.getPrice() + " VND");
+            System.out.println(Log.toInfo(String.valueOf((i + 1))) + "\t|\t" + p.getPID() + "\t|\t" + p.getName() + "\t|\t" + p.getPrice() + " VND");
         }
 
-        System.out.print("Nhap STT: ");
+        Log.request("Nhap STT: ");
         try {
             int choice = Integer.parseInt(sc.nextLine().trim());
             if (choice >= 1 && choice <= matched.size()) {
                 return matched.get(choice - 1);
             }
         } catch (NumberFormatException e) {
-            System.out.println("Lua chon khong hop le!");
+            Log.warning("Lua chon khong hop le!");
         }
         return null; // không có trả về null
     }

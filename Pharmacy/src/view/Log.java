@@ -9,32 +9,53 @@ public class Log {
     public static final String BLUE = "\u001B[94m";
     public static final String MAGENTA = "\u001B[35m";
 
-    // [REQUEST] — Dành cho nhập dữ liệu
+    // [EXIT] — Dành cho thông báo kết thúc
     public static void exit(String message) {
         System.out.print(CYAN + message + RESET + "\n");
     }
 
     public static void request(String message) {
-        System.out.print(MAGENTA + "[REQUEST] " + message + RESET);
+        System.out.print(MAGENTA + message + RESET);
     }
 
-    // [INFO] — Dành cho thông báo hệ thống / tiến trình
+    // [INFO]
     public static void info(String msg) {
-        System.out.println(BLUE + "[INFO] " + msg + RESET);
+        System.out.println(BLUE + msg + RESET);
     }
 
-    // [SUCCESS] — Dành cho hành động thành công
+    // [SUCCESS]
     public static void success(String msg) {
-        System.out.println(GREEN + "[SUCCESS] " + msg + RESET);
+        System.out.println(GREEN + msg + RESET);
     }
 
-    // [WARNING] — Cảnh báo nhẹ
+    // [WARNING]
     public static void warning(String msg) {
-        System.out.println(YELLOW + "[WARNING] " + msg + RESET);
+        System.out.println(YELLOW + msg + RESET);
     }
 
-    // [ERROR] — Lỗi nghiêm trọng
+    // [ERROR]
     public static void error(String msg) {
-        System.out.println(RED + "[ERROR] " + msg + RESET);
+        System.out.println(RED + msg + RESET);
+    }
+
+
+    public static String toInfo(String msg) {
+        return BLUE + msg + RESET;
+    }
+
+    public static String toSuccess(String msg) {
+        return GREEN + msg + RESET;
+    }
+
+    public static String toWarning(String msg) {
+        return YELLOW + msg + RESET;
+    }
+
+    public static String toError(String msg) {
+        return RED + msg + RESET;
+    }
+
+    public static String toRequest(String msg) {
+        return MAGENTA + msg + RESET;
     }
 }

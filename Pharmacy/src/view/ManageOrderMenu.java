@@ -51,8 +51,11 @@ public class ManageOrderMenu implements IManageMenu {
         while (true) {
             Extension.clearScreen();
             System.out.println("==== ORDER MANAGER ====");
+            
             System.out.println(om.report());
+            System.out.println("==== DANH SACH TAT CA DON HANG ====");
             om.showList();
+            om.blackList();
             System.out.println("1. Them HOA DON moi (neu giao dich tai quay)");
             System.out.println("2. Kich hoat/Khoa HOA DON");
             System.out.println("3. Cap nhat thong tin HOA DON (Khong co)");
@@ -300,7 +303,7 @@ public class ManageOrderMenu implements IManageMenu {
             System.out.println("==== ACTIVE ORDER ====");
             System.out.println("DANH SACH DON HANG INACTIVE ");
             om.blackList();
-            Log.request("Nhap ID HOA DON muon xoa (hoac nhap 0 de quay lai): ");
+            Log.request("Nhap ID HOA DON muon kich hoat (hoac nhap 0 de quay lai): ");
             String inputID = sc.nextLine().trim();
 
             if (inputID.equals("0")) {
@@ -308,15 +311,15 @@ public class ManageOrderMenu implements IManageMenu {
                 return;
             }
 
-            Log.request("Ban co chac muon xoa san pham " + inputID + "? (y/n): ");
+            Log.request("Ban co chac muon kich hoat san pham " + inputID + "? (y/n): ");
             String confirm = sc.nextLine().trim();
 
             if (confirm.equalsIgnoreCase("y")) {
-                om.get(inputID).setStatus(false);
-                Log.success("Da xoa san pham: " + inputID);
+                om.get(inputID).setStatus(true);
+                Log.success("Da kich hoat don hang: " + inputID);
                 om.save();
             } else {
-                Log.info("Da huy thao tac xoa.");
+                Log.info("Da huy thao tac kich hoat.");
             }
             break;
         }

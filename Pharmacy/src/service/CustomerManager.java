@@ -7,6 +7,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.*;
 import models.Customer;
 import view.Extension;
+import view.Log;
 
 public final class CustomerManager implements IManagement<Customer> {
 
@@ -38,7 +39,7 @@ public final class CustomerManager implements IManagement<Customer> {
 
                 String[] parts = line.split("\\|");
                 if (parts.length < 8) {
-                    System.out.println("[WARN] Invalid line in customers.txt: " + line);
+                    Log.info("[WARN] Invalid line in customers.txt: " + line);
                     continue;
                 }
 
@@ -48,7 +49,7 @@ public final class CustomerManager implements IManagement<Customer> {
                 try {
                     dob = LocalDate.parse(parts[2].trim(), DateTimeFormatter.ofPattern("dd/MM/yyyy"));
                 } catch (Exception e) {
-                    System.out.println("[WARN] Invalid DOB for CID " + CID + ": " + parts[2]);
+                    Log.info("[WARN] Invalid DOB for CID " + CID + ": " + parts[2]);
                 }
 
                 String address = parts[3].trim();
@@ -60,12 +61,12 @@ public final class CustomerManager implements IManagement<Customer> {
                 Customer c = new Customer(username, "", CID, fullName, dob, address, email, phone, status);
                 customerByID.put(CID, c);
                 customerByUsername.put(username, c);
-                System.err.println("[Debug] Load customer ["+ c.getFullname() +"] successfully!");
+                Log.info("[Debug] Load customer ["+ c.getFullname() +"] successfully!");
             }
-            System.err.println("[Debug] Customers data has been loaded successfully!\n");
+            Log.info("[Debug] Customers data has been loaded successfully!\n");
 
         } catch (Exception e) {
-            System.out.println("[ERROR] Error in customer manager: " + e.getMessage());
+            Log.error("[ERROR] Error in customer manager: " + e.getMessage());
         }
     }
 
@@ -132,19 +133,26 @@ public final class CustomerManager implements IManagement<Customer> {
     @Override
     public void showList() {
         Extension.printTableHeader("Ma khach hang","Ho va ten","Ngay sinh","Dia chi","So dien thoai","Email","Trang thai");
+        int k = 0;
         for (Customer c : customerByID.values()) {
             if(c.getStatus())
                 Extension.printTableRow(c.getCID(),c.getFullname(),c.getDobdate(),c.getAddress(),c.getPhone(),c.getEmail(),c.getStatusString());
+            k++;
         }
+
+        if(k == 0){Extension.printTableRow("Danh sach rong");}
     }
 
     @Override
     public void blackList() {
+        int k = 0;
         Extension.printTableHeader("Ma khach hang","Ho va ten","Ngay sinh","Dia chi","So dien thoai","Email","Trang thai");
         for (Customer c : customerByID.values()) {
             if(!c.getStatus())
                 Extension.printTableRow(c.getCID(),c.getFullname(),c.getDobdate(),c.getAddress(),c.getPhone(),c.getEmail(),c.getStatusString());
+            k++;
         }
+        if(k == 0){Extension.printTableRow("Danh sach rong");}
     }
 
     @Override
@@ -159,7 +167,7 @@ public final class CustomerManager implements IManagement<Customer> {
                 bw.write(c.toStringProfile() + "\n");
             }
         } catch (IOException e) {
-            System.out.println("[ERROR] Error saving customers: " + e.getMessage());
+            Log.error("[ERROR] Error saving customers: " + e.getMessage());
         }
     }
 

@@ -19,6 +19,7 @@ import models.Order;
 import models.OrderItem;
 import models.Product;
 import view.Extension;
+import view.Log;
 import view.ManageProductsMenu;
 
 
@@ -84,9 +85,9 @@ public class OrderManager implements IManagement<Order> {
                 }
                 Order o = new Order(oid, items , cm.get(cid), purchaseDate, status);
                 orders.put(oid, o);
-                System.err.println("[Debug] Load Order [" + o.getOID()+";"+ o.getCustomer().getCID()+"] successfully.");
+                Log.info("[Debug] Load Order [" + o.getOID()+";"+ o.getCustomer().getCID()+"] successfully.");
             }
-            System.err.println("[Debug] Orders data has been loaded successfully!\n");
+            Log.info("[Debug] Orders data has been loaded successfully!\n");
         } catch(Exception e){
             System.out.println(" [WARNING] Error in order manager: "+ e.getMessage());
         }
@@ -114,7 +115,7 @@ public class OrderManager implements IManagement<Order> {
                 fw.append(u.toString()).append("\n");
             }
         } catch (IOException e) {
-            System.out.println("[WARNING] Error saving orders: " + e.getMessage());
+            Log.error("[WARNING] Error saving orders: " + e.getMessage());
         }
 
         try (FileWriter fl = new FileWriter(FILE_PATH_2, false)) {
@@ -122,7 +123,7 @@ public class OrderManager implements IManagement<Order> {
                 fl.append(u.getOID()); 
                 for (OrderItem item : u.getItems()) {
                     if (item.getProduct() == null) {
-                        System.err.println("[WARNING] Bo qua item NULL " + u.getOID());
+                        Log.warning("[WARNING] Bo qua item NULL " + u.getOID());
                         continue; // bỏ qua sản phẩm lỗi
                     }
                     fl.append("|").append(item.getProduct().getPID());
@@ -131,39 +132,45 @@ public class OrderManager implements IManagement<Order> {
                 fl.append("\n"); 
             }
         } catch (IOException e) {
-            System.out.println("[WARNING] Error in order manager: " + e.getMessage());
+            Log.error("[WARNING] Error in order manager: " + e.getMessage());
         }
     }
 
 
     @Override
     public void showList(){
-        Extension.printTableHeader("Ma don hang","Ma khach hang","So san pham","Trang thai","Ngay dat");
+        int k =0;
+        Extension.printTableHeader("Ma don hang","Ma khach hang","So luong san pham","Trang thai","Ngay dat");
         for (Order elem : orders.values()) {
             if(elem.getStatus())
-                Extension.printTableRow(elem.getOID(),elem.getCustomer().getCID(),elem.getItems().size(),elem.getStatusString(),elem.getpurchaseDate());
+                Extension.printTableRow(elem.getOID(),elem.getCustomer().getCID(),quantity(elem),elem.getStatusString(),elem.getpurchaseDate());
+            k++;
         }
+        if(k == 0){Extension.printTableRow("Danh sach rong");}
     }
 
     @Override
     public void blackList(){
-        Extension.printTableHeader("Ma don hang","Ma khach hang","So san pham","Trang thai","Ngay dat mua");
+        int k=0;
+        Extension.printTableHeader("Ma don hang","Ma khach hang","So luong san pham","Trang thai","Ngay dat mua");
         for (Order elem : orders.values()) {
             if(!elem.getStatus())
-                Extension.printTableRow(elem.getOID(),elem.getCustomer().getCID(),elem.getItems().size(),elem.getStatusString(),elem.getpurchaseDate());
+                Extension.printTableRow(elem.getOID(),elem.getCustomer().getCID(),quantity(elem),elem.getStatusString(),elem.getpurchaseDate());
+            k++;
         }
+        if(k == 0){Extension.printTableRow("Danh sach rong");}
     }
 
     public static ArrayList<OrderItem> buyProducts(Scanner sc, ProductManager pm, Inventory inv) {
         ArrayList<OrderItem> list = new ArrayList<>();
         while(true){
             inv.showStockList();
-            System.out.println("Nhap ten hay ID pham muon mua (Nhap 0 de thoat): ");
+            Log.request("Nhap ten hay ID pham muon mua (Nhap 0 de thoat): ");
             String choice = sc.nextLine().trim();
             if(choice.equals("0")) break;
 
             if(choice.isEmpty()){
-                System.out.println("[WARNING] Vui long nhap lai!");
+                Log.warning("Vui long nhap lai!");
                 sc.nextLine();
                 continue;
             } 
@@ -171,7 +178,7 @@ public class OrderManager implements IManagement<Order> {
             Product selected = pm.selectProduct(choice, sc);
 
             if(selected == null){
-                System.out.println("[WARNING] San pham khong ton tai!");
+                Log.error("San pham khong ton tai!");
                 continue;
             }
 
@@ -180,23 +187,23 @@ public class OrderManager implements IManagement<Order> {
             String quantity = "";
             long quantityValue = 0;
             while (true) {
-                System.out.print("Nhap so luong san pham: ");
+                Log.request("Nhap so luong san pham: ");
                 quantity = sc.nextLine().trim();
                 // Kểm tra rỗng
                 if (quantity.isEmpty()) {
-                    System.out.println("[WARNING] Vui long nhap lai! Khong duoc de trong.");
+                    Log.warning("Vui long nhap lai! Khong duoc de trong.");
                     continue;
                 }
                 // Kiểm tra phải là số nguyên dương
                 if (!quantity.matches("\\d+")) {
-                    System.out.println("[WARNING] So luong chi duoc phep la so nguyen duong!");
+                    Log.warning("So luong chi duoc phep la so nguyen duong!");
                     continue;
                 }
                 // Chuển sang số
                 quantityValue = Long.parseLong(quantity);
                 // Kiểm tra giá trị
                 if (quantityValue <= 0) {
-                    System.out.println("[WARNING] So luong toi thieu phai la 1!");
+                    Log.warning("So luong toi thieu phai la 1!");
                     continue;
                 }
                 // Nếu hợp lệ thì thoát vòng lặp
@@ -215,16 +222,25 @@ public class OrderManager implements IManagement<Order> {
                 }
             }
 
-            System.out.println("Da chon " + quantity + " x " + selected.getName());
+            Log.success("Da chon " + quantity + " x " + selected.getName());
             if(!found) list.add(new OrderItem(selected, quantityValue));
 
-            System.out.println("Chon them san pham khac? (0 to Stop)");
+            Log.request("Chon them san pham khac? (0 to Stop)");
             String more = sc.nextLine().trim();
             if(more.equalsIgnoreCase("0")) break;
         }
         return list;
     }
 
+    public long quantity(Order ordered){
+        long q = 0;
+        for (OrderItem elem : ordered.getItems()) {
+            if(elem.getProduct().getStatus()){
+                q += elem.getQuantity();
+            }
+        }
+        return q;
+    }
 
     @Override
     public void add(Order order){
@@ -260,7 +276,7 @@ public class OrderManager implements IManagement<Order> {
                 Extension.printTableRow(
                     o.getOID(),
                     item.toString(),
-                    String.valueOf(o.getItems().size()),
+                    String.valueOf(quantity(o)),
                     o.getStatusString()
                 );
             }

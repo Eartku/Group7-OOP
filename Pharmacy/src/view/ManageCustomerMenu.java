@@ -35,7 +35,9 @@ public class ManageCustomerMenu implements IManageMenu {
             Extension.clearScreen();
             System.out.println("==== CUSTOMER MANAGER ====");
             System.out.println(cm.report());
+            System.out.println("==== DANH SACH TAT CA KHACH HANG ====");
             cm.showList();
+            cm.blackList();
             System.out.println("1. Them khach hang - Add Customer (Danh cho giao dich tai quay)");
             System.out.println("2. Kich hoat/Chan khach hang - Activate/Block Customers");
             System.out.println("3. Chinh sua thong tin khach hang - Edit Customers INFO");
@@ -92,6 +94,10 @@ public class ManageCustomerMenu implements IManageMenu {
                 Log.info("Huy thao tac.");
                 return;
             }
+            if (username.isEmpty()) {
+                Log.warning("Username khong duoc de trong!");
+                continue;
+            }
             if (um.exists(username)) {
                 Log.warning("Username da ton tai!");
             } else break;
@@ -100,19 +106,35 @@ public class ManageCustomerMenu implements IManageMenu {
         String password;
         while (true) {
             Log.request("Nhap password: ");
-            password = sc.nextLine();
-            if (password.length() >= 6) break;
-            Log.warning("Password phai dai hon 6 ky tu!");
+            password = sc.nextLine().trim();
+            if (password.isEmpty()) {
+                Log.warning("Password khong duoc de trong!");
+                continue;
+            }
+            if (password.length() < 6) {
+                Log.warning("Password phai dai hon 6 ky tu!");
+            } else break;
         }
 
         String CID = Data.generateNewID(CustomerManager.FILE_PATH, 'C');
-        Log.request("Ho va ten: ");
-        String fullname = sc.nextLine();
+
+        String fullname;
+        while (true) {
+            Log.request("Ho va ten: ");
+            fullname = sc.nextLine().trim();
+            if (fullname.isEmpty()) {
+                 Log.warning("Khong duoc de trong mien nay!");
+            } else break;
+        }
 
         LocalDate dobDate = null;
         while (true) {
             Log.request("Ngay sinh (dd/MM/yyyy): ");
-            String dob = sc.nextLine();
+            String dob = sc.nextLine().trim();
+            if (dob.isEmpty()) {
+                 Log.warning("Khong duoc de trong mien nay!");
+                continue;
+            }
             try {
                 dobDate = LocalDate.parse(dob, DateTimeFormatter.ofPattern("dd/MM/yyyy"));
                 break;
@@ -121,12 +143,32 @@ public class ManageCustomerMenu implements IManageMenu {
             }
         }
 
-        Log.request("Dia chi: ");
-        String address = sc.nextLine();
-        Log.request("Email: ");
-        String email = sc.nextLine();
-        Log.request("So dien thoai: ");
-        String phone = sc.nextLine();
+        String address;
+        while (true) {
+            Log.request("Dia chi: ");
+            address = sc.nextLine().trim();
+            if (address.isEmpty()) {
+                 Log.warning("Khong duoc de trong mien nay!");
+            } else break;
+        }
+
+        String email;
+        while (true) {
+            Log.request("Email: ");
+            email = sc.nextLine().trim();
+            if (email.isEmpty()) {
+                 Log.warning("Khong duoc de trong mien nay!");
+            } else break;
+        }
+
+        String phone;
+        while (true) {
+            Log.request("So dien thoai: ");
+            phone = sc.nextLine().trim();
+            if (phone.isEmpty()) {
+                Log.warning("Khong duoc de trong mien nay!");
+            } else break;
+        }
 
         Customer newUser = new Customer(username, password, CID, fullname, dobDate, address, email, phone, true);
         cm.add(newUser);
@@ -233,11 +275,15 @@ public class ManageCustomerMenu implements IManageMenu {
         }
 
         Customer c = cm.get(ID);
-        Log.request("Ho va ten: ");
-        c.setFullname(sc.nextLine());
+        Log.request("Ho va ten (bo trong neu giu nguyen): ");
+        String name = sc.nextLine();
+        c.setFullname(name.isEmpty() ? c.getFullname() : name);
+        Log.success("Successfull!");
 
         while (true) {
-            Log.request("Ngay sinh (dd/MM/yyyy): ");
+            Log.request("Ngay sinh (dd/MM/yyyy) (bo trong neu giu nguyen): ");
+            String dobS = sc.nextLine();
+            c.setDob(dobS.isEmpty() ? c.getDobdate() : dobS);
             String dob = sc.nextLine();
             try {
                 c.setDob(dob);
@@ -245,14 +291,23 @@ public class ManageCustomerMenu implements IManageMenu {
             } catch (Exception e) {
                 Log.error("Ngay sinh khong hop le!");
             }
+            Log.success("Successfull!");
+
         }
 
-        Log.request("Dia chi: ");
-        c.setAddress(sc.nextLine());
-        Log.request("Email: ");
-        c.setEmail(sc.nextLine());
-        Log.request("So dien thoai: ");
-        c.setPhone(sc.nextLine());
+        Log.request("Dia chi (bo trong neu giu nguyen): ");
+        String adress = sc.nextLine();
+        c.setAddress(adress.isEmpty() ? c.getAddress() : adress);
+        Log.success("Successfull!");
+        Log.request("Email (bo trong neu giu nguyen):");
+        String email = sc.nextLine();
+        c.setFullname(email.isEmpty() ? c.getEmail() : email);
+        Log.success("Successfull!");
+        Log.request("So dien thoai (bo trong neu giu nguyen): ");
+        String phone = sc.nextLine();
+        c.setFullname(phone.isEmpty() ? c.getPhone() : phone);
+        Log.success("Successfull!");
+        
 
         cm.save();
         Log.success("Cap nhat thong tin thanh cong!");
