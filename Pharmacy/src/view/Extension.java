@@ -98,7 +98,7 @@ public class Extension {
 
             if (str.equalsIgnoreCase("Active")) color = Log.GREEN;
             else if (str.equalsIgnoreCase("Block")) color = Log.RED;
-            else if (str.contains("Qua han[Sap het]")) color = Log.YELLOW;
+            else if (str.contains("Con han[Sap het]")) color = Log.YELLOW;
             else if (str.contains("Da qua han") || str.contains("Qua han")) color = Log.RED;
             else if (str.contains("Con han")) color = Log.GREEN;
             else if (str.contains("Customer blocked")) color = Log.YELLOW;
