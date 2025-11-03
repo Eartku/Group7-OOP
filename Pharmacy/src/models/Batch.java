@@ -47,7 +47,7 @@ public class Batch implements Comparable<Batch>, IStatus{
         this.status = isactive;
     }
 
-    //getter/ setter các thông số
+    //getter - setter các thông số
     public String getBatchId() { return BID; }          //Mã
     public void setBatchId(String batchId) { this.BID = batchId; }
 
@@ -63,7 +63,24 @@ public class Batch implements Comparable<Batch>, IStatus{
     @Override
     public void setStatus(boolean active) { this.status = active; }
     @Override
-    public String getStatusString() { return this.status?"Active":"Inactive"; }
+    public String getStatusString() {
+        String statusBatch;
+
+        if (quantity == 0) {
+            statusBatch = "Het hang";
+        } 
+        else if (quantity > 0 && quantity <= 20) {
+            statusBatch = "Sap het hang";
+        }
+        else if (isExpired()) {
+            statusBatch = "Qua han";
+        } 
+        else {
+            statusBatch = status ? "Active - Con hang" : "Inactive - Con hang";
+        }
+        return statusBatch;
+    }
+
 
 
     public String getImportDate() { return importDate.format(FORMATTER); }
@@ -83,10 +100,6 @@ public class Batch implements Comparable<Batch>, IStatus{
         return expiryDate != null && LocalDate.now().isAfter(expiryDate);
     }
 
-    public String isExString(){
-        return (isExpired()?"Da qua han": quantity<=30?"Con han[Sap het]":"Con han");
-
-    }
     public int getExpiryStatus(int warningDays) {
         if (expiryDate == null) return 0;
         LocalDate today = LocalDate.now();

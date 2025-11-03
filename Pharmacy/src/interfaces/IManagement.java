@@ -1,7 +1,7 @@
 package interfaces;
 
 public interface IManagement<T> { // quản lý đối tượng T
-    //CRUD - Create - Read - Update - Delete - Active - Block
+    //Create - Read - Update - Delete - Active - Block
 
     boolean exists(String key);
 

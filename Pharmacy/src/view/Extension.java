@@ -98,11 +98,14 @@ public class Extension {
 
             if (str.equalsIgnoreCase("Active")) color = Log.GREEN;
             else if (str.equalsIgnoreCase("Block")) color = Log.RED;
-            else if (str.contains("Con han[Sap het]")) color = Log.YELLOW;
-            else if (str.contains("Da qua han") || str.contains("Qua han")) color = Log.RED;
-            else if (str.contains("Con han")) color = Log.GREEN;
+            else if (str.contains("Sap het hang")) color = Log.YELLOW;
+            else if (str.contains("Het hang")) color = Log.RED;
+            else if (str.contains("Qua han")) color = Log.RED;
+            else if (str.contains("Active - Con hang")) color = Log.GREEN;
+            else if (str.contains("Inactive - Con hang")) color = Log.RED;
+            else if (str.contains("Confirmed")) color = Log.GREEN;
             else if (str.contains("Customer blocked")) color = Log.YELLOW;
-            else if (str.contains("Inactive")) color = Log.RED;
+            else if (str.contains("Canceled")) color = Log.RED;
             else if (str.contains("Available") || str.contains("Avaiable")) color = Log.GREEN;
             else if (str.contains("Unavailable") || str.contains("Unavaiable")) color = Log.RED;
 

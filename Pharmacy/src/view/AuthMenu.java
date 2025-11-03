@@ -16,6 +16,11 @@ import service.UserManager;
 
 public class AuthMenu {
 
+    private static boolean hasLetterAndDigit(String input) {
+        if (input == null || input.isEmpty()) return false;
+        return input.matches("^(?=.*[A-Za-z])(?=.*\\d).+$");
+    }
+
     public static IAuthenticable Register(Scanner sc, UserManager um, CustomerManager cm){
         Extension.clearScreen();
         System.out.println("______DANG KY_____");
@@ -24,15 +29,26 @@ public class AuthMenu {
             Log.request("Nhap Username (hoac nhap 0 de quay lai): ");
             username = sc.nextLine().trim();
 
+
+            if(username.isEmpty()) {
+                Log.warning("Khong duoc bo trong mien nay");
+                continue;
+            }
+
             if (username.equals("0")) {
                 Log.info("Huy thao tac xoa, quay lai menu chinh.");
                 // break;
                 return null;
             }
 
+            if(!hasLetterAndDigit(username)){
+                Log.warning("Username phai co it nhat 1 chu cai va so");
+                continue;
+            }
+
             if(um.exists(username)){
-                Log.warning("Username da ton tai!");
-                System.out.println("Dang nhap? (y/n): ");
+                Log.error("Username da ton tai!");
+                Log.request("Dang nhap? (y/n): ");
                 char choice = sc.nextLine().charAt(0);
                 if(choice == 'Y' || choice == 'y'){
                     return Login(sc, um, cm);
@@ -51,6 +67,10 @@ public class AuthMenu {
                 Log.warning("Password it nhat 6 ky tu!");
             }
             else{
+                if(!hasLetterAndDigit(password)){
+                    Log.warning("Password phai co chu cai va so");
+                    continue;
+                }
                 Log.success("Password hop le!");
                 break;
             }

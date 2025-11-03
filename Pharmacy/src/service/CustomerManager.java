@@ -63,6 +63,7 @@ public final class CustomerManager implements IManagement<Customer> {
                 boolean status = Boolean.parseBoolean(parts[7].trim());
 
                 Customer c = new Customer(username, "", CID, fullName, dob, address, email, phone, status);
+
                 customerByID.put(CID, c);
                 customerByUsername.put(username, c);
                 Log.info("[Debug] Load customer ["+ c.getFullname() +"] successfully!");
@@ -147,30 +148,53 @@ public final class CustomerManager implements IManagement<Customer> {
 
     // DANH SÁCH HOAT DONG
     @Override
-    public void showList() {
-        Extension.printTableHeader("Ma khach hang","Ho va ten","Ngay sinh","Dia chi","So dien thoai","Email","Trang thai");
-        int k = 0;
-        for (Customer c : customerByID.values()) {
-            if(c.getStatus())
-                Extension.printTableRow(c.getCID(),c.getFullname(),c.getDobdate(),c.getAddress(),c.getPhone(),c.getEmail(),c.getStatusString());
-            k++;
+        public void showList() {
+            Extension.printTableHeader(
+                "Ma khach hang", "Ho va ten", "Ngay sinh",
+                "Dia chi", "So dien thoai", "Email", "Trang thai"
+            );
+
+            int count = 0;
+            for (Customer c : customerByID.values()) {
+                if (c.getStatus()) {
+                    Extension.printTableRow(
+                        c.getCID(), c.getFullname(), c.getDobdate(),
+                        c.getAddress(), c.getPhone(), c.getEmail(),
+                        c.getStatusString()
+                    );
+                    count++;
+                }
+            }
+
+            if (count == 0) {
+                Extension.printTableRow("Danh sach rong");
+            }
         }
 
-        if(k == 0){Extension.printTableRow("Danh sach rong");}
-    }
+        @Override
+        public void blackList() {
+            Extension.printTableHeader(
+                "Ma khach hang", "Ho va ten", "Ngay sinh",
+                "Dia chi", "So dien thoai", "Email", "Trang thai"
+            );
 
-    //DANH SACH BLOCK
-    @Override
-    public void blackList() {
-        int k = 0;
-        Extension.printTableHeader("Ma khach hang","Ho va ten","Ngay sinh","Dia chi","So dien thoai","Email","Trang thai");
-        for (Customer c : customerByID.values()) {
-            if(!c.getStatus())
-                Extension.printTableRow(c.getCID(),c.getFullname(),c.getDobdate(),c.getAddress(),c.getPhone(),c.getEmail(),c.getStatusString());
-            k++;
+            int count = 0;
+            for (Customer c : customerByID.values()) {
+                if (!c.getStatus()) {
+                    Extension.printTableRow(
+                        c.getCID(), c.getFullname(), c.getDobdate(),
+                        c.getAddress(), c.getPhone(), c.getEmail(),
+                        c.getStatusString()
+                    );
+                    count++;
+                }
+            }
+
+            if (count == 0) {
+                Extension.printTableRow("Danh sach rong");
+            }
         }
-        if(k == 0){Extension.printTableRow("Danh sach rong");}
-    }
+
 
     // BAO CAO
     @Override

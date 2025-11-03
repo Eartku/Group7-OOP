@@ -71,15 +71,20 @@ public class Inventory implements IManagement<Batch>{
     }
 
     // Tổng số lượng tồn kho
-    public long getStockbyProduct(Product product){
+    public long getStockbyProduct(Product product) {
         long total = 0;
-        for (Batch b : inv.values()) {
-            if(b.getProduct().equals(product) && b.getStatus() && !b.isExpired()){
+        List<Batch> batches = inv_byPID.get(product.getPID());
+        if (batches == null) return 0; // tránh null pointer
+
+        for (Batch b : batches) {
+            if (b.getStatus() && !b.isExpired()) {
                 total += b.getQuantity();
             }
         }
         return total;
     }
+
+
 
     // Hàm trừ số lượng trong kho khi có đơn đặt hàng
     public void deductStock(OrderItem ordered) {
@@ -114,28 +119,54 @@ public class Inventory implements IManagement<Batch>{
         Log.warning("⚠ Không đủ hàng! Thiếu " + Log.toError(String.valueOf(needed)) + " đơn vị.");
     }
         save();
-    } 
+    }
+    
+    // Hàm hủy lô hàng nếu đã hết hàng
+    public void cancelBatch(){
+        for (Batch elem : inv.values()) {
+            if(elem.getQuantity() == 0){
+                elem.setStatus(false);
+            }
+        }
+    }
     
     
     // Hiển thị danh sách sản phẩm tồn kho
-    public void showStockList() { 
-        int k = 0;
-        Extension.printTableHeader("Ma san pham", "Ten san pham", "Don vi", "Gia ca");
+    public void showStockList() {
+        int printed = 0;
+        Extension.printTableHeader("Ma san pham", "Ten san pham", "Don vi", "Gia ca", "So luong ton");
 
         for (List<Batch> batches : inv_byPID.values()) {
-            if (batches.isEmpty()) continue;
+            if (batches == null || batches.isEmpty()) continue;
 
+            // Lấy Product từ 1 batch bất kỳ (assume tất cả batch trong list cùng product)
             Batch firstBatch = batches.get(0);
+            if (firstBatch == null) continue;
             Product p = firstBatch.getProduct();
+            if (p == null) continue;
 
-            // Kiểm tra trạng thái sản phẩm
-            if (p.getStatus()) {
-                Extension.printTableRow(p.getPID(), p.getName(), p.getUnit(), p.getPrice() + " VND");
+            // Tính tổng tồn khả dụng (bỏ qua batch expired hoặc inactive)
+            long available = getStockbyProduct(p); // hàm bạn đã viết trước đó
+
+            // Chỉ hiển thị khi product active và còn hàng khả dụng
+            if (p.getStatus() && available > 0) {
+                String priceStr = String.format("%.2f VND", p.getPrice());
+                Extension.printTableRow(
+                    p.getPID(),
+                    p.getName(),
+                    p.getUnit(),
+                    priceStr,
+                    String.valueOf(available)
+                );
+                printed++;
             }
-            k++;
         }
-        if(k == 0){Extension.printTableRow("Danh sach rong");}
+
+        if (printed == 0) {
+            Extension.printTableRow("Danh sach rong");
+        }
     }
+
 
 
     // Chọn sản phẩm chỉ khi tồn tại trong kho
@@ -219,6 +250,7 @@ public class Inventory implements IManagement<Batch>{
 
     @Override
     public void save() {
+        cancelBatch();
         try (FileWriter fw = new FileWriter(FILE_PATH, false)) {
             for (Batch u : inv.values()) {
                 fw.append(u.toString()).append("\n");
@@ -228,33 +260,65 @@ public class Inventory implements IManagement<Batch>{
         }
     }
 
-    // Hiển thị dạng bảng các lô hàng vẫn còn hoạt động
-    @Override
-     public void showList(){
-        int k =0;
-        Extension.printTableHeader("Ma lo hang","Ma san pham","Ten san pham","So luong","Ngay nhap lo hang","Trang thai","Canh bao");
+
+  @Override
+    public void showList() {
+        int k = 0;
+        Extension.printTableHeader("Ma lo hang", "Ma san pham", "Ten san pham", "So luong", "Ngay nhap lo hang", "Trang thai");
+
         for (Batch elem : inv.values()) {
-            if(elem.getStatus()){
-                Extension.printTableRow(elem.getBatchId(),elem.getProduct().getPID(),elem.getProduct().getName(),elem.getQuantity(),elem.getImportDate(), elem.getStatusString(), elem.isExString());
+            if (elem == null) continue;          
+            if (elem.getStatus()) {
+                String importDate = elem.getImportDate() == null ? "Chua co" : elem.getImportDate();
+                String productId = elem.getProduct() == null ? "Unknown" : elem.getProduct().getPID();
+                String productName = elem.getProduct() == null ? "Unknown" : elem.getProduct().getName();
+
+                Extension.printTableRow(
+                    elem.getBatchId(),
+                    productId,
+                    productName,
+                    String.valueOf(elem.getQuantity()),
+                    importDate,
+                    elem.getStatusString()
+                );
+                k++;
             }
-            k++;
         }
-        if(k == 0){Extension.printTableRow("Danh sach rong");}
+
+        if (k == 0) {
+            Extension.printTableRow("Danh sach rong");
+        }
     }
 
-    // Hiển thị dạng bảng các lô hàng không còn hoạt động hay bị hủy
     @Override
-    public void blackList(){
+    public void blackList() {
         int k = 0;
-        Extension.printTableHeader("Ma lo hang","Ma san pham","Ten san pham","So luong","Ngay nhap lo hang","Trang thai","Canh bao");
+        Extension.printTableHeader("Ma lo hang", "Ma san pham", "Ten san pham", "So luong", "Ngay nhap lo hang", "Trang thai");
+
         for (Batch elem : inv.values()) {
-            if(!elem.getStatus()){
-                Extension.printTableRow(elem.getBatchId(),elem.getProduct().getPID(),elem.getProduct().getName(),elem.getQuantity(),elem.getImportDate(), elem.getStatusString(), elem.isExString());
+            if (elem == null) continue;
+            if (!elem.getStatus()) {
+                String importDate = elem.getImportDate() == null ? "Chua co" : elem.getImportDate();
+                String productId = elem.getProduct() == null ? "Unknown" : elem.getProduct().getPID();
+                String productName = elem.getProduct() == null ? "Unknown" : elem.getProduct().getName();
+
+                Extension.printTableRow(
+                    elem.getBatchId(),
+                    productId,
+                    productName,
+                    String.valueOf(elem.getQuantity()),
+                    importDate,
+                    elem.getStatusString()
+                );
+                k++;
             }
-            k++;
         }
-        if(k == 0){Extension.printTableRow("Danh sach rong");}
+
+        if (k == 0) {
+            Extension.printTableRow("Danh sach rong");
+        }
     }
+
  
 
     @Override

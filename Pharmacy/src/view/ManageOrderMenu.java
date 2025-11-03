@@ -187,7 +187,10 @@ public class ManageOrderMenu implements IManageMenu {
                                 sc.nextLine();
                                 return;
                             } else {
+                                long bef = inv.getStockbyProduct(o.getProduct());
                                 inv.deductStock(o);
+                                long aft = inv.getStockbyProduct(o.getProduct());
+                                Log.warning("[DEBUG] So luong trong kho cua"+ o.getProduct().getName() + " tai thoi diem truoc ["+ bef + "] - Hien tai ["+ aft+"] ");
                                 inv.save();
                             }
                         }
@@ -235,11 +238,15 @@ public class ManageOrderMenu implements IManageMenu {
                 Log.error("Khong du hang cho san pham " + item.getProductsName() +
                         ". Con: " + available + ", Can ban: " + item.getQuantity());
                 Log.warning("Huy HOA DON do khong du hang");
+                Extension.pause(sc);
                 return;
             }
         }
-        for (OrderItem c : ordered) {
-            inv.deductStock(c);
+        for (OrderItem o : ordered) {
+            long bef = inv.getStockbyProduct(o.getProduct());
+            inv.deductStock(o);
+            long aft = inv.getStockbyProduct(o.getProduct());
+            Log.warning("[DEBUG] So luong trong kho cua"+ o.getProduct().getName() + " tai thoi diem truoc ["+ bef + "] - Hien tai ["+ aft+"] ");
         }
 
         double total = 0;
@@ -380,8 +387,41 @@ public class ManageOrderMenu implements IManageMenu {
             System.out.println(" → Thanh tien: " + subtotal + " VND");
             System.out.println("------------------------------------");
         }
-        Log.info(String.format("Tong thanh toan: %.2f VND", total));
+        System.out.println(String.format("Tong thanh toan: %.2f VND", total));
     }
+
+    public void history(Customer cs, Scanner sc) {
+        if (cs == null) {
+            Log.error("Khach hang khong hop le!");
+            return;
+        }
+
+        while(true){
+            Extension.clearScreen();
+            System.out.println("===== LICH SU MUA HANG CUA KHACH HANG =====" );
+            om.historyList(cs);
+            Log.request("\nNhap ma hoa don de xem chi tiet (Nhap 0 de thoat): ");
+            String oid = sc.nextLine().trim();
+
+
+            if (oid.equals("0")) {
+                Log.info("Huy thao tac.");
+                return; // bỏ qua nếu không nhập
+            }
+
+            Order selected = om.get(oid.trim());
+            if (selected == null || !selected.getCustomer().equals(cs)) {
+                Log.error("Khong tim thay hoa don nao!");
+                return;
+            }
+
+            Extension.printInBox(() -> printOrderDetails(selected));
+
+            Log.info("\nNhan Enter de xem don khac, hoac nhap 0 de quay lai.");
+            String choice = sc.nextLine().trim();
+            if (choice.equals("0")) break;
+        }
+    }   
 
     @Override
     public void updateMenu() {

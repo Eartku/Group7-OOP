@@ -36,19 +36,15 @@ public class GuestMenu {
                         AuthMenu.updateProfile(guest, sc, um, cm);
                         um.upgradeGuestToCustomer(guest, newCustomer);
                     Log.success("Ban da tro thanh KHACH HANG!");
-                    Log.info("Dang chuyen sang menu khach hang...");
-                    
+                    Log.info("Chuyen sang menu khach hang...");
+                    Extension.pause(sc);
                     AuthMenu.getMenu(newCustomer, um, cm, pm, inv, om);
                     return;
                     }
                 }
                 case 2 ->{
-                    if(!guest.getStatus()) {
-                        System.out.println("Tai khoan cua ban da bi khoa. Nen khong the thuc hien chuc nang nay.");
-                        Extension.pause(sc);
-                        break;
-                    }
                     ManageProductsMenu.viewMenuforCustomer(inv, sc);
+                    Extension.pause(sc);
                 }
                 default -> Log.warning("Khong hop le!");
             }

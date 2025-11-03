@@ -8,3 +8,4 @@ C007|Guest One|15/08/2001|Hanoi|guest101@example.com|0900000007|guest101|false
 C008|TranNhutHuy|18/09/2006|TranBinhTrong,HCM|huy@gmail.com|0962713941|Huy|true
 C009|Huylore|19/08/2007|higsdjgdsxg|dgdfgdfg|dgdfgfdgd|admin2|true
 C010|�ertyukjhgfds|18/08/2005|12345yfdsdfg|�ertyjhgfdsd|sdfghds|u|true
+C011|Tran Nhut Huy|18/09/2006|320 Tran Binh Trong, HCM|huy@gmail.com|0962XXXXXX|huy|true

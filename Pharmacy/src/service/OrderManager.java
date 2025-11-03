@@ -97,6 +97,7 @@ public class OrderManager implements IManagement<Order> {
     public static ArrayList<OrderItem> buyProducts(Scanner sc, ProductManager pm, Inventory inv) {
         ArrayList<OrderItem> list = new ArrayList<>();
         while(true){
+            
             inv.showStockList();
             Log.request("Nhap ten hay ID pham muon mua (Nhap 0 de thoat): ");
             String choice = sc.nextLine().trim();
@@ -109,6 +110,7 @@ public class OrderManager implements IManagement<Order> {
             } 
 
             Product selected = pm.selectProduct(choice, sc);
+
 
             if(selected == null){
                 Log.error("San pham khong ton tai!");
@@ -144,7 +146,6 @@ public class OrderManager implements IManagement<Order> {
             }
 
             // Khi thoát ra thì quantityValue là số lượng hợp lệ
-
              // Kiểm tra trùng sản phẩm thì chỉ cần cộng dồn số lượng
             boolean found = false;
             for (OrderItem oi : list) {
@@ -266,22 +267,26 @@ public class OrderManager implements IManagement<Order> {
         return "Tong so don hang trong he thong: " + orders.size() + "\n";
     } 
 
-    public void history(Customer cs) {
-        Extension.printTableHeader("Ma hoa don", "Ten cac san pham", "So luong", "Trang thai");
-        for (Order o : orders.values()) {
-            if (o.getCustomer().equals(cs)) {
-                StringBuilder item = new StringBuilder();
-                for (OrderItem it : o.getItems()) {
-                    if (item.length() > 0) item.append(", ");
-                    item.append(it.getProductsName());
-                }
-                Extension.printTableRow(
-                    o.getOID(),
-                    item.toString(),
-                    String.valueOf(quantity(o)),
-                    o.getStatusString()
-                );
-            }
+    public void historyList(Customer cs){
+        Extension.printTableHeader("Ma hoa don", "San pham", "Tong SL", "Trang thai");
+        for (Order order : orders.values()) {
+            if (order.getCustomer() == null) continue;
+            if (!order.getCustomer().equals(cs)) continue;
+
+            // Ghép tên sản phẩm từ các OrderItem
+            String productNames = order.getItems().stream()
+                    .map(OrderItem::getProductsName)
+                    .reduce((a, b) -> a + "_ " + b)
+                    .orElse("(0)");
+
+            long totalQty = quantity(order);
+
+            Extension.printTableRow(
+                    order.getOID(),
+                    productNames,
+                    String.valueOf(totalQty),
+                    order.getStatusString()
+            );
         }
-    }    
+    }
 }

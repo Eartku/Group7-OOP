@@ -32,11 +32,6 @@ public class CustomerMenu {
                         return;
                     }
                     case 1 -> {
-                        if(!customer.getStatus()) {
-                            System.out.println("Tai khoan cua ban da bi khoa. Nen khong the thuc hien chuc nang nay.");
-                            Extension.pause(sc);
-                            break;
-                        }
                         System.out.println("Xem danh sach san pham...");
                         ManageProductsMenu.viewMenuforCustomer(inv, sc);
                     }
@@ -56,7 +51,7 @@ public class CustomerMenu {
                     }
                     case 4 -> {
                         System.out.println("Xem lich su mua hang...");
-                        om.history(customer);
+                        mo.history(customer, sc);
                         Extension.pause(sc);
                     }
                     default -> Log.warning("Khong hop le!");
