@@ -6,7 +6,7 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.time.temporal.ChronoUnit;
 
-public class Batch implements Comparable<Batch>, IStatus{
+public class Batch implements Comparable<Batch>, IStatus{ 
     private String BID;
     private Product product;
     private long  quantity;
@@ -14,8 +14,16 @@ public class Batch implements Comparable<Batch>, IStatus{
     private final LocalDate expiryDate;
     private boolean status;
 
-    private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+// Một Sản phẩm(Product) có thể được tham chiếu bởi nhiều Lô(Batch)
+// Một Batch chỉ có thể tham chiếu đúng 1 Product
+// Quantity là số lượng sản phẩm trong lô đó
+// Quan hệ UML giữa Product - Batch là Association (1 chiều)
+// (vì Batch biết đến Product nhưng Product không biết đến Batch)
 
+
+    private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("dd/MM/yyyy"); //chỉ là định dạng ngày tháng
+
+    //constructor mặc định
     public Batch() {
         this.BID = "";
         this.product = null;
@@ -25,6 +33,7 @@ public class Batch implements Comparable<Batch>, IStatus{
         this.status = false;
     }
 
+    //constructor có tham số
     public Batch(String BID, Product product, long quantity, LocalDate importDate, boolean isactive) {
         this.BID = BID;
         this.product = product;
@@ -38,15 +47,17 @@ public class Batch implements Comparable<Batch>, IStatus{
         this.status = isactive;
     }
 
-    public String getBatchId() { return BID; }
+    //getter/ setter các thông số
+    public String getBatchId() { return BID; }          //Mã
     public void setBatchId(String batchId) { this.BID = batchId; }
 
-    public Product getProduct() { return product; }
+    public Product getProduct() { return product; }     //Lấy sản phẩm
     public void setProduct(Product product) { this.product = product; }
 
-    public long getQuantity() { return quantity; }
+    public long getQuantity() { return quantity; }      //Lấy số lượng lô hàng
     public void setQuantity(long quantity) { this.quantity = quantity; }
 
+    // các hàm về trạng thái khi nó implements interface IStatus
     @Override
     public boolean getStatus() { return status; }
     @Override
@@ -67,6 +78,7 @@ public class Batch implements Comparable<Batch>, IStatus{
     public String getExpiryDateString() { return expiryDate.format(FORMATTER); }
     public LocalDate getExpiryDate() { return this.expiryDate; }
 
+    // kiểm tra lô hàng hết hạn = cách xét xem ngày
     public boolean isExpired() {
         return expiryDate != null && LocalDate.now().isAfter(expiryDate);
     }
@@ -94,6 +106,7 @@ public class Batch implements Comparable<Batch>, IStatus{
                "|" + status;
     }
 
+    //Hàm so sánh giữa các Batch với nhau thông qua BatchID implement interface Comparable
     @Override
     public int compareTo(Batch bch){
         return this.getBatchId().compareTo(bch.getBatchId());

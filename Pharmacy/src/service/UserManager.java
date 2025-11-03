@@ -15,14 +15,16 @@ public class UserManager implements IManagement<IAuthenticable> {
 
     private static final String FILE_PATH = System.getProperty("user.dir") + "/resources/users.txt";
 
-    private final Map<String, IAuthenticable> users = new TreeMap<>(); // key = username
+    private final Map<String, IAuthenticable> users = new TreeMap<>(); // primary key = username
     private final CustomerManager cm;
 
+    //Constructor
     public UserManager(CustomerManager cm) {
         this.cm = cm;
         loadUsers();
     }
 
+    // hàm load file
     private void loadUsers() {
         Map<String, Customer> customerMap = cm.getCustomerMap(); // lấy tất cả customer từ CustomerManager
 
@@ -70,6 +72,54 @@ public class UserManager implements IManagement<IAuthenticable> {
         }
     }
 
+    // nâng cấp gueest thành khách hàng
+    public void upgradeGuestToCustomer(Guest g, Customer c) {
+        users.remove(g.getUsername());
+        users.put(c.getUsername(), c);
+    }
+
+    // thay thế tài khoản này bằng tk khác
+    public void replaceUser(IAuthenticable oldUser, IAuthenticable newUser) {
+        if (oldUser == null || newUser == null) return;
+        users.remove(oldUser.getUsername());
+        users.put(newUser.getUsername(), newUser);
+        save();
+    }
+
+    // in danh sách dạng ẩn mật khẩu
+    public void hideblackList() {
+        Extension.printTableHeader("Username", "Password", "Role", "Status");
+        for (IAuthenticable u : users.values()) {
+            if (!u.getStatus()) {
+                String role = switch (u.getRole()) {
+                    case 1 -> "Customer";
+                    case 2 -> "Admin";
+                    case 0 -> "Guest";
+                    default -> "Nothing";
+                };
+                Extension.printTableRow(u.getUsername(), Extension.maskPassword(u.getPassword()," "), role, u.getStatusString());
+            }
+        }
+    }
+
+    
+    public void hidePassList() {
+        Extension.printTableHeader("Username", "Password(Hide)", "Role", "Status");
+        for (IAuthenticable u : users.values()) {
+            if (u.getStatus()) {
+                String role = switch (u.getRole()) {
+                    case 1 -> "Customer";
+                    case 2 -> "Admin";
+                    case 0 -> "Guest";
+                    default -> "Nothing";
+                };
+                Extension.printTableRow(u.getUsername(), Extension.maskPassword(u.getPassword(), " "), role, u.getStatusString());
+            }
+        }
+    }
+
+    ///IMPLEMENT MANAGEMENT
+
     @Override
     public boolean exists(String username) {
         return users.containsKey(username);
@@ -97,18 +147,6 @@ public class UserManager implements IManagement<IAuthenticable> {
         }
     }
 
-    public void upgradeGuestToCustomer(Guest g, Customer c) {
-        users.remove(g.getUsername());
-        users.put(c.getUsername(), c);
-    }
-
-    public void replaceUser(IAuthenticable oldUser, IAuthenticable newUser) {
-        if (oldUser == null || newUser == null) return;
-        users.remove(oldUser.getUsername());
-        users.put(newUser.getUsername(), newUser);
-        save();
-    }
-
     @Override
     public void showList() {
         Extension.printTableHeader("Username", "Password(Show)", "Role", "Status");
@@ -125,20 +163,7 @@ public class UserManager implements IManagement<IAuthenticable> {
         }
     }
 
-    public void hidePassList() {
-        Extension.printTableHeader("Username", "Password(Hide)", "Role", "Status");
-        for (IAuthenticable u : users.values()) {
-            if (u.getStatus()) {
-                String role = switch (u.getRole()) {
-                    case 1 -> "Customer";
-                    case 2 -> "Admin";
-                    case 0 -> "Guest";
-                    default -> "Nothing";
-                };
-                Extension.printTableRow(u.getUsername(), Extension.maskPassword(u.getPassword(), " "), role, u.getStatusString());
-            }
-        }
-    }
+    
 
     @Override
     public void blackList() {
@@ -156,20 +181,7 @@ public class UserManager implements IManagement<IAuthenticable> {
         }
     }
 
-    public void hideblackList() {
-        Extension.printTableHeader("Username", "Password", "Role", "Status");
-        for (IAuthenticable u : users.values()) {
-            if (!u.getStatus()) {
-                String role = switch (u.getRole()) {
-                    case 1 -> "Customer";
-                    case 2 -> "Admin";
-                    case 0 -> "Guest";
-                    default -> "Nothing";
-                };
-                Extension.printTableRow(u.getUsername(), Extension.maskPassword(u.getPassword()," "), role, u.getStatusString());
-            }
-        }
-    }
+   
 
 
     @Override

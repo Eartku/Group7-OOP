@@ -5,6 +5,10 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 
 public class Customer extends User implements Comparable<Customer>{
+
+// quan hệ Kế thừa Customer -> User
+
+// thuộc tính (attributes)
     private String CID;
     private String fullname;
     private LocalDate dob;       
@@ -12,8 +16,11 @@ public class Customer extends User implements Comparable<Customer>{
     private String email;
     private String phone;
 
-    private static DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+    private static DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("dd/MM/yyyy");// định dạng ngày
 
+    //không tạo constructor mặc định để tránh tình trạng tạo ra đối tượng không có gì cả
+
+    //Constructor khi chưa có Profile
     public Customer(String username, String password, boolean  status) {
         super(username, password, 1, status);
         this.CID = "";
@@ -23,7 +30,7 @@ public class Customer extends User implements Comparable<Customer>{
         this.email = "";
         this.phone = "";
     }
-    // Constructor cho việc tạo khách hàng trong admin ( giao dịch tại nhà thuốc)
+    // Constructor có tham số
     public Customer(String username, String password, String CID, String fullname, LocalDate dob, String address, String email, String phone, boolean status) {
     super(username, password, 1, status); 
     this.CID = CID;
@@ -34,19 +41,7 @@ public class Customer extends User implements Comparable<Customer>{
     this.phone = phone; 
     }
 
-    // constructor cho việc đọc lại file
-    public Customer(String username, String CID, String fullname, LocalDate dob, String address, String email, String phone, boolean status) {
-    super(username, "", 1, status); 
-    this.CID = CID;
-    this.fullname = fullname;
-    this.dob = dob;
-    this.address = address;
-    this.email = email;
-    this.phone = phone;
-    this.status = status;
-    }
-
-    // Getter và Setter
+    // Getter và Setter (Methods)
     public String getCID() { return CID; }
     public void setCID(String CID) { this.CID = CID; }
 
@@ -63,10 +58,6 @@ public class Customer extends User implements Comparable<Customer>{
         return (dob != null) ? dob.format(FORMATTER) : "Chua co!";
     }
 
-    public int getAge() {
-        return Period.between(this.dob, LocalDate.now()).getYears();
-    }
-
     public String getAddress() { return address; }
     public void setAddress(String address) { this.address = address; }
 
@@ -76,15 +67,18 @@ public class Customer extends User implements Comparable<Customer>{
     public String getPhone() { return phone; }
     public void setPhone(String phone) { this.phone = phone; }
 
+    //định dạng theo user
     @Override
     public String toString(){
         return username + "|" + password + "|" + role;
     }
 
+    // định dạng chính trong file hồ sơ
     public String toStringProfile(){
         return  CID + "|" + fullname + "|" + getDobdate() + "|" + address + "|" + email + "|" + phone + "|" + username + "|" + status;
     }
 
+    //implement Comparable
     @Override
     public int compareTo(Customer c){
         return Integer.compare(Integer.parseInt(this.getCID().substring(1)),Integer.parseInt(c.getCID().substring(1)));

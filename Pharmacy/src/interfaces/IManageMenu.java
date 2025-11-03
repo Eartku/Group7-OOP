@@ -1,6 +1,6 @@
 package interfaces;
 
-public interface IManageMenu { // menu
+public interface IManageMenu { // menu nghiệp vụ
     void mainMenu();
     void addMenu();
     void activeMenu();

@@ -14,8 +14,13 @@ public class Order implements  Comparable<Order>,IStatus{
     private LocalDate purchaseDate;
     private boolean status;
 
-    private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+//Order: đơn hàng - hóa đơn
+//Có OrderItem (quan hệ Composition) chưa danh sách sản phẩm đã mua
+// 1 Order chỉ có 1 Customer (quan hệ Association 1 chiều Order -> Customer)
 
+    private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("dd/MM/yyyy");// định dạng ngày
+
+    // Constructor mặc định
     public Order() {
         this.OID = "";
         this.items = new ArrayList<>();
@@ -23,6 +28,7 @@ public class Order implements  Comparable<Order>,IStatus{
         this.purchaseDate = null;
     }
 
+    // Constructor có tham số nhưng tạo đơn hàng ngay thời điểm hiện tại (Ví dụ như mới đặt hàng xong)
     public Order(String OID, List<OrderItem> items, Customer customer, boolean status) {
         this.OID = OID;
         this.items = new ArrayList<>(items);
@@ -31,6 +37,7 @@ public class Order implements  Comparable<Order>,IStatus{
         this.status = status;
     }
 
+    // Constructor có tham số nhưng tạo đơn hàng ngay thời điểm biết trước (cần dùng trong đọc file)
     public Order(String OID, List<OrderItem> items, Customer customer, LocalDate purchaseDate, boolean status) {
         this.OID = OID;
         this.items = new ArrayList<>(items);
@@ -39,6 +46,7 @@ public class Order implements  Comparable<Order>,IStatus{
         this.status = status;
     }
 
+    //Methods getter - setter
     public String getOID() { return OID; }
     public void setOID(String OID) { this.OID = OID; }
 
@@ -48,7 +56,6 @@ public class Order implements  Comparable<Order>,IStatus{
             System.out.print(o.toString());
         }
     }
-
 
     public Customer getCustomer() { 
         return this.customer; 
@@ -75,6 +82,7 @@ public class Order implements  Comparable<Order>,IStatus{
         return total;
     }
 
+    // implement IStatus
     @Override
     public boolean getStatus() { return status; }
     @Override
@@ -87,11 +95,13 @@ public class Order implements  Comparable<Order>,IStatus{
     }
 
 
+    // định dạng chính trong file
     @Override
     public String toString() {
         return OID + "|" +  customer.getCID() + "|" + purchaseDate.format(FORMATTER) + "|" + status;
     }
 
+    // So sánh - implement Comparable
     @Override
     public int compareTo(Order o){
         return this.getOID().compareTo(o.getOID());    }

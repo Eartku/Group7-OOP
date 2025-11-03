@@ -5,6 +5,8 @@ import java.io.IOException;
 import java.io.PrintStream;
 import java.util.Scanner;
 
+// Chủ yếu sử dụng class này như hàm tiện ích - cải thiện phần hiển thị trong console (không ảnh hưởng phần chính)
+
 public class Extension {
 
     // ===================== NHÓM INPUT & HỖ TRỢ CƠ BẢN =====================

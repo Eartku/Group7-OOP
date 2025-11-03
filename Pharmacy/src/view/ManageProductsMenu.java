@@ -32,8 +32,9 @@ public class ManageProductsMenu implements IManageMenu{
             System.out.println("==== PRODUCT MANAGER ====");
             
             System.out.println(pm.report());
-            System.out.println("==== DANH SACH CAC SAN PHAM TRONG DANH MUC ====");
+            System.out.println("==== DANH SACH CAC SAN PHAM TRONG DANH MUC CHO PHEP ====");
             pm.showList();
+            System.out.println("==== DANH SACH CAC SAN PHAM TRONG DANH MUC KHOA ====");
             pm.blackList();
             System.out.println("1. Them san pham - Add Product");
             System.out.println("2. An/Hien san pham - Hide/Show Product");
@@ -222,7 +223,8 @@ public class ManageProductsMenu implements IManageMenu{
     public void blockMenu() {
         while (true) {
             Extension.clearScreen();
-            System.out.println("==== HIDE PRODUCT ====");
+            System.out.println("==== HIDE-INACTIVE PRODUCT ====");
+            System.out.println("==== DANH SACH CAC SAN PHAM CON HOAT DONG ====");
             pm.showList();
             Log.request("Nhap ID hoac ten san pham muon AN (HIDE) (hoac nhap 0 de quay lai): ");
             String inputID = sc.nextLine().trim();
@@ -261,7 +263,8 @@ public class ManageProductsMenu implements IManageMenu{
     public void activeMenu() {
         while (true) {
             Extension.clearScreen();
-            System.out.println("==== SHOW(ACTIVATE) PRODUCT ====");
+            System.out.println("==== SHOW-ACTIVATE PRODUCT ====");
+            System.out.println("==== DANH SACH CAC SAN PHAM DANG BI KHOA ====");
             pm.blackList();
             Log.request("Nhap ID hoac ten san pham muon HIEN (hoac nhap 0 de quay lai): ");
             String inputID = sc.nextLine().trim();
@@ -299,8 +302,11 @@ public class ManageProductsMenu implements IManageMenu{
     public void updateMenu() {
         while(true){
             Extension.clearScreen();
-            System.out.println("==== EDIT PRODUCT ====");
+            System.out.println("==== EDIT-UPDATE PRODUCT ====");
+            System.out.println("==== DANH SACH CAC SAN PHAM TRONG DANH MUC CHO PHEP ====");
             pm.showList();
+            System.out.println("==== DANH SACH CAC SAN PHAM TRONG DANH MUC KHOA ====");
+            pm.blackList();
             Log.request("Nhap ID hoac ten san pham muon chinh sua (hoac nhap 0 de quay lai): ");
             String ID = sc.nextLine().trim();
             
@@ -388,7 +394,10 @@ public class ManageProductsMenu implements IManageMenu{
             while(true){
             Extension.clearScreen();
             System.out.println("==== VIEW PRODUCTS ====");
+            System.out.println("==== DANH SACH CAC SAN PHAM TRONG DANH MUC CHO PHEP ====");
             pm.showList();
+            System.out.println("==== DANH SACH CAC SAN PHAM TRONG DANH MUC KHOA ====");
+            pm.blackList();
             Log.request("Nhap ID hoac ten san pham muon xem (Nhap 0 de quay lai): ");
             String input = sc.nextLine().trim();
 

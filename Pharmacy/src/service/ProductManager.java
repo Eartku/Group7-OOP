@@ -23,6 +23,7 @@ public class ProductManager implements IManagement<Product>{
  
     private final Map<String, Product> products = new TreeMap<>();
 
+    //Constructor
     public ProductManager() {
         loadProducts();
     }
@@ -78,18 +79,10 @@ public class ProductManager implements IManagement<Product>{
         }
     }
 
-    // kiểm tra tồn tại pname
-    @Override
-    public boolean exists(String ID) {
-        boolean found = products.containsKey(ID);
-        return found;
-    }
-
-    @Override
-    public Product get(String ID){
-        return products.get(ID);
-    }
-
+    public int length(){return products.size();}
+    
+    // thay vì làm dài code phần menu, tái sử dụng trong ProductManger
+    // Chọn sản phẩm theo từ khóa
     public ArrayList<Product> getProductByName(String keyword) {
         ArrayList<Product> matched = new ArrayList<>();
         for (Product p : products.values()) {
@@ -100,7 +93,6 @@ public class ProductManager implements IManagement<Product>{
         return matched;
     }
 
-    // thay vì làm dài code phần menu, tái sử dụng trong ProductManger
     public Product selectProduct(String keyword, Scanner sc) {
         Product direct = products.get(keyword);
         if(direct != null) return direct;
@@ -134,6 +126,8 @@ public class ProductManager implements IManagement<Product>{
         return null;
     }
 
+    // IMPLEMENT MANAGEMENT
+
     @Override
     public void showList(){
         int k =0;
@@ -153,6 +147,17 @@ public class ProductManager implements IManagement<Product>{
             if(!elem.getStatus())
             Extension.printTableRow(elem.getPID(),elem.getName(),elem.getUnit(),elem.getPrice()+"VND",elem.getShelfLifeInfo(),elem.getStatusString());
         }
+    }
+
+    @Override
+    public boolean exists(String ID) {
+        boolean found = products.containsKey(ID);
+        return found;
+    }
+
+    @Override
+    public Product get(String ID){
+        return products.get(ID);
     }
 
     @Override
@@ -232,6 +237,6 @@ public class ProductManager implements IManagement<Product>{
         }
     }
 
-    public int length(){return products.size();}
+    
 }
 

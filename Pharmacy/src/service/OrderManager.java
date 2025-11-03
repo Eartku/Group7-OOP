@@ -27,10 +27,10 @@ public class OrderManager implements IManagement<Order> {
     //các đơn hàng sẽ được lưu trong file "orders.txt"
     public static final String FILE_PATH = System.getProperty("user.dir") + "/resources/orders.txt";
     private static final String FILE_PATH_2 = System.getProperty("user.dir") +"/resources/orderitems.txt";
-    private final CustomerManager cm;
-    private final ProductManager pm;
+    private final CustomerManager cm; // cần quản lý khách hàng
+    private final ProductManager pm;  // cần quản lý sản phẩm
 
-    //quản lý bằng ArrayList
+    //quản lý bằng Map theo OID
     private final Map<String, Order> orders = new TreeMap<>();
 
     //constructor
@@ -92,74 +92,7 @@ public class OrderManager implements IManagement<Order> {
             System.out.println(" [WARNING] Error in order manager: "+ e.getMessage());
         }
     }
-
-    // kiểm tra tồn tại theo OID
-    @Override
-    public boolean exists(String ID) {
-        boolean found = orders.containsKey(ID);
-        return found;
-    }
-
-    // lấy đơn hàng theo ID
-    @Override
-    public Order get(String ID){
-        return orders.get(ID);
-    }
-
-    //lưu file cả list user
-    @Override
-    public void save() {
-        // Ghi order
-        try (FileWriter fw = new FileWriter(FILE_PATH, false)) {
-            for (Order u : orders.values()) {
-                fw.append(u.toString()).append("\n");
-            }
-        } catch (IOException e) {
-            Log.error("[WARNING] Error saving orders: " + e.getMessage());
-        }
-
-        try (FileWriter fl = new FileWriter(FILE_PATH_2, false)) {
-            for (Order u : orders.values()) {
-                fl.append(u.getOID()); 
-                for (OrderItem item : u.getItems()) {
-                    if (item.getProduct() == null) {
-                        Log.warning("[WARNING] Bo qua item NULL " + u.getOID());
-                        continue; // bỏ qua sản phẩm lỗi
-                    }
-                    fl.append("|").append(item.getProduct().getPID());
-                    fl.append("|").append(String.valueOf(item.getQuantity()));
-                }
-                fl.append("\n"); 
-            }
-        } catch (IOException e) {
-            Log.error("[WARNING] Error in order manager: " + e.getMessage());
-        }
-    }
-
-
-    @Override
-    public void showList(){
-        int k =0;
-        Extension.printTableHeader("Ma don hang","Ma khach hang","So luong san pham","Trang thai","Ngay dat");
-        for (Order elem : orders.values()) {
-            if(elem.getStatus())
-                Extension.printTableRow(elem.getOID(),elem.getCustomer().getCID(),quantity(elem),elem.getStatusString(),elem.getpurchaseDate());
-            k++;
-        }
-        if(k == 0){Extension.printTableRow("Danh sach rong");}
-    }
-
-    @Override
-    public void blackList(){
-        int k=0;
-        Extension.printTableHeader("Ma don hang","Ma khach hang","So luong san pham","Trang thai","Ngay dat mua");
-        for (Order elem : orders.values()) {
-            if(!elem.getStatus())
-                Extension.printTableRow(elem.getOID(),elem.getCustomer().getCID(),quantity(elem),elem.getStatusString(),elem.getpurchaseDate());
-            k++;
-        }
-        if(k == 0){Extension.printTableRow("Danh sach rong");}
-    }
+    
 
     public static ArrayList<OrderItem> buyProducts(Scanner sc, ProductManager pm, Inventory inv) {
         ArrayList<OrderItem> list = new ArrayList<>();
@@ -242,6 +175,8 @@ public class OrderManager implements IManagement<Order> {
         return q;
     }
 
+    //IMPLEMENT MANAGEMENT
+
     @Override
     public void add(Order order){
         orders.put(order.getOID(), order);
@@ -258,6 +193,73 @@ public class OrderManager implements IManagement<Order> {
             }
         }
     } 
+
+    @Override
+    public boolean exists(String ID) {
+        boolean found = orders.containsKey(ID);
+        return found;
+    }
+
+    // lấy đơn hàng theo ID
+    @Override
+    public Order get(String ID){
+        return orders.get(ID);
+    }
+
+    //lưu file cả list user
+    @Override
+    public void save() {
+        // Ghi order
+        try (FileWriter fw = new FileWriter(FILE_PATH, false)) {
+            for (Order u : orders.values()) {
+                fw.append(u.toString()).append("\n");
+            }
+        } catch (IOException e) {
+            Log.error("[WARNING] Error saving orders: " + e.getMessage());
+        }
+
+        try (FileWriter fl = new FileWriter(FILE_PATH_2, false)) {
+            for (Order u : orders.values()) {
+                fl.append(u.getOID()); 
+                for (OrderItem item : u.getItems()) {
+                    if (item.getProduct() == null) {
+                        Log.warning("[WARNING] Bo qua item NULL " + u.getOID());
+                        continue; // bỏ qua sản phẩm lỗi
+                    }
+                    fl.append("|").append(item.getProduct().getPID());
+                    fl.append("|").append(String.valueOf(item.getQuantity()));
+                }
+                fl.append("\n"); 
+            }
+        } catch (IOException e) {
+            Log.error("[WARNING] Error in order manager: " + e.getMessage());
+        }
+    }
+
+
+    @Override
+    public void showList(){
+        int k =0;
+        Extension.printTableHeader("Ma don hang","Ma khach hang","So luong san pham","Trang thai","Ngay dat");
+        for (Order elem : orders.values()) {
+            if(elem.getStatus())
+                Extension.printTableRow(elem.getOID(),elem.getCustomer().getCID(),quantity(elem),elem.getStatusString(),elem.getpurchaseDate());
+            k++;
+        }
+        if(k == 0){Extension.printTableRow("Danh sach rong");}
+    }
+
+    @Override
+    public void blackList(){
+        int k=0;
+        Extension.printTableHeader("Ma don hang","Ma khach hang","So luong san pham","Trang thai","Ngay dat mua");
+        for (Order elem : orders.values()) {
+            if(!elem.getStatus())
+                Extension.printTableRow(elem.getOID(),elem.getCustomer().getCID(),quantity(elem),elem.getStatusString(),elem.getpurchaseDate());
+            k++;
+        }
+        if(k == 0){Extension.printTableRow("Danh sach rong");}
+    }
 
     @Override
     public String report(){

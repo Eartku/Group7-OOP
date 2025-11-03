@@ -5,7 +5,7 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-
+// Chủ yếu sử dụng class này như hàm tiện ích - tạo dữ liệu đầu vào (không ảnh hưởng phần chính)
 public class Data {
     public static int initCounter(String path) {
         int count = 0;

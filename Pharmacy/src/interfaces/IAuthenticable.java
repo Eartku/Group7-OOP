@@ -1,7 +1,7 @@
 package interfaces;
 
-public interface IAuthenticable {
-    // một user cần phải được kiểm tra mật khẩu, cần username và role
+public interface IAuthenticable extends  IStatus{
+    // một user cần phải được kiểm tra mật khẩu, cần username và role và cả trạng thái --> extends cho nhanh
     
     // Kiểm tra mật khẩu 
     boolean checkPassword(String inputPassword);
@@ -13,10 +13,6 @@ public interface IAuthenticable {
 
     // Lấy role 
     int getRole();
-
-    boolean getStatus();
-    String getStatusString();
-    void setStatus(boolean status);
 
     // Đặt role 
     void setRole(int role);

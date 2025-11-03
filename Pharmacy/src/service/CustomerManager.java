@@ -13,10 +13,14 @@ public final class CustomerManager implements IManagement<Customer> {
 
     public static final String FILE_PATH = System.getProperty("user.dir") + "/resources/customers.txt";
 
-    // 2 map để lookup nhanh
+    // 2 map để lookup nhanh theo ID khách hàng hoặc Username tài khoản, 
+    //ID : PRIMARY KEY
+    //Username: UNIQUE
+
     private final Map<String, Customer> customerByID = new TreeMap<>();
     private final Map<String, Customer> customerByUsername = new TreeMap<>();
 
+    //Constructor
     public CustomerManager() {
         loadProfiles();
     }
@@ -70,21 +74,26 @@ public final class CustomerManager implements IManagement<Customer> {
         }
     }
 
+
+    //Tìm khách từ username tài khoản
     public Customer getByUsername(String username) {
         return customerByUsername.get(username);
     }
 
+    // kiểm tra tồn tại
     @Override
     public boolean exists(String ID) {
         boolean found = customerByID.containsKey(ID);
         return found;
     }
 
+    // lấy Customer từ ID
     @Override
     public Customer get(String ID) {
         return customerByID.get(ID);
     }
 
+    // Tìm khách theo từ khóa - Tìm kiếm nâng cao
     public ArrayList<Customer> getCustomerByName(String keyword) {
         ArrayList<Customer> matched = new ArrayList<>();
         for (Customer c : customerByID.values()) {
@@ -94,6 +103,7 @@ public final class CustomerManager implements IManagement<Customer> {
         return matched;
     }
 
+    // Cập nhật lại tài khoản khi có thay đổi
     public void updateUser(Customer newCustomer, String oldUsername) {
         Customer oldCustomer = customerByUsername.remove(oldUsername);
         if (oldCustomer != null) {
@@ -103,12 +113,26 @@ public final class CustomerManager implements IManagement<Customer> {
         customerByID.put(newCustomer.getCID(), newCustomer);
     }
 
+    // Cập nhật nếu là khách
+    public void updateCustomer(Customer newCustomer, String oldCID) {
+        Customer oldCustomer = customerByID.get(oldCID);
+        if (oldCustomer != null) {
+            customerByUsername.remove(oldCustomer.getUsername());
+        }
+        customerByID.put(newCustomer.getCID(), newCustomer);
+        customerByUsername.put(newCustomer.getUsername(), newCustomer);
+    }
+
+    //IMPLEMENT MANAGEMENT
+
+    // ADD
     @Override
     public void add(Customer c) {
         customerByID.put(c.getCID(), c);
         customerByUsername.put(c.getUsername(), c);
     }
 
+    //DELETE (xóa vật lý)
     @Override
     public void delete() {
         Iterator<Customer> it = customerByID.values().iterator();
@@ -121,15 +145,7 @@ public final class CustomerManager implements IManagement<Customer> {
         }
     }
 
-    public void updateCustomer(Customer newCustomer, String oldCID) {
-        Customer oldCustomer = customerByID.get(oldCID);
-        if (oldCustomer != null) {
-            customerByUsername.remove(oldCustomer.getUsername());
-        }
-        customerByID.put(newCustomer.getCID(), newCustomer);
-        customerByUsername.put(newCustomer.getUsername(), newCustomer);
-    }
-
+    // DANH SÁCH HOAT DONG
     @Override
     public void showList() {
         Extension.printTableHeader("Ma khach hang","Ho va ten","Ngay sinh","Dia chi","So dien thoai","Email","Trang thai");
@@ -143,6 +159,7 @@ public final class CustomerManager implements IManagement<Customer> {
         if(k == 0){Extension.printTableRow("Danh sach rong");}
     }
 
+    //DANH SACH BLOCK
     @Override
     public void blackList() {
         int k = 0;
@@ -155,11 +172,13 @@ public final class CustomerManager implements IManagement<Customer> {
         if(k == 0){Extension.printTableRow("Danh sach rong");}
     }
 
+    // BAO CAO
     @Override
     public String report() {
         return "Tong so luong khach hang: " + customerByID.size();
     }
 
+    //LUU DU LIEU
     @Override
     public void save() {
         try (BufferedWriter bw = new BufferedWriter(new FileWriter(FILE_PATH))) {

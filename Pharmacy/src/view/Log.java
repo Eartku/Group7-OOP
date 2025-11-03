@@ -1,5 +1,16 @@
 package view;
 
+// Chủ yếu sử dụng class này như hàm tiện ích - tạo màu cho các câu lệnh theo tính chất (không ảnh hưởng phần chính)
+/*
+ * Các tính chất:
+ * Lỗi : Error - Đỏ
+ * cảnh báo: Warning - Vàng
+ * Thoát: Exit - Cyan
+ * yêu cầu: Request - Hồng
+ * hoàn thành: Success - Xanh lá
+ * thông tin: Info - Xanh dương
+ */
+
 public class Log {
     public static final String RESET = "\u001B[0m";
     public static final String RED = "\u001B[31m";
@@ -14,6 +25,7 @@ public class Log {
         System.out.print(CYAN + message + RESET + "\n");
     }
 
+     // [REQUEST]
     public static void request(String message) {
         System.out.print(MAGENTA + message + RESET);
     }

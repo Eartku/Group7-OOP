@@ -24,7 +24,8 @@ import view.Log;
 public class Inventory implements IManagement<Batch>{
     public static final String FILE_PATH = System.getProperty("user.dir") + "/resources/inventory.txt";
 
-    private final ProductManager pm;                                    // Quản lý sản phẩm
+    private final ProductManager pm; // cần quản lý sản phẩm
+    
     private final Map<String, Batch> inv = new TreeMap<>();             // Map tìm lô theo mã
     private final Map<String, List<Batch>> inv_byPID = new TreeMap<>(); // Map tìm lô theo sản phẩm (sp tồn kho)
 
@@ -67,19 +68,6 @@ public class Inventory implements IManagement<Batch>{
         catch(Exception e){
             Log.error("Error in inventory: "+ e.getMessage());
         }
-    }
-
-    // kiểm tra tồn tại ID lo hang
-    @Override
-    public boolean exists(String ID) {
-        boolean found = inv.containsKey(ID);
-        return found;
-    }
-
-    // lấy lô hàng từ Batch ID
-    @Override
-    public Batch get(String ID){
-        return inv.get(ID);
     }
 
     // Tổng số lượng tồn kho
@@ -126,47 +114,8 @@ public class Inventory implements IManagement<Batch>{
         Log.warning("⚠ Không đủ hàng! Thiếu " + Log.toError(String.valueOf(needed)) + " đơn vị.");
     }
         save();
-    }
-
-    //lưu file 
-    @Override
-    public void save() {
-        try (FileWriter fw = new FileWriter(FILE_PATH, false)) {
-            for (Batch u : inv.values()) {
-                fw.append(u.toString()).append("\n");
-            }
-        } catch (IOException e) {
-            System.out.println("Error saving inv: " + e.getMessage());
-        }
-    }
-
-    // Hiển thị dạng bảng các lô hàng vẫn còn hoạt động
-    @Override
-     public void showList(){
-        int k =0;
-        Extension.printTableHeader("Ma lo hang","Ma san pham","Ten san pham","So luong","Ngay nhap lo hang","Trang thai","Canh bao");
-        for (Batch elem : inv.values()) {
-            if(elem.getStatus()){
-                Extension.printTableRow(elem.getBatchId(),elem.getProduct().getPID(),elem.getProduct().getName(),elem.getQuantity(),elem.getImportDate(), elem.getStatusString(), elem.isExString());
-            }
-            k++;
-        }
-        if(k == 0){Extension.printTableRow("Danh sach rong");}
-    }
-
-    // Hiển thị dạng bảng các lô hàng không còn hoạt động hay bị hủy
-    @Override
-    public void blackList(){
-        int k = 0;
-        Extension.printTableHeader("Ma lo hang","Ma san pham","Ten san pham","So luong","Ngay nhap lo hang","Trang thai","Canh bao");
-        for (Batch elem : inv.values()) {
-            if(!elem.getStatus()){
-                Extension.printTableRow(elem.getBatchId(),elem.getProduct().getPID(),elem.getProduct().getName(),elem.getQuantity(),elem.getImportDate(), elem.getStatusString(), elem.isExString());
-            }
-            k++;
-        }
-        if(k == 0){Extension.printTableRow("Danh sach rong");}
-    }
+    } 
+    
     
     // Hiển thị danh sách sản phẩm tồn kho
     public void showStockList() { 
@@ -234,6 +183,20 @@ public class Inventory implements IManagement<Batch>{
     }
 
 
+    //IMPLEMENT MANAGEMENT
+
+    @Override
+    public boolean exists(String ID) {
+        boolean found = inv.containsKey(ID);
+        return found;
+    }
+
+    // lấy lô hàng từ Batch ID
+    @Override
+    public Batch get(String ID){
+        return inv.get(ID);
+    }
+
     @Override
     public void add(Batch batch) {
         inv.put(batch.getBatchId(), batch);
@@ -253,8 +216,46 @@ public class Inventory implements IManagement<Batch>{
             }
         }
     }
- 
 
+    @Override
+    public void save() {
+        try (FileWriter fw = new FileWriter(FILE_PATH, false)) {
+            for (Batch u : inv.values()) {
+                fw.append(u.toString()).append("\n");
+            }
+        } catch (IOException e) {
+            System.out.println("Error saving inv: " + e.getMessage());
+        }
+    }
+
+    // Hiển thị dạng bảng các lô hàng vẫn còn hoạt động
+    @Override
+     public void showList(){
+        int k =0;
+        Extension.printTableHeader("Ma lo hang","Ma san pham","Ten san pham","So luong","Ngay nhap lo hang","Trang thai","Canh bao");
+        for (Batch elem : inv.values()) {
+            if(elem.getStatus()){
+                Extension.printTableRow(elem.getBatchId(),elem.getProduct().getPID(),elem.getProduct().getName(),elem.getQuantity(),elem.getImportDate(), elem.getStatusString(), elem.isExString());
+            }
+            k++;
+        }
+        if(k == 0){Extension.printTableRow("Danh sach rong");}
+    }
+
+    // Hiển thị dạng bảng các lô hàng không còn hoạt động hay bị hủy
+    @Override
+    public void blackList(){
+        int k = 0;
+        Extension.printTableHeader("Ma lo hang","Ma san pham","Ten san pham","So luong","Ngay nhap lo hang","Trang thai","Canh bao");
+        for (Batch elem : inv.values()) {
+            if(!elem.getStatus()){
+                Extension.printTableRow(elem.getBatchId(),elem.getProduct().getPID(),elem.getProduct().getName(),elem.getQuantity(),elem.getImportDate(), elem.getStatusString(), elem.isExString());
+            }
+            k++;
+        }
+        if(k == 0){Extension.printTableRow("Danh sach rong");}
+    }
+ 
 
     @Override
     public String report(){

@@ -1,21 +1,26 @@
 package models;
 
-public class NonDrug extends Product{ 
+public class NonDrug extends Product{ // class con kế thừa abstract class Product
     private String manufacturer;
     private String type;
     private String usage;
 
+    //constructor mặc định
     public NonDrug() {
         this.manufacturer = "Unknown";
         this.type = "";
         this.usage = "";
     }
+
+    //constructor tham số
     public NonDrug(String ID, String name, String unit, double price, int shelfLifeMonths, String man, String type, String usage, boolean status) {
         super(ID, name, unit, price, shelfLifeMonths, status);
         this. manufacturer = man;
         this.type = type;
         this.usage = usage;
     }
+
+    //Method getter - setter
     public void setManufacturer(String man){
         this.manufacturer = man;
     }
@@ -37,12 +42,9 @@ public class NonDrug extends Product{
         return this.usage;
     }
 
-    public void info(){
-        System.out.println("[nD] - " + PID + " \nTen: " + Name + "\nDon vi: " + unit + "\nGia: " + price + "\nNhaSX: " + manufacturer + "\nType: " + type + "\nCong dung: " + usage + "\nThoi han: " + getShelfLifeInfo());
-    }
     @Override
-    public String toString(){
-        return PID + "|" + Name + "|" + unit + "|"  + price + "|" + getShelfLifeInfo() + "|" + manufacturer + "|" + type + "|" + usage + "|" + "1";
+    public String toString(){   // Định dạng chính trong file Sản phẩm + keyword "N" để phân biệt đây không là Thuốc
+        return PID + "|" + Name + "|" + unit + "|"  + price + "|" + getShelfLifeInfo() + "|" + manufacturer + "|" + type + "|" + usage + "|" + "N";
     }
 }
 
