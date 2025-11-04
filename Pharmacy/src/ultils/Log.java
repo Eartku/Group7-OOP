@@ -1,4 +1,4 @@
-package view;
+package ultils;
 
 // Chủ yếu sử dụng class này như hàm tiện ích - tạo màu cho các câu lệnh theo tính chất (không ảnh hưởng phần chính)
 /*

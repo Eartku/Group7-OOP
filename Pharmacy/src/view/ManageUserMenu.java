@@ -1,6 +1,5 @@
 package view;
 
-import data.Data;
 import interfaces.IAuthenticable;
 import interfaces.IManageMenu;
 import java.time.LocalDate;
@@ -11,6 +10,9 @@ import models.Customer;
 import models.Guest;
 import service.CustomerManager;
 import service.UserManager;
+import ultils.Data;
+import ultils.Extension;
+import ultils.Log;
 
 public class ManageUserMenu implements IManageMenu {
     

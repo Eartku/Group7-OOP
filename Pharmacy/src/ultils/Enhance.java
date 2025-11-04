@@ -7,7 +7,7 @@ import java.util.Scanner;
 
 // Chủ yếu sử dụng class này như hàm tiện ích - cải thiện phần hiển thị trong console (không ảnh hưởng phần chính)
 
-public class Extension {
+public class Enhance {
 
     // ===================== NHÓM INPUT & HỖ TRỢ CƠ BẢN =====================
     public static int readIntInRange(String msg, int min, int max, Scanner sc) {

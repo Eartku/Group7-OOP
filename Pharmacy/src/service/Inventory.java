@@ -17,8 +17,8 @@ import models.Batch;
 import models.Order;
 import models.OrderItem;
 import models.Product;
-import view.Extension;
-import view.Log;
+import ultils.Enhance;
+import ultils.Log;
 
 
 // Inventory hay Batch_Management
@@ -161,7 +161,7 @@ public final class Inventory implements IManagement<Batch>{
     // Hiển thị danh sách sản phẩm tồn kho
     public void showStockList() {
         int printed = 0;
-        Extension.printTableHeader("Ma san pham", "Ten san pham", "Don vi", "Gia ca", "So luong ton");// tiêu đề bảng
+        Enhance.printTableHeader("Ma san pham", "Ten san pham", "Don vi", "Gia ca", "So luong ton");// tiêu đề bảng
 
         for (List<Batch> batches : inv_byPID.values()) { // nếu sản phẩm đó ko có danh sách lô thì bỏ qua bước sau
             if (batches == null || batches.isEmpty()) continue;
@@ -176,7 +176,7 @@ public final class Inventory implements IManagement<Batch>{
             // Chỉ hiển thị khi product active và còn hàng khả dụng
             if (p.getStatus() && available > 0) {
                 String priceStr = String.format("%.2f VND", p.getPrice());
-                Extension.printTableRow(
+                Enhance.printTableRow(
                     p.getPID(),
                     p.getName(),
                     p.getUnit(),
@@ -187,7 +187,7 @@ public final class Inventory implements IManagement<Batch>{
             }
         }
         if (printed == 0) {
-            Extension.printTableRow("Danh sach rong"); // danh sachs rỗng
+            Enhance.printTableRow("Danh sach rong"); // danh sachs rỗng
         }
     }
 
@@ -238,7 +238,7 @@ public final class Inventory implements IManagement<Batch>{
     // danh sách nhập hàng
     public void showImportHistory() {
         int count = 0;
-        Extension.printTableHeader("Ngay nhap", "Ma lo hang", "Ma san pham", "Ten san pham", "So luong");
+        Enhance.printTableHeader("Ngay nhap", "Ma lo hang", "Ma san pham", "Ten san pham", "So luong");
 
         for (Map.Entry<LocalDate, List<Batch>> entry : imports.entrySet()) {
             LocalDate date = entry.getKey();
@@ -248,7 +248,7 @@ public final class Inventory implements IManagement<Batch>{
                 String productId = b.getProduct() == null ? "Unknown" : b.getProduct().getPID();
                 String productName = b.getProduct() == null ? "Unknown" : b.getProduct().getName();
 
-                Extension.printTableRow(
+                Enhance.printTableRow(
                     date.format(DateTimeFormatter.ofPattern("dd/MM/yyyy")),
                     b.getBatchId(),
                     productId,
@@ -260,21 +260,21 @@ public final class Inventory implements IManagement<Batch>{
         }
 
         if (count == 0) {
-            Extension.printTableRow("Danh sach nhap hang rong");
+            Enhance.printTableRow("Danh sach nhap hang rong");
         }
     } 
 
     // danh sách xuất hàng
     public void showExportHistory() {
         int count = 0;
-        Extension.printTableHeader("Ngay xuat", "Ma don hang", "Ten khach hang", "So san pham" ,"So luong");
+        Enhance.printTableHeader("Ngay xuat", "Ma don hang", "Ten khach hang", "So san pham" ,"So luong");
 
         for (Map.Entry<LocalDate, List<Order>> entry : exports.entrySet()) {
             LocalDate date = entry.getKey();
             List<Order> list = entry.getValue();
 
             for (Order o : list) {
-                Extension.printTableRow(
+                Enhance.printTableRow(
                     date.format(DateTimeFormatter.ofPattern("dd/MM/yyyy")),
                     o.getOID(),
                     o.getCustomer() == null ? "Khach le" : o.getCustomer().getFullname(),
@@ -286,7 +286,7 @@ public final class Inventory implements IManagement<Batch>{
         }
 
         if (count == 0) {
-            Extension.printTableRow("Danh sach xuat hang rong");
+            Enhance.printTableRow("Danh sach xuat hang rong");
         }
     }
 
@@ -336,7 +336,7 @@ public final class Inventory implements IManagement<Batch>{
         while (it.hasNext()) {
             Map.Entry<String, Batch> entry = it.next();
             if (!entry.getValue().getStatus()) {
-                it.remove(); // ✅ chỉ cần thế này
+                it.remove(); 
             }
         }
     }
@@ -358,7 +358,7 @@ public final class Inventory implements IManagement<Batch>{
   @Override
     public void showList() {
         int k = 0;
-        Extension.printTableHeader("Ma lo hang", "Ma san pham", "Ten san pham", "So luong", "Ngay nhap lo hang", "Trang thai");
+        Enhance.printTableHeader("Ma lo hang", "Ma san pham", "Ten san pham", "So luong", "Ngay nhap lo hang", "Trang thai");
 
         for (Batch elem : inv.values()) {
             if (elem == null) continue;          
@@ -367,7 +367,7 @@ public final class Inventory implements IManagement<Batch>{
                 String productId = elem.getProduct() == null ? "Unknown" : elem.getProduct().getPID();
                 String productName = elem.getProduct() == null ? "Unknown" : elem.getProduct().getName();
 
-                Extension.printTableRow(
+                Enhance.printTableRow(
                     elem.getBatchId(),
                     productId,
                     productName,
@@ -380,14 +380,14 @@ public final class Inventory implements IManagement<Batch>{
         }
 
         if (k == 0) {
-            Extension.printTableRow("Danh sach rong");
+            Enhance.printTableRow("Danh sach rong");
         }
     }
 
     @Override
     public void blackList() {
         int k = 0;
-        Extension.printTableHeader("Ma lo hang", "Ma san pham", "Ten san pham", "So luong", "Ngay nhap lo hang", "Trang thai");
+        Enhance.printTableHeader("Ma lo hang", "Ma san pham", "Ten san pham", "So luong", "Ngay nhap lo hang", "Trang thai");
 
         for (Batch elem : inv.values()) {
             if (elem == null) continue;
@@ -396,7 +396,7 @@ public final class Inventory implements IManagement<Batch>{
                 String productId = elem.getProduct() == null ? "Unknown" : elem.getProduct().getPID();
                 String productName = elem.getProduct() == null ? "Unknown" : elem.getProduct().getName();
 
-                Extension.printTableRow(
+                Enhance.printTableRow(
                     elem.getBatchId(),
                     productId,
                     productName,
@@ -409,7 +409,7 @@ public final class Inventory implements IManagement<Batch>{
         }
 
         if (k == 0) {
-            Extension.printTableRow("Danh sach rong");
+            Enhance.printTableRow("Danh sach rong");
         }
     }
 
