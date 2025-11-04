@@ -16,8 +16,8 @@ public class MainMenu {
         CustomerManager cm = new CustomerManager();
         UserManager um = new UserManager(cm);
         ProductManager pm = new ProductManager();
-        Inventory inv = new Inventory(pm);
         OrderManager om = new OrderManager(cm, pm);
+        Inventory inv = new Inventory(pm,om);
         Scanner sc = new Scanner(System.in);
         Extension.pause(sc);
         IAuthenticable currentUser = null;

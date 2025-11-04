@@ -42,8 +42,9 @@ public class InventoryMenu implements IManageMenu {
             System.out.println("2. Kich hoat/Khoa lo hang trong kho - Activate/Block Batch");
             System.out.println("3. Chinh sua lo hang - Edit Batch");
             System.out.println("4. Tim kiem va Xem - Search & View");
+            System.out.println("5. Xem tinh trang nhap - xuat - Import/Export (Only View)");
             Log.exit("0. Thoat - Cancel");
-            int choice = Extension.readIntInRange("Nhap lua chon (0-4):", 0, 4, sc);
+            int choice = Extension.readIntInRange("Nhap lua chon (0-4):", 0, 5, sc);
 
             switch (choice) {
                 case 1 -> {
@@ -72,6 +73,10 @@ public class InventoryMenu implements IManageMenu {
                 }
                 case 4 -> {
                     viewMenu();
+                    Extension.pause(sc);
+                }
+                case 5 -> {
+                    ImportExport();
                     Extension.pause(sc);
                 }
                 case 0 -> {
@@ -205,6 +210,11 @@ public class InventoryMenu implements IManageMenu {
             }
 
             Batch b = inv.get(inputID);
+
+            if(b.isExpired() || b.getQuantity()==0){
+                Log.error("Lo hang da " + Log.toWarning("Het hang ") + "hoac " + Log.toError("Qua han") +"!!!");
+                continue;
+            }
             System.out.println("\nThong tin lo hang:");
             System.out.println(" - Ma lo hang: " + b.getBatchId());
             System.out.println(" - San pham: " + b.getProduct().getName());
@@ -363,5 +373,16 @@ public class InventoryMenu implements IManageMenu {
             default -> {
             }
         }
+    }
+
+    // xem danh scahs nhập xuất chi tiết
+    public void ImportExport(){
+        Extension.clearScreen();
+        System.out.println("==== VIEW IMPORT - EXPORT STATUS ====");
+        Log.warning("Chi duoc xem - Khong duoc sua");
+        System.out.println("==== DANH SACH NHAP HANG ====");
+        inv.showImportHistory();
+        System.out.println("==== DANH SACH XUAT HANG ====");
+        inv.showExportHistory();
     }
 }

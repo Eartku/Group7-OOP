@@ -92,6 +92,11 @@ public class OrderManager implements IManagement<Order> {
             System.out.println(" [WARNING] Error in order manager: "+ e.getMessage());
         }
     }
+
+// hàm trả về lại danh sách đơn hàng để quản lý nhập xuất
+    public Map<String, Order> getMap(){
+        return orders;
+    }
     
 
     public static ArrayList<OrderItem> buyProducts(Scanner sc, ProductManager pm, Inventory inv) {

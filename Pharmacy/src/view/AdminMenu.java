@@ -11,6 +11,11 @@ import service.UserManager;
 public class AdminMenu {
     private static final Scanner sc = new Scanner(System.in);
 
+    public static void Clean(UserManager um, CustomerManager cm, ProductManager pm, Inventory inv, OrderManager om){
+        
+
+    }
+
     public static void showMenu(IAuthenticable user, UserManager um, CustomerManager cm, ProductManager pm, Inventory inv, OrderManager om){
         ManageUserMenu mu = new ManageUserMenu(cm, um, sc);
         ManageCustomerMenu mc = new ManageCustomerMenu(cm, um, sc);
@@ -57,6 +62,24 @@ public class AdminMenu {
                 }
                 case 6 -> {
                     System.out.println("Don dep du lieu bi chan (Blocked)");
+                    System.out.print("Xac nhan xoa vinh vien du lieu (y/n): ");
+                    String confirm1 = sc.nextLine().trim();
+
+                    if (confirm1.equalsIgnoreCase("y")) {
+                        System.out.print("Ban chac chan muon xoa vinh vien? (Nhap 'CONFIRM' de xac nhan): ");
+                        String confirm2 = sc.nextLine().trim();
+
+                        if (confirm2.equalsIgnoreCase("CONFIRM")) {
+                            
+                            
+                            Log.success("Lo hang da duoc vo hieu hoa thanh cong!");
+                        } else {
+                            Log.warning("Huy thao tac. Lo hang van duoc giu nguyen trang thai.");
+                        }
+                    } else {
+                        Log.warning("Huy thao tac. Lo hang van duoc giu nguyen trang thai.");
+                    }
+
                     //TODO: Blocked Cleaner
                     Extension.pause(sc);
                 }

@@ -14,6 +14,7 @@ import java.util.Map;
 import java.util.Scanner;
 import java.util.TreeMap;
 import models.Batch;
+import models.Order;
 import models.OrderItem;
 import models.Product;
 import view.Extension;
@@ -21,25 +22,43 @@ import view.Log;
 
 
 // Inventory hay Batch_Management
-public class Inventory implements IManagement<Batch>{
+public final class Inventory implements IManagement<Batch>{
     public static final String FILE_PATH = System.getProperty("user.dir") + "/resources/inventory.txt";
 
-    private final ProductManager pm; // cần quản lý sản phẩm
+    private final ProductManager pm;// cần quản lý sản phẩm
+    private OrderManager om = null; // cần xem lại đơn hàng để lấy dữ liệu xuất hàng
     
     private final Map<String, Batch> inv = new TreeMap<>();             // Map tìm lô theo mã
     private final Map<String, List<Batch>> inv_byPID = new TreeMap<>(); // Map tìm lô theo sản phẩm (sp tồn kho)
 
-    public Inventory(ProductManager pm) {   //Constructor
+    private final Map<LocalDate, List<Order>> exports = new TreeMap<>(); // danh sách truy vấn xuất hàng theo ngày
+    private final Map<LocalDate, List<Batch>> imports = new TreeMap<>(); // danh sách truy vấn nhập hàng theo ngày
+
+    
+
+    public Inventory(ProductManager pm, OrderManager om) {   //Constructor
         this.pm = pm;
+        this.om = om;
         loadInventory();
+        cancelBatch();
     }
 
     // lấy lo hang từ file
     private void loadInventory(){ 
+        exports.clear();
+        Map<String, Order> orderList = om.getMap();
+        for (Order order : orderList.values()) { 
+            LocalDate date = order.getpurchaseDate();
+            List<Order> list = exports.getOrDefault(date, new ArrayList<>());
+            list.add(order);
+            exports.put(date, list);
+        }
+        
         java.io.File file = new File(FILE_PATH);    // load dữ liệu từ file inventory.txt vào
         if(!file.exists()) return;
         inv.clear();                                // clear Map, tránh lỗi
         inv_byPID.clear();
+        imports.clear();
         try(BufferedReader br = new BufferedReader(new FileReader(file))){
             String line;
             while ((line = br.readLine())!= null){
@@ -61,6 +80,14 @@ public class Inventory implements IManagement<Batch>{
                 List<Batch> list = inv_byPID.getOrDefault(p.getPID(), new ArrayList<>());   // nếu PID mới --> tạo ngay mảng mới lưu trữ lô hàng cùng sản phẩm
                 list.add(b);                                                                // nếu PID trùng thì thêm Batch (lô) vào mảng
                 inv_byPID.put(b.getProduct().getPID(), list);                               // đưa (key, value) vào TreeMap
+
+                if (importDate != null) {
+                    List<Batch> list1 = imports.getOrDefault(importDate, new ArrayList<>()); // nhập lô ---> thêm nhập
+                    list1.add(b);
+                    imports.put(importDate, list1);
+                }
+
+
                 Log.exit("[Debug] Load Batch [" + BID + ";" + quantity + "] successfully.");
             }
             Log.exit("[Debug] Inventory data has been loaded successfully!\n");
@@ -124,7 +151,7 @@ public class Inventory implements IManagement<Batch>{
     // Hàm hủy lô hàng nếu đã hết hàng
     public void cancelBatch(){
         for (Batch elem : inv.values()) {
-            if(elem.getQuantity() == 0){
+            if(elem.getQuantity() == 0 || elem.isExpired()){
                 elem.setStatus(false);
             }
         }
@@ -134,19 +161,17 @@ public class Inventory implements IManagement<Batch>{
     // Hiển thị danh sách sản phẩm tồn kho
     public void showStockList() {
         int printed = 0;
-        Extension.printTableHeader("Ma san pham", "Ten san pham", "Don vi", "Gia ca", "So luong ton");
+        Extension.printTableHeader("Ma san pham", "Ten san pham", "Don vi", "Gia ca", "So luong ton");// tiêu đề bảng
 
-        for (List<Batch> batches : inv_byPID.values()) {
+        for (List<Batch> batches : inv_byPID.values()) { // nếu sản phẩm đó ko có danh sách lô thì bỏ qua bước sau
             if (batches == null || batches.isEmpty()) continue;
 
-            // Lấy Product từ 1 batch bất kỳ (assume tất cả batch trong list cùng product)
-            Batch firstBatch = batches.get(0);
+            Batch firstBatch = batches.get(0); // Lấy Product từ 1 batch bất kỳ (assume tất cả batch trong list cùng product)
             if (firstBatch == null) continue;
             Product p = firstBatch.getProduct();
             if (p == null) continue;
 
-            // Tính tổng tồn khả dụng (bỏ qua batch expired hoặc inactive)
-            long available = getStockbyProduct(p); // hàm bạn đã viết trước đó
+            long available = getStockbyProduct(p); // Tính tổng tồn khả dụng (bỏ qua batch expired hoặc inactive)
 
             // Chỉ hiển thị khi product active và còn hàng khả dụng
             if (p.getStatus() && available > 0) {
@@ -161,13 +186,10 @@ public class Inventory implements IManagement<Batch>{
                 printed++;
             }
         }
-
         if (printed == 0) {
-            Extension.printTableRow("Danh sach rong");
+            Extension.printTableRow("Danh sach rong"); // danh sachs rỗng
         }
     }
-
-
 
     // Chọn sản phẩm chỉ khi tồn tại trong kho
     public Product selectProduct(String keyword, Scanner sc) {
@@ -213,6 +235,63 @@ public class Inventory implements IManagement<Batch>{
         return null; // không có trả về null
     }
 
+    // danh sách nhập hàng
+    public void showImportHistory() {
+        int count = 0;
+        Extension.printTableHeader("Ngay nhap", "Ma lo hang", "Ma san pham", "Ten san pham", "So luong");
+
+        for (Map.Entry<LocalDate, List<Batch>> entry : imports.entrySet()) {
+            LocalDate date = entry.getKey();
+            List<Batch> list = entry.getValue();
+
+            for (Batch b : list) {
+                String productId = b.getProduct() == null ? "Unknown" : b.getProduct().getPID();
+                String productName = b.getProduct() == null ? "Unknown" : b.getProduct().getName();
+
+                Extension.printTableRow(
+                    date.format(DateTimeFormatter.ofPattern("dd/MM/yyyy")),
+                    b.getBatchId(),
+                    productId,
+                    productName,
+                    "+" +String.valueOf(b.getQuantity())
+                );
+                count++;
+            }
+        }
+
+        if (count == 0) {
+            Extension.printTableRow("Danh sach nhap hang rong");
+        }
+    } 
+
+    // danh sách xuất hàng
+    public void showExportHistory() {
+        int count = 0;
+        Extension.printTableHeader("Ngay xuat", "Ma don hang", "Ten khach hang", "So san pham" ,"So luong");
+
+        for (Map.Entry<LocalDate, List<Order>> entry : exports.entrySet()) {
+            LocalDate date = entry.getKey();
+            List<Order> list = entry.getValue();
+
+            for (Order o : list) {
+                Extension.printTableRow(
+                    date.format(DateTimeFormatter.ofPattern("dd/MM/yyyy")),
+                    o.getOID(),
+                    o.getCustomer() == null ? "Khach le" : o.getCustomer().getFullname(),
+                    String.valueOf(o.getItems().size()),
+                    "-"+String.valueOf(o.getTotalItems())
+                );
+                count++;
+            }
+        }
+
+        if (count == 0) {
+            Extension.printTableRow("Danh sach xuat hang rong");
+        }
+    }
+
+
+
 
     //IMPLEMENT MANAGEMENT
 
@@ -230,11 +309,25 @@ public class Inventory implements IManagement<Batch>{
 
     @Override
     public void add(Batch batch) {
+        // Thêm vào danh sách chính
         inv.put(batch.getBatchId(), batch);
-        List<Batch> list = inv_byPID.getOrDefault(batch.getProduct().getPID(), new ArrayList<>());
-        list.add(batch);
-        inv_byPID.put(batch.getProduct().getPID(), list);
+
+        // Gộp lô vào danh sách theo sản phẩm
+        List<Batch> productList = inv_byPID.getOrDefault(batch.getProduct().getPID(), new ArrayList<>());
+        productList.add(batch);
+        inv_byPID.put(batch.getProduct().getPID(), productList);
+
+        //Ghi nhận lịch sử nhập hàng (imports)
+        LocalDate date = batch.getImportDate();
+        if (date != null) {
+            List<Batch> importList = imports.getOrDefault(date, new ArrayList<>());
+            importList.add(batch);
+            imports.put(date, importList);
+        }
+
+        Log.success("Đã thêm lô hàng " + Log.toInfo(batch.getBatchId()) + " vào kho.");
     }
+
         
 
     @Override
@@ -243,7 +336,7 @@ public class Inventory implements IManagement<Batch>{
         while (it.hasNext()) {
             Map.Entry<String, Batch> entry = it.next();
             if (!entry.getValue().getStatus()) {
-                it.remove(); // xóa an toàn
+                it.remove(); 
             }
         }
     }
@@ -269,7 +362,7 @@ public class Inventory implements IManagement<Batch>{
         for (Batch elem : inv.values()) {
             if (elem == null) continue;          
             if (elem.getStatus()) {
-                String importDate = elem.getImportDate() == null ? "Chua co" : elem.getImportDate();
+                String importDate = elem.getImportDateS() == null ? "Chua co" : elem.getImportDateS();
                 String productId = elem.getProduct() == null ? "Unknown" : elem.getProduct().getPID();
                 String productName = elem.getProduct() == null ? "Unknown" : elem.getProduct().getName();
 
@@ -298,7 +391,7 @@ public class Inventory implements IManagement<Batch>{
         for (Batch elem : inv.values()) {
             if (elem == null) continue;
             if (!elem.getStatus()) {
-                String importDate = elem.getImportDate() == null ? "Chua co" : elem.getImportDate();
+                String importDate = elem.getImportDateS() == null ? "Chua co" : elem.getImportDateS();
                 String productId = elem.getProduct() == null ? "Unknown" : elem.getProduct().getPID();
                 String productName = elem.getProduct() == null ? "Unknown" : elem.getProduct().getName();
 

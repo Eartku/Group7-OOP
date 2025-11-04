@@ -65,16 +65,16 @@ public class Batch implements Comparable<Batch>, IStatus{
     @Override
     public String getStatusString() {
         String statusBatch;
-
-        if (quantity == 0) {
+        if (isExpired()) {
+            statusBatch = "Qua han";
+        } 
+        else if (quantity == 0) {
             statusBatch = "Het hang";
         } 
         else if (quantity > 0 && quantity <= 20) {
             statusBatch = "Sap het hang";
         }
-        else if (isExpired()) {
-            statusBatch = "Qua han";
-        } 
+        
         else {
             statusBatch = status ? "Active - Con hang" : "Inactive - Con hang";
         }
@@ -83,7 +83,8 @@ public class Batch implements Comparable<Batch>, IStatus{
 
 
 
-    public String getImportDate() { return importDate.format(FORMATTER); }
+    public LocalDate getImportDate() { return importDate; }
+    public String getImportDateS() { return importDate.format(FORMATTER); }
     public void setImportDate(String input) {
         try {
             this.importDate = LocalDate.parse(input, FORMATTER);

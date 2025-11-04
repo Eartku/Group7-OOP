@@ -74,6 +74,14 @@ public class Order implements  Comparable<Order>,IStatus{
         }
     }
 
+    public long getTotalItems(){
+        long total = 0;
+        for(OrderItem o : items){
+            total += o.getQuantity();
+        }
+        return total;
+    }
+
     public double getTotal(){
         double total = 0.0;
         for(OrderItem o : items){
