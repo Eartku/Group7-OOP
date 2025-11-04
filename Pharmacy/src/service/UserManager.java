@@ -139,13 +139,13 @@ public class UserManager implements IManagement<IAuthenticable> {
     public void delete() {
         Iterator<IAuthenticable> it = users.values().iterator();
         while (it.hasNext()) {
-            IAuthenticable c = it.next();
-            if (!c.getStatus()) {
-                it.remove();
-                users.remove(c.getUsername()); 
+            IAuthenticable u = it.next();
+            if (!u.getStatus()) {
+                it.remove(); // ✅ không cần users.remove()
             }
         }
     }
+
 
     @Override
     public void showList() {

@@ -336,10 +336,11 @@ public final class Inventory implements IManagement<Batch>{
         while (it.hasNext()) {
             Map.Entry<String, Batch> entry = it.next();
             if (!entry.getValue().getStatus()) {
-                it.remove(); 
+                it.remove(); // ✅ chỉ cần thế này
             }
         }
     }
+
 
     @Override
     public void save() {

@@ -169,13 +169,13 @@ public class ProductManager implements IManagement<Product>{
     public void delete() {
         Iterator<Product> it = products.values().iterator();
         while (it.hasNext()) {
-            Product c = it.next();
-            if (!c.getStatus()) {
-                it.remove();
-                products.remove(c.getPID()); 
+            Product p = it.next();
+            if (!p.getStatus()) {
+                it.remove(); // ✅
             }
         }
     }
+
 
     @Override
     public String report(){

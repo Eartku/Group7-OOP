@@ -12,8 +12,16 @@ public class AdminMenu {
     private static final Scanner sc = new Scanner(System.in);
 
     public static void Clean(UserManager um, CustomerManager cm, ProductManager pm, Inventory inv, OrderManager om){
-        
-
+        um.delete();
+        cm.delete();
+        pm.delete();
+        inv.delete();
+        om.delete();
+        um.save();
+        cm.save();
+        pm.save();
+        inv.save();
+        om.save();
     }
 
     public static void showMenu(IAuthenticable user, UserManager um, CustomerManager cm, ProductManager pm, Inventory inv, OrderManager om){
@@ -66,21 +74,18 @@ public class AdminMenu {
                     String confirm1 = sc.nextLine().trim();
 
                     if (confirm1.equalsIgnoreCase("y")) {
-                        System.out.print("Ban chac chan muon xoa vinh vien? (Nhap 'CONFIRM' de xac nhan): ");
+                        System.out.print("Ban chac chan muon xoa vinh vien (khong the khoi phuc) ? (Nhap 'CONFIRM' de xac nhan): ");
                         String confirm2 = sc.nextLine().trim();
 
                         if (confirm2.equalsIgnoreCase("CONFIRM")) {
-                            
-                            
-                            Log.success("Lo hang da duoc vo hieu hoa thanh cong!");
+                            Clean(um, cm, pm, inv, om);
+                            Log.success("Xoa du lieu thanh cong!");
                         } else {
-                            Log.warning("Huy thao tac. Lo hang van duoc giu nguyen trang thai.");
+                            Log.warning("Huy thao tac.");
                         }
                     } else {
-                        Log.warning("Huy thao tac. Lo hang van duoc giu nguyen trang thai.");
+                        Log.warning("Huy thao tac XOA.");
                     }
-
-                    //TODO: Blocked Cleaner
                     Extension.pause(sc);
                 }
                 default -> Log.warning("Khong hop le!");

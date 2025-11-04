@@ -141,7 +141,7 @@ public final class CustomerManager implements IManagement<Customer> {
             Customer c = it.next();
             if (!c.getStatus()) {
                 it.remove();
-                customerByUsername.remove(c.getUsername()); 
+                customerByUsername.remove(c.getUsername());
             }
         }
     }

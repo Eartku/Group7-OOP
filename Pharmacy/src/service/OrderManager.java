@@ -188,17 +188,18 @@ public class OrderManager implements IManagement<Order> {
         orders.put(order.getOID(), order);
     }  
 
+
     @Override
     public void delete() {
         Iterator<Order> it = orders.values().iterator();
         while (it.hasNext()) {
-            Order c = it.next();
-            if (!c.getStatus()) {
-                it.remove();
-                orders.remove(c.getOID()); 
+            Order o = it.next();
+            if (!o.getStatus()) {
+                it.remove(); // ✅ đủ rồi, không cần orders.remove()
             }
         }
-    } 
+}
+
 
     @Override
     public boolean exists(String ID) {
