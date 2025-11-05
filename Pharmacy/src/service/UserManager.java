@@ -68,12 +68,6 @@ public class UserManager implements IManagement<IAuthenticable> {
         }
     }
 
-    // nâng cấp gueest thành khách hàng
-    public void upgradeGuestToCustomer(Guest g, Customer c) {
-        users.remove(g.getUsername());
-        users.put(c.getUsername(), c);
-    }
-
     // thay thế tài khoản này bằng tk khác
     public void replaceUser(IAuthenticable oldUser, IAuthenticable newUser) {
         if (oldUser == null || newUser == null) return;

@@ -25,18 +25,18 @@ public class GuestMenu {
                     System.out.println("Dang xuat thanh cong!\n");
                     return;
                 }
-                case 1 -> {
+                case 1 -> { //TODO: có vấn đề ở việc chuyển dổi khách hàng
                     Customer newCustomer = guest.toCustomer();
                     if (newCustomer != null) {
                         System.out.println("=== CAP NHAT THONG TIN ===");
                         AuthMenu.updateProfile(guest, sc, um, cm);
-                        um.upgradeGuestToCustomer(guest, newCustomer);
+                        um.replaceUser(guest, newCustomer);
                     Log.success("Ban da tro thanh KHACH HANG!");
                     Log.info("Chuyen sang menu khach hang...");
                     Enhance.pause(sc);
                     AuthMenu.getMenu(newCustomer, um, cm, pm, inv, om);
                     return;
-                    }
+                    }//TODO: vũ bò nhuổi
                 }
                 case 2 ->{
                     ManageProductsMenu.viewMenuforCustomer(inv, sc);
