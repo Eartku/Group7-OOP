@@ -1,6 +1,5 @@
 package view;
 
-import data.Data;
 import interfaces.IManageMenu;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -9,6 +8,9 @@ import java.util.Scanner;
 import models.Customer;
 import service.CustomerManager;
 import service.UserManager;
+import ultils.Data;
+import ultils.Enhance;
+import ultils.Log;
 
 public class ManageCustomerMenu implements IManageMenu {
 
@@ -24,7 +26,7 @@ public class ManageCustomerMenu implements IManageMenu {
 
     @Override
     public void mainMenu() {
-        Extension.clearScreen();
+        Enhance.clearScreen();
 
         if (cm == null) {
             Log.error("Khong the quan ly khach hang!");
@@ -32,7 +34,7 @@ public class ManageCustomerMenu implements IManageMenu {
         }
 
         while (true) {
-            Extension.clearScreen();
+            Enhance.clearScreen();
             System.out.println("==== CUSTOMER MANAGER ====");
             System.out.println(cm.report());
             System.out.println("==== DANH SACH TAT CA KHACH HANG ====");
@@ -44,32 +46,32 @@ public class ManageCustomerMenu implements IManageMenu {
             System.out.println("4. Xem thong tin khach hang - View Customers INFO");
             Log.exit("0. Thoat - Exit");
 
-            int choice = Extension.readIntInRange("Nhap lua chon (0-4):", 0, 4, sc);
+            int choice = Enhance.readIntInRange("Nhap lua chon (0-4):", 0, 4, sc);
 
             switch (choice) {
                 case 1 -> {
                     addMenu();
-                    Extension.pause(sc);
+                    Enhance.pause(sc);
                 }
                 case 2 -> {
                     System.out.println("1. Chan khach hang - Block Customer");
                     System.out.println("2. Kich hoat khach hang - Activate Customer");
                     Log.exit("0. Huy - Cancel");
-                    int choice2 = Extension.readIntInRange("Nhap lua chon (0-2):", 0, 2, sc);
+                    int choice2 = Enhance.readIntInRange("Nhap lua chon (0-2):", 0, 2, sc);
                     switch (choice2) {
                         case 1 -> blockMenu();
                         case 2 -> activeMenu();
                         default -> Log.info("Huy thao tac.");
                     }
-                    Extension.pause(sc);
+                    Enhance.pause(sc);
                 }
                 case 3 -> {
                     updateMenu();
-                    Extension.pause(sc);
+                    Enhance.pause(sc);
                 }
                 case 4 -> {
                     viewMenu();
-                    Extension.pause(sc);
+                    Enhance.pause(sc);
                 }
                 case 0 -> {
                     Log.info("Thoat quan ly khach hang.");
@@ -82,7 +84,7 @@ public class ManageCustomerMenu implements IManageMenu {
 
     @Override
     public void addMenu() {
-        Extension.clearScreen();
+        Enhance.clearScreen();
         System.out.println("==== ADD CUSTOMER ====");
         Log.info("Truoc tien, ban can phai dang ky tai khoan:");
 
@@ -180,7 +182,7 @@ public class ManageCustomerMenu implements IManageMenu {
 
     @Override
     public void blockMenu() {
-        Extension.clearScreen();
+        Enhance.clearScreen();
         while (true) {
             System.out.println("==== BLOCK CUSTOMER ====");
             cm.showList();
@@ -219,7 +221,7 @@ public class ManageCustomerMenu implements IManageMenu {
 
     @Override
     public void activeMenu() {
-        Extension.clearScreen();
+        Enhance.clearScreen();
         while (true) {
             System.out.println("==== ACTIVATE CUSTOMER ====");
             cm.blackList();
@@ -258,7 +260,7 @@ public class ManageCustomerMenu implements IManageMenu {
 
     @Override
     public void updateMenu() {
-        Extension.clearScreen();
+        Enhance.clearScreen();
         System.out.println("==== UPDATE CUSTOMER ====");
         cm.showList();
         Log.request("Nhap ID khach hang muon cap nhat (hoac nhap 0 de quay lai): ");
@@ -311,12 +313,12 @@ public class ManageCustomerMenu implements IManageMenu {
 
         cm.save();
         Log.success("Cap nhat thong tin thanh cong!");
-        Extension.printInBox(() -> printCustomer(c));
+        Enhance.printInBox(() -> printCustomer(c));
     }
 
     @Override
     public void viewMenu() {
-        Extension.clearScreen();
+        Enhance.clearScreen();
         System.out.println("==== VIEW CUSTOMER ====");
         cm.showList();
         Log.request("Nhap ID hoac Ten khach hang (Nhap 0 de quay lai): ");
@@ -348,7 +350,7 @@ public class ManageCustomerMenu implements IManageMenu {
         }
 
         final Customer c = user;
-        Extension.printInBox(() -> printCustomer(c));
+        Enhance.printInBox(() -> printCustomer(c));
     }
 
     public static void printCustomer(Customer c) {

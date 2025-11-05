@@ -8,6 +8,8 @@ import service.Inventory;
 import service.OrderManager;
 import service.ProductManager;
 import service.UserManager;
+import ultils.Enhance;
+import ultils.Log;
 
 public class CustomerMenu {
     private static final Scanner sc = new Scanner(System.in);
@@ -16,7 +18,7 @@ public class CustomerMenu {
         ManageOrderMenu mo = new ManageOrderMenu(sc, pm, cm, um, inv, om);
         Customer customer = (Customer) user;
         while (true) {
-            Extension.clearScreen();
+            Enhance.clearScreen();
                 System.out.println("==== MENU CUSTOMER ====");
                 System.out.println("1. Xem va Tim kiem san pham - View & Search products");
                 System.out.println("2. Dat mua san pham - Buy products");
@@ -24,7 +26,7 @@ public class CustomerMenu {
                 System.out.println("4. Xem lich su mua hang - Purchase history");
                 Log.exit("0. Dang xuat - Logout");
                 System.out.print("Nhap lua chon: ");
-                int choice = Extension.readIntInRange("Nhap lua chon (0-4):", 0, 4, sc);
+                int choice = Enhance.readIntInRange("Nhap lua chon (0-4):", 0, 4, sc);
 
                 switch (choice) {
                     case 0 -> {
@@ -38,7 +40,7 @@ public class CustomerMenu {
                     case 2 -> {
                         if(!customer.getStatus()) {
                             System.out.println("Tai khoan cua ban da bi khoa. Nen khong the thuc hien chuc nang nay.");
-                            Extension.pause(sc);
+                            Enhance.pause(sc);
                             break;
                         }
                         System.out.println("Dang ky mua san pham...");
@@ -46,13 +48,13 @@ public class CustomerMenu {
                     }
                     case 3 -> {
                         System.out.println("Xem thong tin ca nhan...");
-                        Extension.printInBox(() -> {ManageCustomerMenu.printCustomer(customer);});
-                        Extension.pause(sc);
+                        Enhance.printInBox(() -> {ManageCustomerMenu.printCustomer(customer);});
+                        Enhance.pause(sc);
                     }
                     case 4 -> {
                         System.out.println("Xem lich su mua hang...");
                         mo.history(customer, sc);
-                        Extension.pause(sc);
+                        Enhance.pause(sc);
                     }
                     default -> Log.warning("Khong hop le!");
                 }

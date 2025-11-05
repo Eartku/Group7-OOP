@@ -1,6 +1,5 @@
 package view;
 
-import data.Data;
 import interfaces.IManageMenu;
 import java.util.Scanner;
 import models.Drug;
@@ -8,6 +7,9 @@ import models.NonDrug;
 import models.Product;
 import service.Inventory;
 import service.ProductManager;
+import ultils.Data;
+import ultils.Enhance;
+import ultils.Log;
 
 public class ManageProductsMenu implements IManageMenu{
     private final ProductManager pm;
@@ -20,7 +22,7 @@ public class ManageProductsMenu implements IManageMenu{
 
     @Override
     public void mainMenu(){
-        Extension.clearScreen();
+        Enhance.clearScreen();
 
         if (pm == null) {
             Log.error("Khong the quan ly san pham!");
@@ -28,7 +30,7 @@ public class ManageProductsMenu implements IManageMenu{
         }
 
         while (true) {
-            Extension.clearScreen();
+            Enhance.clearScreen();
             System.out.println("==== PRODUCT MANAGER ====");
             
             System.out.println(pm.report());
@@ -41,33 +43,33 @@ public class ManageProductsMenu implements IManageMenu{
             System.out.println("3. Chinh sua thong tin san pham - Edit product INFO");
             System.out.println("4. Tim kiem va Xem - Search & View");
             Log.exit("0. Huy - Cancel");
-            int choice = Extension.readIntInRange("Nhap lua chon (0-4):", 0, 4, sc);
+            int choice = Enhance.readIntInRange("Nhap lua chon (0-4):", 0, 4, sc);
 
             switch (choice) {
                 case 1 -> {
                     addMenu();
-                    Extension.pause(sc);
+                    Enhance.pause(sc);
                 }
                 case 2 -> {
                     System.out.println("1. An san pham - Hide Product");
                     System.out.println("2. Hien san pham - Show Product");
                     Log.exit("0. Huy - Cancel");
-                    int choice2 = Extension.readIntInRange("Nhap lua chon (0-2):", 0, 2, sc);
+                    int choice2 = Enhance.readIntInRange("Nhap lua chon (0-2):", 0, 2, sc);
                     switch (choice2) {
                         case 0 ->{break;}
                         case 1 ->blockMenu();
                         case 2 ->activeMenu();
                         default -> System.out.println("Khong hop le!");
                     }
-                    Extension.pause(sc);
+                    Enhance.pause(sc);
                 }
                 case 3 -> {
                     updateMenu();
-                    Extension.pause(sc);
+                    Enhance.pause(sc);
                 }
                 case 4 -> {
                     viewMenu();
-                    Extension.pause(sc);
+                    Enhance.pause(sc);
                 }
                 case 0 -> {
                     Log.info("Thoat chuong trinh. Tam biet!");
@@ -81,7 +83,7 @@ public class ManageProductsMenu implements IManageMenu{
     @Override
     public void addMenu(){
         while(true){
-            Extension.clearScreen();
+            Enhance.clearScreen();
             System.out.println("==== ADD NEW PRODUCT ====");
             String PID = Data.generateNewID(ProductManager.FILE_PATH, 'P');
             Log.request("Ten san pham (Nhap 0 de quay lai): ");
@@ -214,7 +216,7 @@ public class ManageProductsMenu implements IManageMenu{
             Log.success("Da them san pham thanh cong!");
             pm.save();
             Log.request("Tiep tuc them? [0 de thoat]: ");
-            Extension.pause(sc);
+            Enhance.pause(sc);
             if(sc.nextLine().trim().equals("0")) return;
         }
     }
@@ -222,7 +224,7 @@ public class ManageProductsMenu implements IManageMenu{
     @Override
     public void blockMenu() {
         while (true) {
-            Extension.clearScreen();
+            Enhance.clearScreen();
             System.out.println("==== HIDE-INACTIVE PRODUCT ====");
             System.out.println("==== DANH SACH CAC SAN PHAM CON HOAT DONG ====");
             pm.showList();
@@ -238,7 +240,7 @@ public class ManageProductsMenu implements IManageMenu{
 
             if (target == null || target.getStatus() == false) {
                 Log.error("Khong tim thay san pham voi tu khoa: " + inputID);
-                Extension.pause(sc);
+                Enhance.pause(sc);
                 continue;
             }
 
@@ -255,14 +257,14 @@ public class ManageProductsMenu implements IManageMenu{
             }
             Log.request("Tiep tuc? [0 de thoat]: ");
             if(sc.nextLine().trim().equals("0")) return;
-            Extension.pause(sc);
+            Enhance.pause(sc);
         }
     }
 
     @Override
     public void activeMenu() {
         while (true) {
-            Extension.clearScreen();
+            Enhance.clearScreen();
             System.out.println("==== SHOW-ACTIVATE PRODUCT ====");
             System.out.println("==== DANH SACH CAC SAN PHAM DANG BI KHOA ====");
             pm.blackList();
@@ -278,7 +280,7 @@ public class ManageProductsMenu implements IManageMenu{
 
             if (target == null || target.getStatus() == true) {
                 Log.error("Khong tim thay san pham voi tu khoa: " + inputID);
-                Extension.pause(sc);
+                Enhance.pause(sc);
                 continue;
             }
 
@@ -294,14 +296,14 @@ public class ManageProductsMenu implements IManageMenu{
             }
             Log.request("Tiep tuc? [0 de thoat]: ");
             if(sc.nextLine().trim().equals("0")) return;
-            Extension.pause(sc);
+            Enhance.pause(sc);
         }
     }
 
     @Override
     public void updateMenu() {
         while(true){
-            Extension.clearScreen();
+            Enhance.clearScreen();
             System.out.println("==== EDIT-UPDATE PRODUCT ====");
             System.out.println("==== DANH SACH CAC SAN PHAM TRONG DANH MUC CHO PHEP ====");
             pm.showList();
@@ -317,7 +319,7 @@ public class ManageProductsMenu implements IManageMenu{
 
             if (!pm.exists(ID)) {
                 Log.error("Khong tim thay san pham voi tu khoa: " + ID);
-                Extension.pause(sc);
+                Enhance.pause(sc);
                 continue;
             }
             
@@ -385,14 +387,14 @@ public class ManageProductsMenu implements IManageMenu{
             printProduct(oldProduct);
             Log.request("Tiep tuc chinh sua? [0 de thoat]: ");
             if(sc.nextLine().trim().equals("0")) return;
-            Extension.pause(sc);
+            Enhance.pause(sc);
         }  
     }
 
     @Override
     public void viewMenu() {
             while(true){
-            Extension.clearScreen();
+            Enhance.clearScreen();
             System.out.println("==== VIEW PRODUCTS ====");
             System.out.println("==== DANH SACH CAC SAN PHAM TRONG DANH MUC CHO PHEP ====");
             pm.showList();
@@ -408,7 +410,7 @@ public class ManageProductsMenu implements IManageMenu{
 
             if (!pm.exists(input)) {
                 Log.error("Khong tim thay san pham voi tu khoa: " + input);
-                Extension.pause(sc);
+                Enhance.pause(sc);
                 continue;
             }
 
@@ -427,7 +429,7 @@ public class ManageProductsMenu implements IManageMenu{
 
     public static void viewMenuforCustomer(Inventory inv, Scanner sc) {
         while(true){
-            Extension.clearScreen();
+            Enhance.clearScreen();
             System.out.println("==== VIEW PRODUCTS ====");
             inv.showStockList();
             Log.request("Nhap ID hoac ten san pham muon xem (Nhap 0 de quay lai): ");
@@ -439,7 +441,7 @@ public class ManageProductsMenu implements IManageMenu{
             }
             
             Product p = inv.selectProduct(input, sc);
-            Extension.printInBox(() ->{
+            Enhance.printInBox(() ->{
                 switch (p) {
                     case Drug d ->{
                         System.out.println("----- THONG TIN SAN PHAM - THUOC [" + d.getPID() +"] -----");
@@ -474,12 +476,12 @@ public class ManageProductsMenu implements IManageMenu{
                 Log.info("Huy thao tac, quay lai menu chinh.");
                 return;
             }
-            Extension.pause(sc);
+            Enhance.pause(sc);
         }
     }
 
     public static void printProduct(Product product){
-        Extension.printInBox(() ->{
+        Enhance.printInBox(() ->{
             switch (product) {
                 case Drug d ->{
                     System.out.println("----- THONG TIN SAN PHAM - THUOC [" + d.getPID() +"] -----");

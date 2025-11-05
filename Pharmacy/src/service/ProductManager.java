@@ -14,8 +14,8 @@ import java.util.TreeMap;
 import models.Drug;
 import models.NonDrug;
 import models.Product;
-import view.Extension;
-import view.Log;
+import ultils.Enhance;
+import ultils.Log;
 
 
 public class ProductManager implements IManagement<Product>{
@@ -131,21 +131,21 @@ public class ProductManager implements IManagement<Product>{
     @Override
     public void showList(){
         int k =0;
-        Extension.printTableHeader("Ma san pham","Ten san pham","Don vi","Gia ca","Han dung","Trang thai");
+        Enhance.printTableHeader("Ma san pham","Ten san pham","Don vi","Gia ca","Han dung","Trang thai");
         for (Product elem : products.values()) {
             if(elem.getStatus())
-                Extension.printTableRow(elem.getPID(),elem.getName(),elem.getUnit(),elem.getPrice()+"VND",elem.getShelfLifeInfo(),elem.getStatusString());
+                Enhance.printTableRow(elem.getPID(),elem.getName(),elem.getUnit(),elem.getPrice()+"VND",elem.getShelfLifeInfo(),elem.getStatusString());
             k++;
         }
-        if(k == 0){Extension.printTableRow("Danh sach rong");}
+        if(k == 0){Enhance.printTableRow("Danh sach rong");}
     }
 
     @Override
     public void blackList(){
-        Extension.printTableHeader("Ma san pham","Ten san pham","Don vi","Gia ca","Han dung","Trang thai");
+        Enhance.printTableHeader("Ma san pham","Ten san pham","Don vi","Gia ca","Han dung","Trang thai");
         for (Product elem : products.values()) {
             if(!elem.getStatus())
-            Extension.printTableRow(elem.getPID(),elem.getName(),elem.getUnit(),elem.getPrice()+"VND",elem.getShelfLifeInfo(),elem.getStatusString());
+            Enhance.printTableRow(elem.getPID(),elem.getName(),elem.getUnit(),elem.getPrice()+"VND",elem.getShelfLifeInfo(),elem.getStatusString());
         }
     }
 

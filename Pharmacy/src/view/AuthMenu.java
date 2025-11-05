@@ -1,6 +1,5 @@
 package view;
 
-import data.Data;
 import interfaces.IAuthenticable;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -13,6 +12,9 @@ import service.Inventory;
 import service.OrderManager;
 import service.ProductManager;
 import service.UserManager;
+import ultils.Data;
+import ultils.Enhance;
+import ultils.Log;
 
 public class AuthMenu {
 
@@ -22,7 +24,7 @@ public class AuthMenu {
     }
 
     public static IAuthenticable Register(Scanner sc, UserManager um, CustomerManager cm){
-        Extension.clearScreen();
+        Enhance.clearScreen();
         System.out.println("______DANG KY_____");
         String username;
         while(true){
@@ -83,7 +85,7 @@ public class AuthMenu {
     }
 
     public static IAuthenticable Login(Scanner sc, UserManager um, CustomerManager cm){
-        Extension.clearScreen();
+        Enhance.clearScreen();
         String username, password; 
         try {
             System.out.println("______DANG NHAP_____");
@@ -145,7 +147,7 @@ public class AuthMenu {
     }
 
     public static Customer updateProfile(Guest g, Scanner sc, UserManager um, CustomerManager cm){
-        Extension.clearScreen();
+        Enhance.clearScreen();
         System.out.println("=== CAP NHAT THONG TIN CA NHAN ===");
         String CID = Data.generateNewID("resources/customers.txt", 'C');
 

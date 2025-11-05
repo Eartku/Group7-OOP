@@ -18,8 +18,8 @@ import models.Customer;
 import models.Order;
 import models.OrderItem;
 import models.Product;
-import view.Extension;
-import view.Log;
+import ultils.Enhance;
+import ultils.Log;
 import view.ManageProductsMenu;
 
 
@@ -195,7 +195,7 @@ public class OrderManager implements IManagement<Order> {
         while (it.hasNext()) {
             Order o = it.next();
             if (!o.getStatus()) {
-                it.remove(); // ✅ đủ rồi, không cần orders.remove()
+                it.remove(); 
             }
         }
 }
@@ -247,25 +247,25 @@ public class OrderManager implements IManagement<Order> {
     @Override
     public void showList(){
         int k =0;
-        Extension.printTableHeader("Ma don hang","Ma khach hang","So luong san pham","Trang thai","Ngay dat");
+        Enhance.printTableHeader("Ma don hang","Ma khach hang","So luong san pham","Trang thai","Ngay dat");
         for (Order elem : orders.values()) {
             if(elem.getStatus())
-                Extension.printTableRow(elem.getOID(),elem.getCustomer().getCID(),quantity(elem),elem.getStatusString(),elem.getpurchaseDate());
+                Enhance.printTableRow(elem.getOID(),elem.getCustomer().getCID(),quantity(elem),elem.getStatusString(),elem.getpurchaseDate());
             k++;
         }
-        if(k == 0){Extension.printTableRow("Danh sach rong");}
+        if(k == 0){Enhance.printTableRow("Danh sach rong");}
     }
 
     @Override
     public void blackList(){
         int k=0;
-        Extension.printTableHeader("Ma don hang","Ma khach hang","So luong san pham","Trang thai","Ngay dat mua");
+        Enhance.printTableHeader("Ma don hang","Ma khach hang","So luong san pham","Trang thai","Ngay dat mua");
         for (Order elem : orders.values()) {
             if(!elem.getStatus())
-                Extension.printTableRow(elem.getOID(),elem.getCustomer().getCID(),quantity(elem),elem.getStatusString(),elem.getpurchaseDate());
+                Enhance.printTableRow(elem.getOID(),elem.getCustomer().getCID(),quantity(elem),elem.getStatusString(),elem.getpurchaseDate());
             k++;
         }
-        if(k == 0){Extension.printTableRow("Danh sach rong");}
+        if(k == 0){Enhance.printTableRow("Danh sach rong");}
     }
 
     @Override
@@ -274,7 +274,7 @@ public class OrderManager implements IManagement<Order> {
     } 
 
     public void historyList(Customer cs){
-        Extension.printTableHeader("Ma hoa don", "San pham", "Tong SL", "Trang thai");
+        Enhance.printTableHeader("Ma hoa don", "San pham", "Tong SL", "Trang thai");
         for (Order order : orders.values()) {
             if (order.getCustomer() == null) continue;
             if (!order.getCustomer().equals(cs)) continue;
@@ -287,7 +287,7 @@ public class OrderManager implements IManagement<Order> {
 
             long totalQty = quantity(order);
 
-            Extension.printTableRow(
+            Enhance.printTableRow(
                     order.getOID(),
                     productNames,
                     String.valueOf(totalQty),

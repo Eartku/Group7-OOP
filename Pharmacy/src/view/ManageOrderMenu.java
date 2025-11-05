@@ -1,6 +1,5 @@
 package view;
 
-import data.Data;
 import interfaces.IAuthenticable;
 import interfaces.IManageMenu;
 import java.time.format.DateTimeFormatter;
@@ -19,6 +18,9 @@ import service.Inventory;
 import service.OrderManager;
 import service.ProductManager;
 import service.UserManager;
+import ultils.Data;
+import ultils.Enhance;
+import ultils.Log;
 
 public class ManageOrderMenu implements IManageMenu {
     private final ProductManager pm;
@@ -41,7 +43,7 @@ public class ManageOrderMenu implements IManageMenu {
 
     @Override
     public void mainMenu() {
-        Extension.clearScreen();
+        Enhance.clearScreen();
 
         if (pm == null) {
             Log.error("Khong the quan ly cac HOA DON!");
@@ -49,7 +51,7 @@ public class ManageOrderMenu implements IManageMenu {
         }
 
         while (true) {
-            Extension.clearScreen();
+            Enhance.clearScreen();
             System.out.println("==== ORDER MANAGER ====");
             
             System.out.println(om.report());
@@ -61,32 +63,32 @@ public class ManageOrderMenu implements IManageMenu {
             System.out.println("3. Cap nhat thong tin HOA DON (Khong co)");
             System.out.println("4. Truy xuat HOA DON");
             Log.exit("0. Thoat");
-            int choice = Extension.readIntInRange("Nhap lua chon (0-5):", 0, 5, sc);
+            int choice = Enhance.readIntInRange("Nhap lua chon (0-5):", 0, 5, sc);
 
             switch (choice) {
                 case 1 -> {
                     addMenu();
-                    Extension.pause(sc);
+                    Enhance.pause(sc);
                 }
                 case 2 -> {
                     System.out.println("1. Khoa HOA DON - Block Order");
                     System.out.println("2. Kich hoat HOA DON - Activate Order");
                     Log.exit("0. Huy - Cancel");
-                    int choice2 = Extension.readIntInRange("Nhap lua chon (0-2):", 0, 2, sc);
+                    int choice2 = Enhance.readIntInRange("Nhap lua chon (0-2):", 0, 2, sc);
                     switch (choice2) {
                         case 1 -> blockMenu();
                         case 2 -> activeMenu();
                         default -> Log.info("Huy thao tac.");
                     }
-                    Extension.pause(sc);
+                    Enhance.pause(sc);
                 }
                 case 3 -> {
                     updateMenu();
-                    Extension.pause(sc);
+                    Enhance.pause(sc);
                 }
                 case 4 ->{
                     viewMenu();
-                    Extension.pause(sc);
+                    Enhance.pause(sc);
                 }
                 case 0 -> {
                     Log.exit("Thoat chuong trinh. Tam biet!");
@@ -99,7 +101,7 @@ public class ManageOrderMenu implements IManageMenu {
 
     @Override
     public void addMenu() {
-        Extension.clearScreen();
+        Enhance.clearScreen();
         System.out.println("==== ADD NEW ORDER ====");
         String OID = Data.generateNewID(OrderManager.FILE_PATH, 'H');
         IAuthenticable c;
@@ -215,7 +217,7 @@ public class ManageOrderMenu implements IManageMenu {
     }
 
     public void OrderforCustomer(Customer customer) {
-        Extension.clearScreen();
+        Enhance.clearScreen();
         if (!customer.getStatus()) {
             Log.error("Ban da bi khoa! Khong the mua hang!");
             return;
@@ -238,7 +240,7 @@ public class ManageOrderMenu implements IManageMenu {
                 Log.error("Khong du hang cho san pham " + item.getProductsName() +
                         ". Con: " + available + ", Can ban: " + item.getQuantity());
                 Log.warning("Huy HOA DON do khong du hang");
-                Extension.pause(sc);
+                Enhance.pause(sc);
                 return;
             }
         }
@@ -276,7 +278,7 @@ public class ManageOrderMenu implements IManageMenu {
 
     @Override
     public void blockMenu() {
-        Extension.clearScreen();
+        Enhance.clearScreen();
         while (true) {
             System.out.println("==== INACTIVE ORDER ====");
             System.out.println("DANH SACH DON HANG ACTIVE ");
@@ -305,7 +307,7 @@ public class ManageOrderMenu implements IManageMenu {
 
     @Override
     public void activeMenu() {
-        Extension.clearScreen();
+        Enhance.clearScreen();
         while (true) {
             System.out.println("==== ACTIVE ORDER ====");
             System.out.println("DANH SACH DON HANG INACTIVE ");
@@ -335,7 +337,7 @@ public class ManageOrderMenu implements IManageMenu {
     @Override
     public void viewMenu() {
         while (true) {
-            Extension.clearScreen();
+            Enhance.clearScreen();
             System.out.println("==== DANH SACH HOA DON ====");
             om.showList();
             Log.request("Nhap ID HOA DON muon xem (Nhap 0 de quay lai): ");
@@ -352,7 +354,7 @@ public class ManageOrderMenu implements IManageMenu {
                 continue;
             }
 
-            Extension.printInBox(() -> printOrderDetails(order));
+            Enhance.printInBox(() -> printOrderDetails(order));
 
             Log.info("\nNhan Enter de xem don khac, hoac nhap 0 de quay lai.");
             String choice = sc.nextLine().trim();
@@ -397,7 +399,7 @@ public class ManageOrderMenu implements IManageMenu {
         }
 
         while(true){
-            Extension.clearScreen();
+            Enhance.clearScreen();
             System.out.println("===== LICH SU MUA HANG CUA KHACH HANG =====" );
             om.historyList(cs);
             Log.request("\nNhap ma hoa don de xem chi tiet (Nhap 0 de thoat): ");
@@ -415,7 +417,7 @@ public class ManageOrderMenu implements IManageMenu {
                 return;
             }
 
-            Extension.printInBox(() -> printOrderDetails(selected));
+            Enhance.printInBox(() -> printOrderDetails(selected));
 
             Log.info("\nNhan Enter de xem don khac, hoac nhap 0 de quay lai.");
             String choice = sc.nextLine().trim();
@@ -425,7 +427,7 @@ public class ManageOrderMenu implements IManageMenu {
 
     @Override
     public void updateMenu() {
-        Extension.clearScreen();
+        Enhance.clearScreen();
         System.out.println("==== CAP NHAT TRANG THAI HOA DON ====");
         om.showList();
 
@@ -438,14 +440,14 @@ public class ManageOrderMenu implements IManageMenu {
             Log.warning("Khong tim thay HOA DON!");
             return;
         }
-        Extension.printInBox(() -> printOrderDetails(order));
+        Enhance.printInBox(() -> printOrderDetails(order));
 
         Log.info("Trang thai hien tai: " + order.getStatus());
         System.out.println("Chon trang thai moi (khong duoc bo trong):");
         System.out.println("1. Active");
         System.out.println("2. Inactive");
         Log.request("Nhap lua chon: ");
-        int choice = Extension.readIntInRange("Nhap lua chon (1-2):", 1, 2, sc);
+        int choice = Enhance.readIntInRange("Nhap lua chon (1-2):", 1, 2, sc);
         boolean newStatus = choice == 1;
 
         if (order.getStatus() == newStatus) {

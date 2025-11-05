@@ -7,8 +7,8 @@ import java.util.*;
 import models.Admin;
 import models.Customer;
 import models.Guest;
-import view.Extension;
-import view.Log;
+import ultils.Enhance;
+import ultils.Log;
 
 
 public class UserManager implements IManagement<IAuthenticable> {
@@ -88,7 +88,7 @@ public class UserManager implements IManagement<IAuthenticable> {
 
     // in danh sách dạng ẩn mật khẩu
     public void hideblackList() {
-        Extension.printTableHeader("Username", "Password", "Role", "Status");
+        Enhance.printTableHeader("Username", "Password", "Role", "Status");
         for (IAuthenticable u : users.values()) {
             if (!u.getStatus()) {
                 String role = switch (u.getRole()) {
@@ -97,14 +97,14 @@ public class UserManager implements IManagement<IAuthenticable> {
                     case 0 -> "Guest";
                     default -> "Nothing";
                 };
-                Extension.printTableRow(u.getUsername(), Extension.maskPassword(u.getPassword()," "), role, u.getStatusString());
+                Enhance.printTableRow(u.getUsername(), Enhance.maskPassword(u.getPassword()," "), role, u.getStatusString());
             }
         }
     }
 
     
     public void hidePassList() {
-        Extension.printTableHeader("Username", "Password(Hide)", "Role", "Status");
+        Enhance.printTableHeader("Username", "Password(Hide)", "Role", "Status");
         for (IAuthenticable u : users.values()) {
             if (u.getStatus()) {
                 String role = switch (u.getRole()) {
@@ -113,7 +113,7 @@ public class UserManager implements IManagement<IAuthenticable> {
                     case 0 -> "Guest";
                     default -> "Nothing";
                 };
-                Extension.printTableRow(u.getUsername(), Extension.maskPassword(u.getPassword(), " "), role, u.getStatusString());
+                Enhance.printTableRow(u.getUsername(), Enhance.maskPassword(u.getPassword(), " "), role, u.getStatusString());
             }
         }
     }
@@ -149,7 +149,7 @@ public class UserManager implements IManagement<IAuthenticable> {
 
     @Override
     public void showList() {
-        Extension.printTableHeader("Username", "Password(Show)", "Role", "Status");
+        Enhance.printTableHeader("Username", "Password(Show)", "Role", "Status");
         for (IAuthenticable u : users.values()) {
             if (u.getStatus()) {
                 String role = switch (u.getRole()) {
@@ -158,7 +158,7 @@ public class UserManager implements IManagement<IAuthenticable> {
                     case 0 -> "Guest";
                     default -> "Nothing";
                 };
-                Extension.printTableRow(u.getUsername(), u.getPassword(), role, u.getStatusString());
+                Enhance.printTableRow(u.getUsername(), u.getPassword(), role, u.getStatusString());
             }
         }
     }
@@ -167,7 +167,7 @@ public class UserManager implements IManagement<IAuthenticable> {
 
     @Override
     public void blackList() {
-        Extension.printTableHeader("Username", "Password", "Role", "Status");
+        Enhance.printTableHeader("Username", "Password", "Role", "Status");
         for (IAuthenticable u : users.values()) {
             if (!u.getStatus()) {
                 String role = switch (u.getRole()) {
@@ -176,7 +176,7 @@ public class UserManager implements IManagement<IAuthenticable> {
                     case 0 -> "Guest";
                     default -> "Nothing";
                 };
-                Extension.printTableRow(u.getUsername(), u.getPassword(), role, u.getStatusString());
+                Enhance.printTableRow(u.getUsername(), u.getPassword(), role, u.getStatusString());
             }
         }
     }

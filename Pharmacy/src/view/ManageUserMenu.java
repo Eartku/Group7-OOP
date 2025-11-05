@@ -11,7 +11,7 @@ import models.Guest;
 import service.CustomerManager;
 import service.UserManager;
 import ultils.Data;
-import ultils.Extension;
+import ultils.Enhance;
 import ultils.Log;
 
 public class ManageUserMenu implements IManageMenu {
@@ -29,7 +29,7 @@ public class ManageUserMenu implements IManageMenu {
 
     @Override
     public void mainMenu(){
-        Extension.clearScreen();
+        Enhance.clearScreen();
 
         if (um == null) {
             Log.error("Khong the quan ly user!");
@@ -37,7 +37,7 @@ public class ManageUserMenu implements IManageMenu {
         }
 
         while (true) {
-            Extension.clearScreen();
+            Enhance.clearScreen();
             System.out.println("==== USER MANAGER ====");
             System.out.println(um.report());
             System.out.println("==== DANH SACH USER HOAT DONG ====");
@@ -51,33 +51,33 @@ public class ManageUserMenu implements IManageMenu {
             System.out.println("5. Che do AN mat khau - Hide password mode");
             System.out.println("6. Che do HIEN mat khau - Show Password mode");
             Log.exit("0. Thoat - Exit");
-            int choice = Extension.readIntInRange("Nhap lua chon (0-6):", 0, 6, sc);
+            int choice = Enhance.readIntInRange("Nhap lua chon (0-6):", 0, 6, sc);
 
             switch (choice) {
                 case 1 -> {
                     addMenu();
-                    Extension.pause(sc);
+                    Enhance.pause(sc);
                 }
                 case 2 -> {
                     System.out.println("1. Chan User - Block User");
                     System.out.println("2. Kich hoat User - Activate User");
                     Log.exit("0. Huy - Cancel");
-                    int choice2 = Extension.readIntInRange("Nhap lua chon (0-2):", 0, 2, sc);
+                    int choice2 = Enhance.readIntInRange("Nhap lua chon (0-2):", 0, 2, sc);
                     switch (choice2) {
                         case 0 -> { break; }
                         case 1 -> blockMenu();
                         case 2 -> activeMenu();
                         default -> Log.warning("Lua chon khong hop le!");
                     }
-                    Extension.pause(sc);
+                    Enhance.pause(sc);
                 }
                 case 3 -> {
                     updateMenu();
-                    Extension.pause(sc);
+                    Enhance.pause(sc);
                 }
                 case 4 -> {
                     viewMenu();
-                    Extension.pause(sc);
+                    Enhance.pause(sc);
                 }
                 case 5 -> this.active = false;
                 case 6 -> this.active = true;
@@ -92,7 +92,7 @@ public class ManageUserMenu implements IManageMenu {
 
     @Override
     public void addMenu(){
-        Extension.clearScreen();
+        Enhance.clearScreen();
         System.out.println("==== ADD USER ====");
         String username;
         while(true){
@@ -173,7 +173,7 @@ public class ManageUserMenu implements IManageMenu {
     @Override
     public void blockMenu() {
         while(true){
-            Extension.clearScreen();
+            Enhance.clearScreen();
             System.out.println("==== BLOCK USER ====");
             if(active) um.showList(); else um.hidePassList();
             Log.request("Nhap username (hoac nhap 0 de quay lai): ");
@@ -219,7 +219,7 @@ public class ManageUserMenu implements IManageMenu {
     @Override
     public void activeMenu() {
         while(true){
-            Extension.clearScreen();
+            Enhance.clearScreen();
             System.out.println("==== ACTIVATE USER ====");
             um.blackList();
             Log.request("Nhap username (hoac nhap 0 de quay lai): ");
@@ -257,7 +257,7 @@ public class ManageUserMenu implements IManageMenu {
 
     @Override
     public void updateMenu() {
-        Extension.clearScreen();
+        Enhance.clearScreen();
         System.out.println("==== EDIT USER ====");
         
         if (active) um.showList(); 
@@ -376,7 +376,7 @@ public class ManageUserMenu implements IManageMenu {
     }
 
     public void UserInfo(IAuthenticable user){
-        Extension.printInBox(() -> {
+        Enhance.printInBox(() -> {
             System.out.println("----- USER [" + user.getUsername() +"] -----");
             System.out.println("Username: " + user.getUsername());
             System.out.println("Password: " + user.getPassword());
@@ -394,7 +394,7 @@ public class ManageUserMenu implements IManageMenu {
     @Override
     public void viewMenu() {
         while(true){
-            Extension.clearScreen();
+            Enhance.clearScreen();
             System.out.println("==== VIEW USER ====");
             if(active) um.showList(); else um.hidePassList();
             Log.request("Nhap username ban muon xem (Nhap 0 de quay lai): ");

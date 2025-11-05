@@ -1,6 +1,5 @@
 package view;
 
-import data.Data;
 import interfaces.IManageMenu;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -11,6 +10,9 @@ import models.NonDrug;
 import models.Product;
 import service.Inventory;
 import service.ProductManager;
+import ultils.Data;
+import ultils.Enhance;
+import ultils.Log;
 
 public class InventoryMenu implements IManageMenu {
     private final ProductManager pm;
@@ -25,14 +27,14 @@ public class InventoryMenu implements IManageMenu {
 
     @Override
     public void mainMenu() {
-        Extension.clearScreen();
+        Enhance.clearScreen();
 
         if (inv == null) {
             Log.error("Khong the quan ly Kho hang!");
             return;
         }
         while (true) {
-            Extension.clearScreen();
+            Enhance.clearScreen();
             System.out.println("==== INVENTORY MANAGER ====\n");
             System.out.println(inv.report() + "\n");
             System.out.println("==== DANH SACH CAC LO HANG TRONG KHO ====");
@@ -44,18 +46,18 @@ public class InventoryMenu implements IManageMenu {
             System.out.println("4. Tim kiem va Xem - Search & View");
             System.out.println("5. Xem tinh trang nhap - xuat - Import/Export (Only View)");
             Log.exit("0. Thoat - Cancel");
-            int choice = Extension.readIntInRange("Nhap lua chon (0-4):", 0, 5, sc);
+            int choice = Enhance.readIntInRange("Nhap lua chon (0-4):", 0, 5, sc);
 
             switch (choice) {
                 case 1 -> {
                     addMenu();
-                    Extension.pause(sc);
+                    Enhance.pause(sc);
                 }
                 case 2 -> {
                     System.out.println("1. Khoa lo hang - Block");
                     System.out.println("2. Kich hoat lo hang - Activate");
                     Log.exit("0. Huy - Cancel");
-                    int choice2 = Extension.readIntInRange("Nhap lua chon (0-2):", 0, 2, sc);
+                    int choice2 = Enhance.readIntInRange("Nhap lua chon (0-2):", 0, 2, sc);
                     switch (choice2) {
                         case 0 -> {
                             Log.info("Huy thao tac.");
@@ -65,19 +67,19 @@ public class InventoryMenu implements IManageMenu {
                         case 2 -> activeMenu();
                         default -> Log.error("Khong hop le!");
                     }
-                    Extension.pause(sc);
+                    Enhance.pause(sc);
                 }
                 case 3 -> {
                     updateMenu();
-                    Extension.pause(sc);
+                    Enhance.pause(sc);
                 }
                 case 4 -> {
                     viewMenu();
-                    Extension.pause(sc);
+                    Enhance.pause(sc);
                 }
                 case 5 -> {
                     ImportExport();
-                    Extension.pause(sc);
+                    Enhance.pause(sc);
                 }
                 case 0 -> {
                     Log.info("Thoat kho hang.");
@@ -90,7 +92,7 @@ public class InventoryMenu implements IManageMenu {
 
     @Override
     public void addMenu() {
-        Extension.clearScreen();
+        Enhance.clearScreen();
         System.out.println("==== ADD NEW BATCH ====");
 
         String BID = Data.generateNewID(Inventory.FILE_PATH, 'B');
@@ -149,7 +151,7 @@ public class InventoryMenu implements IManageMenu {
 
     @Override
     public void blockMenu() {
-        Extension.clearScreen();
+        Enhance.clearScreen();
         System.out.println("==== BLOCK BATCH ====");
 
         while (true) {
@@ -191,7 +193,7 @@ public class InventoryMenu implements IManageMenu {
 
     @Override
     public void activeMenu() {
-        Extension.clearScreen();
+        Enhance.clearScreen();
         System.out.println("==== ACTIVATE BATCH ====");
 
         while (true) {
@@ -238,7 +240,7 @@ public class InventoryMenu implements IManageMenu {
 
     @Override
     public void updateMenu() {
-        Extension.clearScreen();
+        Enhance.clearScreen();
         System.out.println("==== EDIT BATCH ====");
 
         while (true) {
@@ -328,7 +330,7 @@ public class InventoryMenu implements IManageMenu {
 
     @Override
     public void viewMenu() {
-        Extension.clearScreen();
+        Enhance.clearScreen();
         System.out.println("==== VIEW BATCH ====");
         inv.showList();
 
@@ -377,7 +379,7 @@ public class InventoryMenu implements IManageMenu {
 
     // xem danh scahs nhập xuất chi tiết
     public void ImportExport(){
-        Extension.clearScreen();
+        Enhance.clearScreen();
         System.out.println("==== VIEW IMPORT - EXPORT STATUS ====");
         Log.warning("Chi duoc xem - Khong duoc sua");
         System.out.println("==== DANH SACH NHAP HANG ====");

@@ -6,8 +6,8 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 import models.Customer;
-import view.Extension;
-import view.Log;
+import ultils.Enhance;
+import ultils.Log;
 
 public final class CustomerManager implements IManagement<Customer> {
 
@@ -149,7 +149,7 @@ public final class CustomerManager implements IManagement<Customer> {
     // DANH SÁCH HOAT DONG
     @Override
         public void showList() {
-            Extension.printTableHeader(
+            Enhance.printTableHeader(
                 "Ma khach hang", "Ho va ten", "Ngay sinh",
                 "Dia chi", "So dien thoai", "Email", "Trang thai"
             );
@@ -157,7 +157,7 @@ public final class CustomerManager implements IManagement<Customer> {
             int count = 0;
             for (Customer c : customerByID.values()) {
                 if (c.getStatus()) {
-                    Extension.printTableRow(
+                    Enhance.printTableRow(
                         c.getCID(), c.getFullname(), c.getDobdate(),
                         c.getAddress(), c.getPhone(), c.getEmail(),
                         c.getStatusString()
@@ -167,13 +167,13 @@ public final class CustomerManager implements IManagement<Customer> {
             }
 
             if (count == 0) {
-                Extension.printTableRow("Danh sach rong");
+                Enhance.printTableRow("Danh sach rong");
             }
         }
 
         @Override
         public void blackList() {
-            Extension.printTableHeader(
+            Enhance.printTableHeader(
                 "Ma khach hang", "Ho va ten", "Ngay sinh",
                 "Dia chi", "So dien thoai", "Email", "Trang thai"
             );
@@ -181,7 +181,7 @@ public final class CustomerManager implements IManagement<Customer> {
             int count = 0;
             for (Customer c : customerByID.values()) {
                 if (!c.getStatus()) {
-                    Extension.printTableRow(
+                    Enhance.printTableRow(
                         c.getCID(), c.getFullname(), c.getDobdate(),
                         c.getAddress(), c.getPhone(), c.getEmail(),
                         c.getStatusString()
@@ -191,7 +191,7 @@ public final class CustomerManager implements IManagement<Customer> {
             }
 
             if (count == 0) {
-                Extension.printTableRow("Danh sach rong");
+                Enhance.printTableRow("Danh sach rong");
             }
         }
 

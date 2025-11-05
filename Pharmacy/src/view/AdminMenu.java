@@ -7,6 +7,8 @@ import service.Inventory;
 import service.OrderManager;
 import service.ProductManager;
 import service.UserManager;
+import ultils.Enhance;
+import ultils.Log;
 
 public class AdminMenu {
     private static final Scanner sc = new Scanner(System.in);
@@ -32,7 +34,7 @@ public class AdminMenu {
         InventoryMenu minv = new InventoryMenu(pm, inv, sc);
         
         while (true) {
-            Extension.clearScreen();
+            Enhance.clearScreen();
             System.out.println();
             System.out.println("==== MENU ADMIN ====");
             System.out.println("1. Quan ly tai khoan - Accounts");
@@ -42,7 +44,7 @@ public class AdminMenu {
             System.out.println("5. Quan ly cac don hang - Orders");
             System.out.println("6. Blocked Cleaner");
             Log.exit("0. Dang xuat - Logout");
-            int choice = Extension.readIntInRange("Nhap lua chon (0-5):", 0, 6, sc);
+            int choice = Enhance.readIntInRange("Nhap lua chon (0-5):", 0, 6, sc);
 
             switch (choice) {
                 case 0 -> {
@@ -86,7 +88,7 @@ public class AdminMenu {
                     } else {
                         Log.warning("Huy thao tac XOA.");
                     }
-                    Extension.pause(sc);
+                    Enhance.pause(sc);
                 }
                 default -> Log.warning("Khong hop le!");
             }
