@@ -3,7 +3,10 @@ C002|Lan Anh|10/10/1992|Ho Chi Minh City|lan_anh92@example.com|0900000002|lan_an
 C003|Shadow X|05/05/1995|Da Nang|shadowx@example.com|0900000003|shadowx|true
 C004|Minh Trang|12/12/1998|Hanoi|minhtrang@example.com|0900000004|minhtrang|true
 C005|Beta Tester|03/03/1990|Hue|beta_tester@example.com|0900000005|beta_tester|true
-C006|Nguyen Rey|07/07/1993|Can Tho|vietnam_rey@example.com|0900000006|vietnam_rey|false
+C006|Nguyen Rey|07/07/1993|Can Tho|vietnam_rey@example.com|0900000006|vietnam_rey|true
 C007|Guest One|15/08/2001|Hanoi|guest101@example.com|0900000007|guest101|false
-C008|ph�c ch?t tim|09/09/2009|dat09|9cm|911|phucu9cm|true
-C009|Phung anh vu|27/07/2006|doc la lam dong|vuchim-1cm|vu -bo nhuoi|vubechiem123|true
+C008|pav|19/09/2009|LamDong|vu|12091939123|vu123|true
+C009|Huy|01/02/2003|�dsfsdfsdf|sdfsfsdfsfd|sdfsdfsdfsdfsf|huy223|true
+C010|Nguyen Hoang Phuc|13/07/2006|Bac Lie|phuc|2139123129|phuc123|true
+C011|sdsadsada|12/12/2002|12231123|123ewafsdgbgf|243r43453|012dsa|true
+C012|Huy|12/12/2012|112sdfsdf|sdfsdfsdfs|sdfsdfsdfsf|uhuy|true

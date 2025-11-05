@@ -138,55 +138,72 @@ public class AuthMenu {
         } else Log.error("Unknown user type!");
     }
 
-    public static Customer updateProfile(Guest g, Scanner sc, UserManager um, CustomerManager cm){
+    public static Customer updateProfile(Scanner sc){
         Enhance.clearScreen();
         System.out.println("=== CAP NHAT THONG TIN CA NHAN ===");
         String CID = Data.generateNewID("resources/customers.txt", 'C');
 
-        Log.request("Nhap Ho va ten: ");
-        String fullname = sc.nextLine();
+        String fullname;
+        while (true) {
+            Log.request("Ho va ten: ");
+            fullname = sc.nextLine().trim();
+            if (fullname.isEmpty()) {
+                 Log.warning("Khong duoc de trong mien nay!");
+            } else break;
+        }
 
         LocalDate dobDate = null;
         while (true) {
-            Log.request(" Nhap Ngay sinh (dd/MM/yyyy): ");
-            String dob = sc.nextLine();
+            Log.request("Ngay sinh (dd/MM/yyyy): ");
+            String dob = sc.nextLine().trim();
+            if (dob.isEmpty()) {
+                 Log.warning("Khong duoc de trong mien nay!");
+                continue;
+            }
             try {
                 dobDate = LocalDate.parse(dob, DateTimeFormatter.ofPattern("dd/MM/yyyy"));
-                break; 
+                break;
             } catch (Exception e) {
-                Log.warning("Ngay sinh khong hop le! Nhap lai theo dd/MM/yyyy");
+                Log.error("Ngay sinh khong hop le! Nhap lai theo dd/MM/yyyy");
             }
         }
 
-        Log.request("Nhap Dia chi: ");
-        String address = sc.nextLine();
+        String address;
+        while (true) {
+            Log.request("Dia chi: ");
+            address = sc.nextLine().trim();
+            if (address.isEmpty()) {
+                 Log.warning("Khong duoc de trong mien nay!");
+            } else break;
+        }
 
-        Log.request("Nhap dia chi Email: ");
-        String email = sc.nextLine();
+        String email;
+        while (true) {
+            Log.request("Email: ");
+            email = sc.nextLine().trim();
+            if (email.isEmpty()) {
+                 Log.warning("Khong duoc de trong mien nay!");
+            } else break;
+        }
 
-        Log.request("Nhap So dien thoai: ");
-        String phone = sc.nextLine();
+        String phone;
+        while (true) {
+            Log.request("So dien thoai: ");
+            phone = sc.nextLine().trim();
+            if (phone.isEmpty()) {
+                Log.warning("Khong duoc de trong mien nay!");
+            } else break;
+        }
 
-        Customer customer = new Customer(
-            g.getUsername(),
-            g.getPassword(),
-            CID,
-            fullname,
-            dobDate,
-            address, 
-            email, 
-            phone,
-            true
-        );
-
-        cm.add(customer);
-        cm.save();
-
-        um.replaceUser(g, customer);
-        um.save();
-
-        Log.success("Đã cập nhật hồ sơ thành công! Bạn đã trở thành khách hàng chính thức.");
-        return customer;
+        Customer c = new Customer("", "", false);
+        c.setFullname(fullname);
+        c.setCID(CID);
+        c.setDate(dobDate);
+        c.setAddress(address);
+        c.setEmail(email);
+        c.setPhone(phone);
+        Log.success("Da cap nhat ho so thanh cong!.");
+        return c;
     }
 
 }

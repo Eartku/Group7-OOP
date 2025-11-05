@@ -92,7 +92,7 @@ public class ManageOrderMenu implements IManageMenu {
         IAuthenticable c;
 
         while (true) {
-            Log.request("Khach hang da co tai khoan chua (y/n) - (Nhap 0 de quay lai): ");
+            Log.request("Khach hang da co tai khoan chua (y/n) - (Nhap 0 de quay lai): "); // hỏi admin là khách có tài khoản chưa
             String hasAccount = sc.nextLine().trim();
 
             if (hasAccount.equals("0")) {
@@ -100,7 +100,7 @@ public class ManageOrderMenu implements IManageMenu {
                 return;
             }
 
-            if (hasAccount.equalsIgnoreCase("y")) {
+            if (hasAccount.equalsIgnoreCase("y")) { // trường hợp đã có tài khoản
                 c = AuthMenu.Login(sc, um, cm);
                 if (c == null) {
                     Log.warning("Dang nhap that bai hoac huy thao tac. Thu lai!");
@@ -109,7 +109,7 @@ public class ManageOrderMenu implements IManageMenu {
 
                 if (c instanceof Customer customer) {
                     Log.success("Dang nhap thanh cong, xin chao " + customer.getFullname() + "!");
-                    ArrayList<OrderItem> ordered = OrderManager.buyProducts(sc, pm, inv);
+                    ArrayList<OrderItem> ordered = OrderManager.buyProducts(sc, pm, inv); // chọn sản phẩm mua cho khách
                     if (!ordered.isEmpty()) {
                         for (OrderItem o : ordered) {
                             long available = inv.getStockbyProduct(o.getProduct());
@@ -119,7 +119,10 @@ public class ManageOrderMenu implements IManageMenu {
                                 Log.warning("Huy HOA DON do khong du hang!");
                                 return;
                             } else {
+                                long bef = inv.getStockbyProduct(o.getProduct());
                                 inv.deductStock(o);
+                                long aft = inv.getStockbyProduct(o.getProduct());
+                                Log.warning("[DEBUG] So luong trong kho cua"+ o.getProduct().getName() + " tai thoi diem truoc ["+ bef + "] - Hien tai ["+ aft+"] ");
                                 inv.save();
                             }
                         }
@@ -134,7 +137,7 @@ public class ManageOrderMenu implements IManageMenu {
                     Log.warning("Tai khoan nay khong phai khach hang! Nhan Enter de quay lai.");
                 }
             } else if (hasAccount.equalsIgnoreCase("n")) {
-                System.out.println("=== DANG KY TAI KHOAN MOI ===");
+                System.out.println("=== DANG KY TAI KHOAN KHACH HANG MOI ===");
                 String username;
                 while (true) {
                     Log.request("Nhap username: ");
@@ -151,11 +154,12 @@ public class ManageOrderMenu implements IManageMenu {
                         Log.error("Mat khau phai co it nhat 6 ky tu!");
                     } else break;
                 }
-
-                Guest g = new Guest(username, password, true);
-                c = AuthMenu.updateProfile(g, sc, um, cm);
+                c = AuthMenu.updateProfile(sc);
 
                 if (c instanceof Customer customer) {
+                    customer.setUsername(username);
+                    customer.setPassword(password);
+                    customer.setStatus(true);
                     um.add(customer);
                     um.save();
                     cm.add(customer);
@@ -184,6 +188,7 @@ public class ManageOrderMenu implements IManageMenu {
                         om.add(new Order(OID, ordered, customer, true));
                         om.save();
                         Log.success("Tao HOA DON thanh cong! Ma don: " + OID);
+                        
                     } else {
                         Log.warning("Khong co san pham nao duoc chon. Huy HOA DON!");
                     }
@@ -203,6 +208,11 @@ public class ManageOrderMenu implements IManageMenu {
 
     public void OrderforCustomer(Customer customer) {
         Enhance.clearScreen();
+        if(customer == null){
+            System.out.println("Khach hang khong ton tai trong he thong!");
+            return;
+        }
+
         if (!customer.getStatus()) {
             Log.error("Ban da bi khoa! Khong the mua hang!");
             return;
@@ -229,12 +239,7 @@ public class ManageOrderMenu implements IManageMenu {
                 return;
             }
         }
-        for (OrderItem o : ordered) {
-            long bef = inv.getStockbyProduct(o.getProduct());
-            inv.deductStock(o);
-            long aft = inv.getStockbyProduct(o.getProduct());
-            Log.warning("[DEBUG] So luong trong kho cua"+ o.getProduct().getName() + " tai thoi diem truoc ["+ bef + "] - Hien tai ["+ aft+"] ");
-        }
+        
 
         double total = 0;
         for (OrderItem item : ordered) {
@@ -251,7 +256,13 @@ public class ManageOrderMenu implements IManageMenu {
             om.save();
             inv.save();
             Log.success("Thanh toan thanh cong!");
-            Log.success("Ma HOA DON: " + OID);
+            Enhance.printInBox(() -> printOrderDetails(order));
+            for (OrderItem o : ordered) {
+            long bef = inv.getStockbyProduct(o.getProduct());
+            inv.deductStock(o);
+            long aft = inv.getStockbyProduct(o.getProduct());
+            Log.warning("[DEBUG] So luong trong kho cua"+ o.getProduct().getName() + " tai thoi diem truoc ["+ bef + "] - Hien tai ["+ aft+"] ");
+        }
         } else {
             Order order = new Order(OID, ordered, customer, false);
             om.add(order);

@@ -38,8 +38,10 @@ public class CustomerMenu {
                             Enhance.pause(sc);
                             break;
                         }
+                        cm.save();
                         System.out.println("Dang ky mua san pham...");
                         mo.OrderforCustomer(customer);
+                        Enhance.pause(sc);
                     }
                     case 3 -> {
                         System.out.println("Xem thong tin ca nhan...");

@@ -53,6 +53,9 @@ public class Customer extends User implements Comparable<Customer>{
             this.dob = LocalDate.parse(input,FORMATTER);
         } catch (DateTimeParseException e){throw new IllegalArgumentException("Ngay sinh khong hop le! DD/MM/YYYY");}
     }
+    public void setDate(LocalDate date){
+        this.dob = date;
+    }
     public LocalDate getDob(){return dob;}
     public String getDobdate(){
         return (dob != null) ? dob.format(FORMATTER) : "Chua co!";
