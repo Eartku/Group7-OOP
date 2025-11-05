@@ -5,3 +5,5 @@ C004|Minh Trang|12/12/1998|Hanoi|minhtrang@example.com|0900000004|minhtrang|true
 C005|Beta Tester|03/03/1990|Hue|beta_tester@example.com|0900000005|beta_tester|true
 C006|Nguyen Rey|07/07/1993|Can Tho|vietnam_rey@example.com|0900000006|vietnam_rey|false
 C007|Guest One|15/08/2001|Hanoi|guest101@example.com|0900000007|guest101|false
+C008|ph�c ch?t tim|09/09/2009|dat09|9cm|911|phucu9cm|true
+C009|Phung anh vu|27/07/2006|doc la lam dong|vuchim-1cm|vu -bo nhuoi|vubechiem123|true

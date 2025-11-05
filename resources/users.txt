@@ -4,6 +4,8 @@ beta_tester|B3taTest#1|1|true
 guest101|guest_pass101|1|false
 lan_anh92|lanA!992021|1|true
 minhtrang|MtR@ng2025|1|true
+phucu9cm|cu9cmm|1|true
 shadowx|sh4d0wX777|1|true
 system|system1|2|true
 vietnam_rey|VnR3y_88|1|false
+vubechiem123|123abc|1|true
