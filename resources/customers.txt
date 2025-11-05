@@ -3,5 +3,5 @@ C002|Lan Anh|10/10/1992|Ho Chi Minh City|lan_anh92@example.com|0900000002|lan_an
 C003|Shadow X|05/05/1995|Da Nang|shadowx@example.com|0900000003|shadowx|true
 C004|Minh Trang|12/12/1998|Hanoi|minhtrang@example.com|0900000004|minhtrang|true
 C005|Beta Tester|03/03/1990|Hue|beta_tester@example.com|0900000005|beta_tester|true
-C006|Nguyen Rey|07/07/1993|Can Tho|vietnam_rey@example.com|0900000006|vietnam_rey|true
+C006|Nguyen Rey|07/07/1993|Can Tho|vietnam_rey@example.com|0900000006|vietnam_rey|false
 C007|Guest One|15/08/2001|Hanoi|guest101@example.com|0900000007|guest101|false

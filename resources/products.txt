@@ -4,7 +4,7 @@ P003|Vitamin C|Lo|30000.0|24|1 vien/ngay|Acid Ascorbic 1000mg|false|D|true
 P004|Cetirizine|Hop|45000.0|12|1 vien/ngay|Cetirizine Hydrochloride 10mg|false|D|true
 P005|Azithromycin|Hop|85000.0|18|1 vien/ngay|Azithromycin 250mg|true|D|true
 P006|Metformin|Hop|65000.0|24|2 vien/ngay|Metformin 500mg|true|D|true
-P007|Loratadine|Hop|50000.0|18|1 vien/ngay|Loratadine 10mg|false|D|true
+P007|Loratadine|Hop|50000.0|18|1 vien/ngay|Loratadine 10mg|false|D|false
 P008|Prednisolone|Hop|90000.0|12|1 vien/ngay|Prednisolone 5mg|true|D|true
 P009|DD NaCl 0,9%|Chai|20000.0|12|Rua mui, ve sinh vet thuong|Bidiphar|Ve sinh|N|true
 P010|Gel rua tay|Chai|45000.0|18|Diet khuan tay|Lifebuoy|Ve sinh|N|true
