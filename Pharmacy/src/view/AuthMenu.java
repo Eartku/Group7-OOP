@@ -1,20 +1,12 @@
 package view;
 
-import interfaces.IAuthenticable;
-import java.time.LocalDate;
+import interfaces.*;
+import java.time.*;
 import java.time.format.DateTimeFormatter;
-import java.util.Scanner;
-import models.Admin;
-import models.Customer;
-import models.Guest;
-import service.CustomerManager;
-import service.Inventory;
-import service.OrderManager;
-import service.ProductManager;
-import service.UserManager;
-import ultils.Data;
-import ultils.Enhance;
-import ultils.Log;
+import java.util.*;
+import models.*;
+import service.*;
+import ultils.*;
 
 public class AuthMenu {
 

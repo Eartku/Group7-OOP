@@ -1,18 +1,12 @@
 package view;
 
-import interfaces.IManageMenu;
-import java.time.LocalDate;
+import interfaces.*;
+import java.time.*;
 import java.time.format.DateTimeFormatter;
-import java.util.Scanner;
-import models.Batch;
-import models.Drug;
-import models.NonDrug;
-import models.Product;
-import service.Inventory;
-import service.ProductManager;
-import ultils.Data;
-import ultils.Enhance;
-import ultils.Log;
+import java.util.*;
+import models.*;
+import service.*;
+import ultils.*;
 
 public class InventoryMenu implements IManageMenu {
     private final ProductManager pm;

@@ -1,15 +1,10 @@
 package view;
 
-import interfaces.IManageMenu;
-import java.util.Scanner;
-import models.Drug;
-import models.NonDrug;
-import models.Product;
-import service.Inventory;
-import service.ProductManager;
-import ultils.Data;
-import ultils.Enhance;
-import ultils.Log;
+import interfaces.*;
+import java.util.*;
+import models.*;
+import service.*;
+import ultils.*;
 
 public class ManageProductsMenu implements IManageMenu{
     private final ProductManager pm;

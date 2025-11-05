@@ -1,15 +1,10 @@
 package view;
 
-import interfaces.IAuthenticable;
-import java.util.Scanner;
-import models.Customer;
-import service.CustomerManager;
-import service.Inventory;
-import service.OrderManager;
-import service.ProductManager;
-import service.UserManager;
-import ultils.Enhance;
-import ultils.Log;
+import interfaces.*;
+import java.util.*;
+import models.*;
+import service.*;
+import ultils.*;
 
 public class CustomerMenu {
     private static final Scanner sc = new Scanner(System.in);

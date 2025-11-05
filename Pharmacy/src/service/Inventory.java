@@ -1,25 +1,11 @@
 package service;
-import interfaces.IManagement;
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.time.LocalDate;
+import interfaces.*;
+import java.io.*;
+import java.time.*;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Scanner;
-import java.util.TreeMap;
-import models.Batch;
-import models.Order;
-import models.OrderItem;
-import models.Product;
-import ultils.Enhance;
-import ultils.Log;
-
+import java.util.*;
+import models.*;
+import ultils.*;
 
 // Inventory hay Batch_Management
 public final class Inventory implements IManagement<Batch>{

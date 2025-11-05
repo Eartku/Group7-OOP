@@ -1,18 +1,12 @@
 package view;
 
-import interfaces.IAuthenticable;
-import interfaces.IManageMenu;
-import java.time.LocalDate;
+import interfaces.*;
+import java.time.*;
 import java.time.format.DateTimeFormatter;
-import java.util.Scanner;
-import models.Admin;
-import models.Customer;
-import models.Guest;
-import service.CustomerManager;
-import service.UserManager;
-import ultils.Data;
-import ultils.Enhance;
-import ultils.Log;
+import java.util.*;
+import models.*;
+import service.*;
+import ultils.*;
 
 public class ManageUserMenu implements IManageMenu {
     

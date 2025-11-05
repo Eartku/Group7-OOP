@@ -1,21 +1,9 @@
 package service;
 import interfaces.IManagement;
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.Scanner;
-import java.util.TreeMap;
-import models.Drug;
-import models.NonDrug;
-import models.Product;
-import ultils.Enhance;
-import ultils.Log;
+import java.io.*;
+import java.util.*;
+import models.*;
+import ultils.*;
 
 
 public class ProductManager implements IManagement<Product>{

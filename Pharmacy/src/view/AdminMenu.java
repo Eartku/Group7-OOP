@@ -1,14 +1,9 @@
 package view;
 
-import interfaces.IAuthenticable;
-import java.util.Scanner;
-import service.CustomerManager;
-import service.Inventory;
-import service.OrderManager;
-import service.ProductManager;
-import service.UserManager;
-import ultils.Enhance;
-import ultils.Log;
+import interfaces.*;
+import java.util.*;
+import service.*;
+import ultils.*;
 
 public class AdminMenu {
     private static final Scanner sc = new Scanner(System.in);

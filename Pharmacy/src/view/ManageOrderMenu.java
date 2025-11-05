@@ -1,26 +1,11 @@
 package view;
 
-import interfaces.IAuthenticable;
-import interfaces.IManageMenu;
+import interfaces.*;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Scanner;
-import models.Customer;
-import models.Drug;
-import models.Guest;
-import models.NonDrug;
-import models.Order;
-import models.OrderItem;
-import models.Product;
-import service.CustomerManager;
-import service.Inventory;
-import service.OrderManager;
-import service.ProductManager;
-import service.UserManager;
-import ultils.Data;
-import ultils.Enhance;
-import ultils.Log;
+import java.util.*;
+import models.*;
+import service.*;
+import ultils.*;
 
 public class ManageOrderMenu implements IManageMenu {
     private final ProductManager pm;

@@ -1,14 +1,10 @@
 package service;
 
-import interfaces.IAuthenticable;
-import interfaces.IManagement;
+import interfaces.*;
 import java.io.*;
 import java.util.*;
-import models.Admin;
-import models.Customer;
-import models.Guest;
-import ultils.Enhance;
-import ultils.Log;
+import models.*;
+import ultils.*;
 
 
 public class UserManager implements IManagement<IAuthenticable> {
