@@ -93,6 +93,7 @@ public class ManageProductsMenu implements IManageMenu{
                 if(!name.isEmpty()) break;
                 else Log.warning("Khong duoc bo trong mien nay!");
             }
+            Log.success("Successful!");
 
             
             String unit;
@@ -102,6 +103,7 @@ public class ManageProductsMenu implements IManageMenu{
                 if(!unit.isEmpty()) break;
                 else Log.warning("Khong duoc bo trong mien nay!");
             }
+            Log.success("Successful!");
 
             double price;
             while (true) {
@@ -118,6 +120,7 @@ public class ManageProductsMenu implements IManageMenu{
                     Log.warning("Gia tien khong hop le! Vui long nhap so.");
                 }
             }
+            Log.success("Successful!");
 
             Log.request("Thoi han su dung (theo thang), bo trong neu khong co: ");
             String input = sc.nextLine().trim();
@@ -211,7 +214,6 @@ public class ManageProductsMenu implements IManageMenu{
             Log.success("Da them san pham thanh cong!");
             pm.save();
             Log.request("Tiep tuc them? [0 de thoat]: ");
-            Enhance.pause(sc);
             if(sc.nextLine().trim().equals("0")) return;
         }
     }

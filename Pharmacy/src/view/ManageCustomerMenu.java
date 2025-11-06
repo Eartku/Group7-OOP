@@ -281,10 +281,12 @@ public class ManageCustomerMenu implements IManageMenu {
         while (true) {
             Log.request("Ngay sinh (dd/MM/yyyy) (bo trong neu giu nguyen): ");
             String dobS = sc.nextLine();
-            c.setDob(dobS.isEmpty() ? c.getDobdate() : dobS);
-            String dob = sc.nextLine();
+            if(dobS.isEmpty()) {c.setDob(c.getDobdate()); 
+                Log.success("Successfull!");
+                break;
+            }
             try {
-                c.setDob(dob);
+                c.setDob(dobS);
                 break;
             } catch (Exception e) {
                 Log.error("Ngay sinh khong hop le!");
