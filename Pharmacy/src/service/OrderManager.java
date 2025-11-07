@@ -61,6 +61,8 @@ public class OrderManager implements IManagement<Order> {
                 String parts[] = line.split("\\|");
                 String oid = parts[0];
                 String cid = parts[1];
+                Customer c = cm.get(cid);
+                if(c == null) continue;
                 boolean status = Boolean.parseBoolean(parts[3]);
                 LocalDate purchaseDate;
                 List<OrderItem> items = loadItems(oid);
@@ -69,7 +71,7 @@ public class OrderManager implements IManagement<Order> {
                 } catch (Exception e) {
                     purchaseDate = null;
                 }
-                Order o = new Order(oid, items , cm.get(cid), purchaseDate, status);
+                Order o = new Order(oid, items , c, purchaseDate, status);
                 orders.put(oid, o);
                 Log.info("[Debug] Load Order [" + o.getOID()+";"+ o.getCustomer().getCID()+"] successfully.");
             }
@@ -184,7 +186,7 @@ public class OrderManager implements IManagement<Order> {
                 it.remove(); 
             }
         }
-}
+    }
 
 
     @Override

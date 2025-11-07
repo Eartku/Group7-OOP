@@ -9,7 +9,7 @@ public class Customer extends User implements Comparable<Customer>{
 // quan hệ Kế thừa Customer -> User
 
 // thuộc tính (attributes)
-    private String CID;
+    private String CID; // khóa chính
     private String fullname;
     private LocalDate dob;       
     private String address;

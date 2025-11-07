@@ -80,18 +80,6 @@ public final class CustomerManager implements IManagement<Customer> {
         return customerByUsername.get(username);
     }
 
-    // kiểm tra tồn tại
-    @Override
-    public boolean exists(String ID) {
-        boolean found = customerByID.containsKey(ID);
-        return found;
-    }
-
-    // lấy Customer từ ID
-    @Override
-    public Customer get(String ID) {
-        return customerByID.get(ID);
-    }
 
     // Tìm khách theo từ khóa - Tìm kiếm nâng cao
     public ArrayList<Customer> getCustomerByName(String keyword) {
@@ -103,15 +91,6 @@ public final class CustomerManager implements IManagement<Customer> {
         return matched;
     }
 
-    // Cập nhật lại tài khoản khi có thay đổi
-    public void updateUser(Customer newCustomer, String oldUsername) {
-        Customer oldCustomer = customerByUsername.remove(oldUsername);
-        if (oldCustomer != null) {
-            customerByID.remove(oldCustomer.getCID());
-        }
-        customerByUsername.put(newCustomer.getUsername(), newCustomer);
-        customerByID.put(newCustomer.getCID(), newCustomer);
-    }
 
     // Cập nhật nếu là khách
     public void updateCustomer(Customer newCustomer, String oldCID) {
@@ -124,6 +103,17 @@ public final class CustomerManager implements IManagement<Customer> {
     }
 
     //IMPLEMENT MANAGEMENT
+     @Override
+    public boolean exists(String ID) {
+        boolean found = customerByID.containsKey(ID);
+        return found;
+    }
+
+    // lấy Customer từ ID
+    @Override
+    public Customer get(String ID) {
+        return customerByID.get(ID);
+    }
 
     // ADD
     @Override

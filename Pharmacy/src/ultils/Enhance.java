@@ -1,6 +1,8 @@
 package ultils;
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.util.Scanner;
@@ -8,6 +10,7 @@ import java.util.Scanner;
 // Chủ yếu sử dụng class này như hàm tiện ích - cải thiện phần hiển thị trong console (không ảnh hưởng phần chính)
 
 public class Enhance {
+    private static int counter = 0;
 
     // ===================== NHÓM INPUT & HỖ TRỢ CƠ BẢN =====================
     public static int readIntInRange(String msg, int min, int max, Scanner sc) {
@@ -155,5 +158,36 @@ public class Enhance {
             }
         }
         System.out.println(border);
+    }
+
+    public static void ExportFile(Runnable r, String file){
+        counter++;
+
+        // Đảm bảo file không bị lặp đuôi .txt
+        String path = file + counter + ".txt"; 
+        System.out.println("Đang ghi file vào: " + path);
+
+        // ✅ Tạo thư mục nếu chưa có
+        File f = new File(path).getParentFile();
+        if (f != null && !f.exists()) {
+            f.mkdirs();
+        }
+
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        PrintStream ps = new PrintStream(baos);
+        PrintStream old = System.out;
+        System.setOut(ps);
+
+        r.run();
+
+        System.out.flush();
+        System.setOut(old);
+
+        try (FileWriter fw = new FileWriter(path)) {
+            fw.write(baos.toString("UTF-8"));
+            Log.success("Xuất file thành công: " + path);
+        } catch (Exception e) {
+            Log.error("Lỗi khi ghi file: " + e.getMessage());
+        }
     }
 }

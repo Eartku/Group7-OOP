@@ -126,9 +126,11 @@ public class ManageOrderMenu implements IManageMenu {
                                 inv.save();
                             }
                         }
-                        om.add(new Order(OID, ordered, customer, true));
+                        Order order =new Order(OID, ordered, customer, true);
+                        om.add(order);
                         om.save();
                         Log.success("Tao HOA DON thanh cong! Ma don: " + OID);
+    
                     } else {
                         Log.warning("Khong co san pham nao duoc chon. Huy HOA DON!");
                     }
@@ -185,13 +187,15 @@ public class ManageOrderMenu implements IManageMenu {
                                 inv.save();
                             }
                         }
-                        om.add(new Order(OID, ordered, customer, true));
+                        Order order = new Order(OID, ordered, customer, true);
+                        om.add(order);
                         om.save();
                         Log.success("Tao HOA DON thanh cong! Ma don: " + OID);
-                        
+                      
                     } else {
                         Log.warning("Khong co san pham nao duoc chon. Huy HOA DON!");
                     }
+                    
                     Log.info("Nhan Enter de quay lai menu...");
                     sc.nextLine();
                     break;
@@ -287,17 +291,26 @@ public class ManageOrderMenu implements IManageMenu {
                 return;
             }
 
-            Log.request("Ban co chac muon xoa san pham " + inputID + "? (y/n): ");
+            Log.request("Ban co chac muon huy san pham " + inputID + "? (y/n): ");
             String confirm = sc.nextLine().trim();
 
             if (confirm.equalsIgnoreCase("y")) {
-                om.get(inputID).setStatus(false);
+                Order o = om.get(inputID);
+                if (o != null) {
+                    o.setStatus(false);
+                    Log.success("Huy thanh cong!");
+                } else {
+                    Log.error("Khong tim thay don hang co ma " + inputID);
+                }
+
                 Log.success("Da xoa san pham: " + inputID);
                 om.save();
             } else {
                 Log.info("Da huy thao tac khoa.");
+                break;
             }
-            break;
+            Log.request("Tiep tuc voi don hang khac? (y/n): ");
+            if (!sc.nextLine().trim().equalsIgnoreCase("y")) break;
         }
     }
 
@@ -320,13 +333,22 @@ public class ManageOrderMenu implements IManageMenu {
             String confirm = sc.nextLine().trim();
 
             if (confirm.equalsIgnoreCase("y")) {
-                om.get(inputID).setStatus(true);
+               Order o = om.get(inputID);
+                if (o != null) {
+                    o.setStatus(true);
+                    Log.success("Kich hoat thanh cong!");
+                } else {
+                    Log.error("Khong tim thay don hang co ma " + inputID);
+                }
+
                 Log.success("Da kich hoat don hang: " + inputID);
                 om.save();
             } else {
                 Log.info("Da huy thao tac kich hoat.");
+                break;
             }
-            break;
+            Log.request("Tiep tuc voi don hang khac? (y/n): ");
+            if (!sc.nextLine().trim().equalsIgnoreCase("y")) break;
         }
     }
 
@@ -336,6 +358,7 @@ public class ManageOrderMenu implements IManageMenu {
             Enhance.clearScreen();
             System.out.println("==== DANH SACH HOA DON ====");
             om.showList();
+            om.blackList();
             Log.request("Nhap ID HOA DON muon xem (Nhap 0 de quay lai): ");
             String input = sc.nextLine().trim();
 
@@ -358,7 +381,7 @@ public class ManageOrderMenu implements IManageMenu {
         }
     }
 
-    public void printOrderDetails(Order order) {
+    public static  void printOrderDetails(Order order) {
         System.out.println("\n===== CHI TIET HOA DON =====");
         System.out.println("Ma HOA DON: " + order.getOID());
         System.out.println("Ngay dat: " + order.getpurchaseDate().format(FORMATTER));
@@ -454,4 +477,5 @@ public class ManageOrderMenu implements IManageMenu {
             Log.success("Cap nhat thanh cong trang thai hoa don!");
         }
     }
+    
 }

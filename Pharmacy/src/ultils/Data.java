@@ -65,6 +65,9 @@ public class Data {
         beta_tester|B3taTest#1|1|true
         vietnam_rey|VnR3y_88|1|true
         guest101|guest_pass101|1|false
+        nguyenvanhai|pass_hai|1|true
+        linhtran|pass_linh|1|true
+        minhpham|pass_minh|1|false
         """;
 
         String customers = """
@@ -72,9 +75,12 @@ public class Data {
         C002|Lan Anh|10/10/1992|Ho Chi Minh City|lan_anh92@example.com|0900000002|lan_anh92|true
         C003|Shadow X|05/05/1995|Da Nang|shadowx@example.com|0900000003|shadowx|true
         C004|Minh Trang|12/12/1998|Hanoi|minhtrang@example.com|0900000004|minhtrang|true
-        C005|Beta Tester|03/03/1990|Hue|beta_tester@example.com|0900000005|beta_tester|true
+        C005|Beta Tester|03/03/1990|Hue|beta_tester@example.com|0900000005|beta_tester|false
         C006|Nguyen Rey|07/07/1993|Can Tho|vietnam_rey@example.com|0900000006|vietnam_rey|true
         C007|Guest One|15/08/2001|Hanoi|guest101@example.com|0900000007|guest101|false
+        C008|Nguyen Van Hai|22/09/1999|HCM|nguyenvanhai@example.com|0900000008|nguyenvanhai|true
+        C009|Tran Thi My Linh|05/03/2002|Da Nang|linhtran@example.com|0900000009|linhtran|true
+        C010|Pham Duc Minh|30/12/2000|Hue|minhpham@example.com|0900000010|minhpham|false
         """;
 
         String products = """
@@ -95,39 +101,40 @@ public class Data {
         """;
 
         String batches = """
-        B001|P001|120|05/03/2025|true
-        B002|P002|150|10/03/2025|true
-        B003|P003|200|15/03/2025|true
-        B004|P004|180|22/03/2025|true
-        B005|P005|160|30/03/2025|false
-        B006|P006|140|02/08/2024|true
-        B007|P007|220|10/04/2025|true
-        B008|P008|130|15/04/2025|false
+        B001|P001|300|05/03/2025|true
+        B002|P002|300|10/03/2025|true
+        B003|P003|300|15/03/2025|true
+        B004|P004|400|22/03/2025|true
+        B005|P005|500|30/03/2025|true
+        B006|P006|450|02/08/2024|true
+        B007|P007|100|10/04/2025|true
+        B008|P008|250|15/04/2025|true
         B009|P009|250|25/08/2024|true
         B010|P010|300|02/05/2025|true
         B011|P011|400|10/05/2023|true
-        B012|P012|350|18/05/2025|true
-        B013|P013|270|25/05/2025|true
-        B014|P014|180|01/06/2025|true
-        B015|P002|190|15/06/2025|false
+        B012|P012|650|18/05/2025|true
+        B013|P013|280|25/05/2025|true
+        B014|P014|520|01/06/2025|true
+        B015|P002|120|15/06/2025|false
+        B016|P003|220|15/06/2025|false
         """;
 
         String orders = """
         H001|C001|05/10/2025|true
-        H002|C001|12/10/2025|true
-        H003|C001|20/10/2025|true
-        H004|C002|06/10/2025|true
-        H005|C002|14/10/2025|true
-        H006|C002|21/10/2025|true
-        H007|C003|08/10/2025|true
-        H008|C003|15/10/2025|false
-        H009|C003|22/10/2025|true
-        H010|C004|09/10/2025|true
-        H011|C004|18/10/2025|true
-        H012|C005|10/10/2025|true
-        H013|C005|19/10/2025|true
+        H002|C002|12/10/2025|true
+        H003|C002|20/10/2025|true
+        H004|C003|06/10/2025|true
+        H005|C003|14/10/2025|true
+        H006|C004|21/10/2025|true
+        H007|C004|08/10/2025|true
+        H008|C005|15/10/2025|false
+        H009|C006|22/10/2025|true
+        H010|C007|09/10/2025|true
+        H011|C008|18/10/2025|true
+        H012|C009|10/10/2025|true
+        H013|C010|19/10/2025|true
         H014|C006|11/10/2025|false
-        H015|C006|20/10/2025|true
+        H015|C010|20/10/2025|true
         H016|C007|12/10/2025|true
         H017|C007|21/10/2025|true
         H018|C007|22/10/2025|true

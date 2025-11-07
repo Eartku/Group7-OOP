@@ -7,10 +7,7 @@ P006|Metformin|Hop|65000.0|24|2 vien/ngay|Metformin 500mg|true|D|true
 P007|Loratadine|Hop|50000.0|18|1 vien/ngay|Loratadine 10mg|false|D|true
 P008|Prednisolone|Hop|90000.0|12|1 vien/ngay|Prednisolone 5mg|true|D|true
 P009|DD NaCl 0,9%|Chai|20000.0|12|Rua mui, ve sinh vet thuong|Bidiphar|Ve sinh|N|true
-P010|Gel rua tay|Chai|45000.0|18|Diet khuan tay|Lifebuoy|Ve sinh|N|false
-P011|Khau trang|Hop|40000.0|6|Loc bui, bao ve ho hap|Nam Anh|Dung cu y te|N|false
+P010|Gel rua tay|Chai|45000.0|18|Diet khuan tay|Lifebuoy|Ve sinh|N|true
+P011|Khau trang|Hop|40000.0|6|Loc bui, bao ve ho hap|Nam Anh|Dung cu y te|N|true
 P012|Bong y te|Go|25000.0|48|Dung de sat trung vet thuong|Viet Duc|Dung cu y te|N|true
 P013|Nuoc sat trung|Chai|60000.0|24|Diet khuan nhanh tren tay|Green Cross|Ve sinh|N|true
-P014|Dau thao duoc|Chai|80000.0|18|Giam rung toc, lam mem toc|Thorakao|My pham|N|false
-P015|Nuoc suc mieng|Chai|50000.0|12|Bao ve rang mieng|Listerine|Dung dich|N|true
-P017|dgfhgfjhhk|dsafdgfdhfjg|120000.0|24|dsafdgfhgfh|�gdhftjg|d�gfdhgf|N|false

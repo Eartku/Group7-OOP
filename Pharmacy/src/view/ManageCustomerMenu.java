@@ -259,6 +259,7 @@ public class ManageCustomerMenu implements IManageMenu {
         Enhance.clearScreen();
         System.out.println("==== UPDATE CUSTOMER ====");
         cm.showList();
+        cm.blackList();
         Log.request("Nhap ID khach hang muon cap nhat (hoac nhap 0 de quay lai): ");
         String ID = sc.nextLine().trim();
 
@@ -301,11 +302,11 @@ public class ManageCustomerMenu implements IManageMenu {
         Log.success("Successfull!");
         Log.request("Email (bo trong neu giu nguyen):");
         String email = sc.nextLine();
-        c.setFullname(email.isEmpty() ? c.getEmail() : email);
+        c.setEmail(email.isEmpty() ? c.getEmail() : email);
         Log.success("Successfull!");
         Log.request("So dien thoai (bo trong neu giu nguyen): ");
         String phone = sc.nextLine();
-        c.setFullname(phone.isEmpty() ? c.getPhone() : phone);
+        c.setPhone(phone.isEmpty() ? c.getPhone() : phone);
         Log.success("Successfull!");
         
 

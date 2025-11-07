@@ -37,7 +37,7 @@ public class AdminMenu {
             System.out.println("3. Quan ly khach hang - Customers");
             System.out.println("4. Quan ly kho/lo hang - Inventory");
             System.out.println("5. Quan ly cac don hang - Orders");
-            System.out.println("6. Blocked Cleaner");
+            System.out.println("6. Cleaner");
             Log.exit("0. Dang xuat - Logout");
             int choice = Enhance.readIntInRange("Nhap lua chon (0-5):", 0, 6, sc);
 
