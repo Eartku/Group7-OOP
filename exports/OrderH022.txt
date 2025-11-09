@@ -1,0 +1,14 @@
++-----------------------------------+
+|                                   |
+| ===== CHI TIET HOA DON =====      |
+| Ma HOA DON: H022                  |
+| Ngay dat: 07/11/2025              |
+| Khach hang: Lan Anh               |
+| Trang thai: true                  |
+| [THUOC] Amoxicillin (12 Hop)      |
+|  - Gia: 75000.0 VND               |
+|  → Thanh tien: 900000.0 VND       |
+| --------------------------------- |
+| ---                               |
+| Tong thanh toan: 900000.00 VND    |
++-----------------------------------+

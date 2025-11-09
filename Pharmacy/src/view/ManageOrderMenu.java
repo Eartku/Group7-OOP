@@ -8,6 +8,7 @@ import service.*;
 import ultils.*;
 
 public class ManageOrderMenu implements IManageMenu {
+
     private final ProductManager pm;
     private final CustomerManager cm;
     private final UserManager um;
@@ -127,6 +128,12 @@ public class ManageOrderMenu implements IManageMenu {
                             }
                         }
                         Order order =new Order(OID, ordered, customer, true);
+                        Log.request("Xuat hoa don? (y/n): ");
+                        if (sc.nextLine().trim().equalsIgnoreCase("y")){
+                            Enhance.ExportFile(() -> {
+                                Enhance.printInBox(() -> printOrderDetails(order));
+                            }, "exports/Order" + order.getOID() + ".txt");
+                        }
                         om.add(order);
                         om.save();
                         Log.success("Tao HOA DON thanh cong! Ma don: " + OID);
@@ -188,9 +195,16 @@ public class ManageOrderMenu implements IManageMenu {
                             }
                         }
                         Order order = new Order(OID, ordered, customer, true);
+                        Log.request("Xuat hoa don? (y/n): ");
+                        if (sc.nextLine().trim().equalsIgnoreCase("y")){
+                            Enhance.ExportFile(() -> {
+                                Enhance.printInBox(() -> printOrderDetails(order));
+                            }, "exports/Order" + order.getOID() + ".txt");
+                        }
                         om.add(order);
                         om.save();
                         Log.success("Tao HOA DON thanh cong! Ma don: " + OID);
+
                       
                     } else {
                         Log.warning("Khong co san pham nao duoc chon. Huy HOA DON!");
@@ -375,6 +389,14 @@ public class ManageOrderMenu implements IManageMenu {
 
             Enhance.printInBox(() -> printOrderDetails(order));
 
+            Log.request("Xuat hoa don? (y/n): ");
+            if (sc.nextLine().trim().equalsIgnoreCase("y")){
+                Enhance.ExportFile(() -> {
+                    Enhance.printInBox(() -> printOrderDetails(order));
+                }, "exports/Order" + order.getOID() + ".txt");
+
+            }
+
             Log.info("\nNhan Enter de xem don khac, hoac nhap 0 de quay lai.");
             String choice = sc.nextLine().trim();
             if (choice.equals("0")) break;
@@ -477,5 +499,5 @@ public class ManageOrderMenu implements IManageMenu {
             Log.success("Cap nhat thanh cong trang thai hoa don!");
         }
     }
-    
 }
+

@@ -1,0 +1,19 @@
++-----------------------------------+
+|                                   |
+| ===== CHI TIET HOA DON =====      |
+| Ma HOA DON: H006                  |
+| Ngay dat: 21/10/2025              |
+| Khach hang: Minh Trang            |
+| Trang thai: true                  |
+| [THUOC] Loratadine (2 Hop)        |
+|  - Gia: 50000.0 VND               |
+|  → Thanh tien: 100000.0 VND       |
+| --------------------------------- |
+| ---                               |
+| [THUOC] Prednisolone (1 Hop)      |
+|  - Gia: 90000.0 VND               |
+|  → Thanh tien: 90000.0 VND        |
+| --------------------------------- |
+| ---                               |
+| Tong thanh toan: 190000.00 VND    |
++-----------------------------------+

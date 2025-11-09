@@ -1,0 +1,25 @@
++-----------------------------------+
+|                                   |
+| ===== CHI TIET HOA DON =====      |
+| Ma HOA DON: H023                  |
+| Ngay dat: 09/11/2025              |
+| Khach hang: Nguyen Rey            |
+| Trang thai: true                  |
+| [PHI THUOC] Nuoc sat trung (3 Cha |
+| i)                                |
+|  - Gia: 60000.0 VND               |
+|  → Thanh tien: 180000.0 VND       |
+| --------------------------------- |
+| ---                               |
+| [PHI THUOC] Bong y te (2 Go)      |
+|  - Gia: 25000.0 VND               |
+|  → Thanh tien: 50000.0 VND        |
+| --------------------------------- |
+| ---                               |
+| [THUOC] Metformin (5 Hop)         |
+|  - Gia: 65000.0 VND               |
+|  → Thanh tien: 325000.0 VND       |
+| --------------------------------- |
+| ---                               |
+| Tong thanh toan: 555000.00 VND    |
++-----------------------------------+

@@ -10,7 +10,6 @@ import java.util.Scanner;
 // Chủ yếu sử dụng class này như hàm tiện ích - cải thiện phần hiển thị trong console (không ảnh hưởng phần chính)
 
 public class Enhance {
-    private static int counter = 0;
 
     // ===================== NHÓM INPUT & HỖ TRỢ CƠ BẢN =====================
     public static int readIntInRange(String msg, int min, int max, Scanner sc) {
@@ -160,12 +159,10 @@ public class Enhance {
         System.out.println(border);
     }
 
-    public static void ExportFile(Runnable r, String file){
-        counter++;
+    public static void ExportFile(Runnable r, String path){
 
         // Đảm bảo file không bị lặp đuôi .txt
-        String path = file + counter + ".txt"; 
-        System.out.println("Đang ghi file vào: " + path);
+        System.out.println("Dang ghi file: " + path);
 
         // ✅ Tạo thư mục nếu chưa có
         File f = new File(path).getParentFile();
@@ -185,9 +182,9 @@ public class Enhance {
 
         try (FileWriter fw = new FileWriter(path)) {
             fw.write(baos.toString("UTF-8"));
-            Log.success("Xuất file thành công: " + path);
+            Log.success("xuat file thanh cong: " + path);
         } catch (Exception e) {
-            Log.error("Lỗi khi ghi file: " + e.getMessage());
+            Log.error("Loi khi ghi file: " + e.getMessage());
         }
     }
 }
