@@ -162,6 +162,7 @@ public class ManageProductsMenu implements IManageMenu{
                 Log.success("Successful!");
                 String dosage;
                 while(true){
+                    Log.request("Nhap thanh lieu dung cua thuoc: ");
                     dosage = sc.nextLine().trim();
                     if(!dosage.isEmpty()) break;
                     else Log.warning("Khong duoc bo trong mien nay!");
