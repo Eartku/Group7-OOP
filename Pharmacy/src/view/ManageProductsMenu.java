@@ -315,11 +315,6 @@ public class ManageProductsMenu implements IManageMenu{
                     return;
                 }
 
-            if (!pm.exists(ID)) {
-                Log.error("Khong tim thay san pham voi tu khoa: " + ID);
-                Enhance.pause(sc);
-                continue;
-            }
             
             Product oldProduct = pm.selectProduct(ID, sc);
 
@@ -404,12 +399,6 @@ public class ManageProductsMenu implements IManageMenu{
             if (input.equals("0")) {
                 Log.info("Huy thao tac.");
                 return;
-            }
-
-            if (!pm.exists(input)) {
-                Log.error("Khong tim thay san pham voi tu khoa: " + input);
-                Enhance.pause(sc);
-                continue;
             }
 
             Product product = pm.selectProduct(input, sc);
